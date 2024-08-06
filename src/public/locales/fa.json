@@ -1,0 +1,10 @@
+{
+	"Username Or Password Wrong": "نام کاربری یا رمز عبور اشتباه است",
+	"Account is Suspend!": "اکانت غیر فعال شده است",
+	"Please Try Again Later": "لطفا دوباره تلاش کنید",
+	"Wrong Confirm Code": "کد تایید اشتباه است",
+	"Invalid Refresh Token": "Invalid Refresh Token",
+	"Invalid Token": "Invalid Token",
+	"Please try again later": "Please try again later",
+	"User Already Exists With Email": "User Already Exists With Email"
+}
