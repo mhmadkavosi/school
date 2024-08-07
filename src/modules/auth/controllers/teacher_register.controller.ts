@@ -91,41 +91,31 @@ export const register_confirm = async (req: Request, res: Response) => {
 	if (request_info === null) {
 		return new BadRequestError(res, 'Expired!');
 	}
-	if (request_info.name && request_info.value && request_info.family) {
-		if (request_info.code !== req.body.confirm_code) {
-			return new BadRequestError(res, 'Code is wrong!');
-		}
-
-		const result = await new TeacherCreate().create(
-			request_info.value,
-			request_info?.name,
-			request_info?.family
-		);
-
-		if (!result.is_success) {
-			return new InternalServerError(res);
-		}
-
-		await new AuthRequestManager().remove_request(RequestType.register, req.body.access_address);
-
-		return ApiRes(res, {
-			status: HttpStatus.OK,
-			data: result.data
-		});
-	} else {
+	if (!request_info.name || !request_info.value || !request_info.family) {
 		return new InternalServerError(res);
 	}
+
+	if (request_info.code !== req.body.confirm_code) {
+		return new BadRequestError(res, 'Code is wrong!');
+	}
+
+	return ApiRes(res, {
+		status: HttpStatus.OK,
+		data: {
+			access_address: req.body.access_address
+		}
+	});
 };
-// TODO : fix that for leave the site and not enter password
+
 export const confirm_password = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			teacher_id: req.body.teacher_id,
+			access_address: req.body.access_address,
 			password: req.body.password,
 			confirm_password: req.body.confirm_password
 		},
 		{
-			teacher_id: ['required', 'string'],
+			access_address: ['required', 'string'],
 			password: [
 				'required',
 				'string',
@@ -143,23 +133,41 @@ export const confirm_password = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const teacher_info = await new TeacherInfo().get_by_id(req.body.teacher_id);
-
-	if (!teacher_info.is_success) {
-		return new BadRequestError(res);
-	}
-
 	if (req.body.password !== req.body.confirm_password) {
 		return new BadRequestError(res, 'Passwords not match');
 	}
 
+	const request_info = await new AuthRequestManager().get_request(
+		RequestType.register,
+		req.body.access_address
+	);
+	if (request_info === null) {
+		return new BadRequestError(res, 'Expired!');
+	}
+
+	if (!request_info.name || !request_info.value || !request_info.family) {
+		return new InternalServerError(res);
+	}
+
+	const teacher_info = await new TeacherCreate().create(
+		request_info.value,
+		request_info?.name,
+		request_info?.family
+	);
+
+	if (!teacher_info.is_success) {
+		return new InternalServerError(res);
+	}
+
 	const add_password = await new TeacherUpdate().add_password(
-		req.body.teacher_id,
+		teacher_info.data.id,
 		hash_password(req.body.password)
 	);
 	if (!add_password.is_success) {
 		return new InternalServerError(res);
 	}
+
+	await new AuthRequestManager().remove_request(RequestType.register, req.body.access_address);
 
 	const user_agent = get_user_agent(req);
 
