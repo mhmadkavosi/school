@@ -1,6 +1,6 @@
-import { SexEnum } from './../../models/enums/sex.enum';
-import { AppLogger } from '../../../../lib/logger/Logger';
-import SchoolModel from '../../models/school.model';
+import { AppLogger } from '../../../lib/logger/Logger';
+import { SexEnum } from '../models/enums/sex.enum';
+import SchoolModel from '../models/school.model';
 
 export class SchoolInfo {
 	async get_all(): Promise<RestApi.ObjectResInterface> {

@@ -4,7 +4,7 @@ import { AuthRequestManager, RequestType } from '../methods/requests/request_man
 
 import { TeacherTokenBuilder } from '../methods/teacher/teacher_token.builder';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
-import { TeacherInfo } from '../../teacher/methods/teacher/teacher_info';
+
 import { BadRequestError } from '../../../lib/http/error/bad_request.error';
 import { generate_random_code } from '../../../utils/random_generator.utility';
 import {
@@ -15,12 +15,13 @@ import {
 import { HttpStatus } from '../../../lib/http/http_status';
 import { InternalServerError } from '../../../lib/http/error/internal_server.error';
 import { ApiRes } from '../../../lib/http/api_response';
-import { TeacherCreate } from '../../teacher/methods/teacher/teacher_create';
-import { TeacherUpdate } from '../../teacher/methods/teacher/teacher_update';
 import { get_user_agent } from '../../../utils/user_agent.utility';
 import { add_day } from '../../../utils/date_generator.utility';
 import { BaseConfig } from '../../../config/base.config';
 import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
+import { TeacherInfo } from '../../teacher/methods/teacher_info';
+import { TeacherCreate } from '../../teacher/methods/teacher_create';
+import { TeacherUpdate } from '../../teacher/methods/teacher_update';
 
 export const register_request = async (req: Request, res: Response) => {
 	const validate = new Validator(

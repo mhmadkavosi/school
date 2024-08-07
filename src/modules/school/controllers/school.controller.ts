@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 
 import Validator from 'validatorjs';
-import { SchoolInfo } from '../methods/school/school_info';
+
 import { SexEnum } from '../models/enums/sex.enum';
-import { SchoolCreate } from '../methods/school/school_create';
-import { SchoolUpdate } from '../methods/school/school_update';
 import { ApiRes } from '../../../lib/http/api_response';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
+import { SchoolInfo } from '../methods/school_info';
+import { SchoolCreate } from '../methods/school_create';
+import { SchoolUpdate } from '../methods/school_update';
 
 export const get_all = async (req: Request, res: Response) => {
 	const result = await new SchoolInfo().get_all();

@@ -1,5 +1,5 @@
-import { AppLogger } from '../../../../lib/logger/Logger';
-import TeacherModel from '../../models/teacher.model';
+import { AppLogger } from '../../../lib/logger/Logger';
+import TeacherModel from '../models/teacher.model';
 
 export class TeacherCreate {
 	async create(email: string, name: string, family: string): Promise<RestApi.ObjectResInterface> {

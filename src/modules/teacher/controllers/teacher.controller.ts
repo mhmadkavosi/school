@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 
 import Validator from 'validatorjs';
-import { TeacherInfo } from '../methods/teacher/teacher_info';
-import { TeacherUpdate } from '../methods/teacher/teacher_update';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
 import { BadRequestError } from '../../../lib/http/error/bad_request.error';
 import {
@@ -15,6 +13,8 @@ import { AuthRequestManager, RequestType } from '../../auth/methods/requests/req
 import { InternalServerError } from '../../../lib/http/error/internal_server.error';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { ApiRes } from '../../../lib/http/api_response';
+import { TeacherInfo } from '../methods/teacher_info';
+import { TeacherUpdate } from '../methods/teacher_update';
 
 export const request_update_phone_number = async (req: Request, res: Response) => {
 	const validate = new Validator(

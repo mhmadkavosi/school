@@ -1,4 +1,4 @@
-import { InternalServerError } from './../../../lib/http/error/internal_server.error';
+import { InternalServerError } from '../../../lib/http/error/internal_server.error';
 import { Request, Response } from 'express';
 import Validator from 'validatorjs';
 import { ClassInfo } from '../methods/class/class_info';

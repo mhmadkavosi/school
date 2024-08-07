@@ -1,10 +1,10 @@
 import { Application } from 'express';
 import { BaseConfig } from '../config/base.config';
 import AuthRouter from '../modules/auth/routes/auth.routes';
-import ClassLevelRouter from '../modules/teacher/routes/class_level.routes';
-import ClassRouter from '../modules/teacher/routes/class.routes';
-import MajorRouter from '../modules/teacher/routes/major.routes';
-import SchoolRouter from '../modules/teacher/routes/school.routes';
+import ClassLevelRouter from '../modules/school_class/routes/class_level.routes';
+import ClassRouter from '../modules/school_class/routes/class.routes';
+import MajorRouter from '../modules/school_class/routes/major.routes';
+import SchoolRouter from '../modules/school/routes/school.routes';
 import TeacherRouter from '../modules/teacher/routes/teacher.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
@@ -13,9 +13,13 @@ export function RegisterRoutes(app: Application) {
 	app.use(routePrefix, AuthRouter);
 
 	// teacher
+	app.use(routePrefix, TeacherRouter);
+
+	// school class
 	app.use(routePrefix, ClassLevelRouter);
 	app.use(routePrefix, ClassRouter);
 	app.use(routePrefix, MajorRouter);
+
+	// school
 	app.use(routePrefix, SchoolRouter);
-	app.use(routePrefix, TeacherRouter);
 }

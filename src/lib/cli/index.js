@@ -24,15 +24,15 @@ program
 
             await Promise.all([
                 fs.mkdir(modulePath, {recursive: true}),
-                fs.mkdir(path.join(modulePath, 'controllers/Teacher'), {recursive: true}),
+                fs.mkdir(path.join(modulePath, 'controllers/admin'), {recursive: true}),
                 fs.mkdir(path.join(modulePath, 'methods'), {recursive: true}),
-                fs.mkdir(path.join(modulePath, 'routes/Teacher'), {recursive: true}),
+                fs.mkdir(path.join(modulePath, 'routes/admin'), {recursive: true}),
                 fs.mkdir(path.join(modulePath, 'models/enums'), {recursive: true})
             ]);
 
             await Promise.all([
                 fs.writeFile(path.join(modulePath, 'controllers', `${name}.controller.ts`), ''),
-                fs.writeFile(path.join(modulePath, 'controllers/Teacher', `Teacher_${name}.controller.ts`), ''),
+                fs.writeFile(path.join(modulePath, 'controllers/admin', `admin_${name}.controller.ts`), ''),
 
                 fs.writeFile(
                     path.join(modulePath, 'methods', `${name}_create.ts`),

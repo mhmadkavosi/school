@@ -1,6 +1,6 @@
-import { AppLogger } from '../../../../lib/logger/Logger';
-import SchoolModel from '../../models/school.model';
-import { SexEnum } from '../../models/enums/sex.enum';
+import { AppLogger } from '../../../lib/logger/Logger';
+import { SexEnum } from '../models/enums/sex.enum';
+import SchoolModel from '../models/school.model';
 
 export class SchoolUpdate {
 	async update(id: string, name: string, sex: SexEnum): Promise<RestApi.ObjectResInterface> {

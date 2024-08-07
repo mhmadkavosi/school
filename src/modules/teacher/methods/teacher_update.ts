@@ -1,5 +1,5 @@
-import { AppLogger } from '../../../../lib/logger/Logger';
-import TeacherModel from '../../models/teacher.model';
+import { AppLogger } from '../../../lib/logger/Logger';
+import TeacherModel from '../models/teacher.model';
 
 export class TeacherUpdate {
 	async add_password(id: string, password: string): Promise<RestApi.ObjectResInterface> {

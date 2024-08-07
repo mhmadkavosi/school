@@ -1,4 +1,4 @@
-import { TeacherAuthMiddleware } from './../../../middlewares/teacher_auth.middleware';
+import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as SchoolController from '../controllers/school.controller';
 import { Router } from 'express';
 
