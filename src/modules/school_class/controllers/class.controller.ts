@@ -103,14 +103,12 @@ export const update_class = async (req: Request, res: Response) => {
 export const create_class = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			class_id: req.body.class_id,
 			school_id: req.body.school_id,
 			major_id: req.body.major_id,
 			class_level_id: req.body.class_level_id,
 			count: req.body.count
 		},
 		{
-			class_id: ['required', 'string'],
 			school_id: ['required', 'string'],
 			major_id: ['required', 'string'],
 			class_level_id: ['required', 'string'],
@@ -123,7 +121,7 @@ export const create_class = async (req: Request, res: Response) => {
 	}
 
 	const link = await new ClassInfo().get_link();
-
+	console.log(req.user_id);
 	if (!link) {
 		return new InternalServerError(res);
 	}

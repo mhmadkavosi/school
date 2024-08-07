@@ -1,11 +1,17 @@
 import { AppLogger } from '../../../../lib/logger/Logger';
 import { make_random_string } from '../../../../utils/random_generator.utility';
+import SchoolModel from '../../../school/models/school.model';
+import ClassLevelModel from '../../models/class_level.model';
 import ClassesModel from '../../models/classes.model';
+import MajorModel from '../../models/major.model';
 
 export class ClassInfo {
 	async get_all_by_teacher_id(teacher_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findAll({ where: { teacher_id } });
+			const result = await ClassesModel.findAll({
+				where: { teacher_id },
+				include: [{ model: MajorModel }, { model: ClassLevelModel }, { model: SchoolModel }]
+			});
 
 			return {
 				is_success: true,
@@ -22,7 +28,10 @@ export class ClassInfo {
 
 	async get_by_link(link: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findOne({ where: { link } });
+			const result = await ClassesModel.findOne({
+				where: { link },
+				include: [{ model: MajorModel }, { model: ClassLevelModel }, { model: SchoolModel }]
+			});
 
 			return {
 				is_success: !!result,
@@ -53,7 +62,10 @@ export class ClassInfo {
 
 	async get_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findOne({ where: { id } });
+			const result = await ClassesModel.findOne({
+				where: { id },
+				include: [{ model: MajorModel }, { model: ClassLevelModel }, { model: SchoolModel }]
+			});
 
 			return {
 				is_success: !!result,
@@ -70,7 +82,10 @@ export class ClassInfo {
 
 	async get_all_by_school_id(school_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findAll({ where: { school_id } });
+			const result = await ClassesModel.findAll({
+				where: { school_id },
+				include: [{ model: MajorModel }, { model: ClassLevelModel }, { model: SchoolModel }]
+			});
 
 			return {
 				is_success: true,

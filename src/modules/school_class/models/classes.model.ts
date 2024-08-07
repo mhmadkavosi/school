@@ -3,6 +3,7 @@ import DB from '../../../config/sequelize.config';
 import MajorModel from './major.model';
 import ClassLevelModel from './class_level.model';
 import SchoolModel from '../../school/models/school.model';
+import TeacherModel from '../../teacher/models/teacher.model';
 
 const ClassesModel = DB.instance().define(
 	'class',
@@ -56,6 +57,11 @@ ClassesModel.hasOne(MajorModel, {
 ClassesModel.hasOne(ClassLevelModel, {
 	foreignKey: 'id',
 	sourceKey: 'class_level_id'
+});
+
+ClassesModel.hasOne(TeacherModel, {
+	foreignKey: 'id',
+	sourceKey: 'teacher_id'
 });
 
 export default ClassesModel;

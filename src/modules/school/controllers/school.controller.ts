@@ -34,7 +34,7 @@ export const create_school = async (req: Request, res: Response) => {
 		},
 		{
 			name: ['required', 'string'],
-			sex: ['required', 'string', { in: [Object.keys(SexEnum)] }]
+			sex: ['required', 'string', { in: Object.keys(SexEnum) }]
 		}
 	);
 
@@ -60,7 +60,7 @@ export const update_school = async (req: Request, res: Response) => {
 		{
 			school_id: ['required', 'string'],
 			name: ['string'],
-			sex: ['string', { in: [Object.keys(SexEnum)] }]
+			sex: ['string', { in: Object.keys(SexEnum) }]
 		}
 	);
 
