@@ -8,12 +8,14 @@ export class TeacherTokenRemove {
 	 * @param teacher_id The id of the Teacher
 	 * @returns ObjectResInterface
 	 */
-	async remove_Teacher_token_by_teacher_id_and_token_id(
+	async remove_teacher_token_by_teacher_id_and_token_id(
 		token_id: string,
 		teacher_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await TeacherTokenModel.destroy({ where: { teacher_id: teacher_id, id: token_id } });
+			const result = await TeacherTokenModel.destroy({
+				where: { teacher_id: teacher_id, token_id: token_id }
+			});
 
 			return {
 				is_success: result > 0

@@ -49,7 +49,7 @@ export const register_request = async (req: Request, res: Response) => {
 	const access_address = generate_access_address();
 	const code = await generate_random_code(6);
 	const result = await new AuthRequestManager().add_request(RequestType.register, access_address, {
-		code: code,
+		code: String(code),
 		value: req.body.email,
 		name: req.body.name,
 		family: req.body.family
@@ -62,7 +62,8 @@ export const register_request = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
-			access_address: access_address
+			access_address: access_address,
+			code: code
 		}
 	});
 };
@@ -74,7 +75,7 @@ export const register_confirm = async (req: Request, res: Response) => {
 			access_address: req.body.access_address
 		},
 		{
-			confirm_code: ['required', 'string'],
+			confirm_code: ['required', 'string', 'min:6', 'max:6'],
 			access_address: ['required', 'string']
 		}
 	);
@@ -128,12 +129,12 @@ export const confirm_password = async (req: Request, res: Response) => {
 			password: [
 				'required',
 				'string',
-				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/'
+				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/'
 			],
 			confirm_password: [
 				'required',
 				'string',
-				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/'
+				'same:password' // Use 'same' rule to ensure it matches the password field
 			]
 		}
 	);

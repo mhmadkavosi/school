@@ -1,4 +1,6 @@
+import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as TeacherLoginController from '../controllers/teacher_login.controller';
+import * as TeacherLogoutController from '../controllers/teacher_logout.controller';
 import * as TeacherRegisterController from '../controllers/teacher_register.controller';
 import { Router } from 'express';
 
@@ -14,5 +16,6 @@ AuthRouter.post(
 	`${route_prefix}/teacher/register/confirm/password`,
 	TeacherRegisterController.confirm_password
 );
+AuthRouter.get(`${route_prefix}/teacher/logout`, TeacherAuthMiddleware, TeacherLogoutController.logout);
 
 export default AuthRouter;

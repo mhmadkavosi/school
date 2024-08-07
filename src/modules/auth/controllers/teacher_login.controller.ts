@@ -31,7 +31,7 @@ export const login_request = async (req: Request, res: Response) => {
 			password: [
 				'required',
 				'string',
-				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/'
+				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/'
 			]
 		}
 	);
@@ -53,7 +53,7 @@ export const login_request = async (req: Request, res: Response) => {
 	const access_address = generate_access_address();
 	const code = await generate_random_code(6);
 	const result = await new AuthRequestManager().add_request(RequestType.login, access_address, {
-		code: code,
+		code: String(code),
 		value: req.body.email
 	});
 
@@ -64,7 +64,8 @@ export const login_request = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
-			access_address: access_address
+			access_address: access_address,
+			code: code
 		}
 	});
 };

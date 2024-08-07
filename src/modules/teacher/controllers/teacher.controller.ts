@@ -43,7 +43,7 @@ export const request_update_phone_number = async (req: Request, res: Response) =
 	const access_address = generate_access_address();
 	const code = await generate_random_code(6);
 	const result = await new AuthRequestManager().add_request(RequestType.change_phone_number, access_address, {
-		code: code,
+		code: String(code),
 		value: req.body.phone_number
 	});
 
@@ -54,7 +54,8 @@ export const request_update_phone_number = async (req: Request, res: Response) =
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
-			access_address: access_address
+			access_address: access_address,
+			code: code
 		}
 	});
 };
@@ -66,7 +67,7 @@ export const phone_number_confirm = async (req: Request, res: Response) => {
 			access_address: req.body.access_address
 		},
 		{
-			confirm_code: ['required', 'string'],
+			confirm_code: ['required', 'string', 'min:6', 'max:6'],
 			access_address: ['required', 'string']
 		}
 	);
@@ -119,7 +120,7 @@ export const request_update_email = async (req: Request, res: Response) => {
 	const access_address = generate_access_address();
 	const code = await generate_random_code(6);
 	const result = await new AuthRequestManager().add_request(RequestType.change_email, access_address, {
-		code: code,
+		code: String(code),
 		value: req.body.email
 	});
 
@@ -130,7 +131,8 @@ export const request_update_email = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
-			access_address: access_address
+			access_address: access_address,
+			code
 		}
 	});
 };
@@ -142,7 +144,7 @@ export const email_confirm = async (req: Request, res: Response) => {
 			access_address: req.body.access_address
 		},
 		{
-			confirm_code: ['required', 'string'],
+			confirm_code: ['required', 'string', 'min:6', 'max:6'],
 			access_address: ['required', 'string']
 		}
 	);
@@ -222,7 +224,7 @@ export const update_details = async (req: Request, res: Response) => {
 	);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
 
@@ -233,15 +235,11 @@ export const update_password = async (req: Request, res: Response) => {
 			new_password: req.body.new_password
 		},
 		{
-			old_password: [
-				'required',
-				'string',
-				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/'
-			],
+			old_password: ['required', 'string'],
 			new_password: [
 				'required',
 				'string',
-				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/'
+				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/'
 			]
 		}
 	);
