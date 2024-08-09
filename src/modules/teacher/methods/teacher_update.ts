@@ -71,7 +71,8 @@ export class TeacherUpdate {
 		name: string,
 		family: string,
 		major_id: string,
-		about: string
+		about: string,
+		school_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await TeacherModel.update(
@@ -79,7 +80,8 @@ export class TeacherUpdate {
 					name,
 					family,
 					major_id,
-					about
+					about,
+					school_id
 				},
 				{ where: { id } }
 			);

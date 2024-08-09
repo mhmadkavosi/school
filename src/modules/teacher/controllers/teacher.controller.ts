@@ -201,13 +201,15 @@ export const update_details = async (req: Request, res: Response) => {
 			name: req.body.name,
 			family: req.body.family,
 			about: req.body.about,
-			major_id: req.body.major_id
+			major_id: req.body.major_id,
+			school_id: req.body.school_id
 		},
 		{
 			name: ['string'],
 			family: ['string'],
 			about: ['string'],
-			major_id: ['string']
+			major_id: ['string'],
+			school_id: ['string']
 		}
 	);
 
@@ -220,7 +222,8 @@ export const update_details = async (req: Request, res: Response) => {
 		req.body.name,
 		req.body.family,
 		req.body.major_id,
-		req.body.about
+		req.body.about,
+		req.body.school_id
 	);
 
 	return ApiRes(res, {
