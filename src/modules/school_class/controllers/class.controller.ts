@@ -106,13 +106,15 @@ export const create_class = async (req: Request, res: Response) => {
 			school_id: req.body.school_id,
 			major_id: req.body.major_id,
 			class_level_id: req.body.class_level_id,
-			count: req.body.count
+			count: req.body.count,
+			name: req.body.name
 		},
 		{
 			school_id: ['required', 'string'],
 			major_id: ['required', 'string'],
 			class_level_id: ['required', 'string'],
-			count: ['required', 'numeric']
+			count: ['required', 'numeric'],
+			name: ['required', 'string']
 		}
 	);
 
@@ -133,6 +135,7 @@ export const create_class = async (req: Request, res: Response) => {
 		.setMajorId(req.body.major_id)
 		.setSchoolId(req.body.school_id)
 		.setTeacherId(req.user_id)
+		.setName(req.body.name)
 		.build();
 
 	return ApiRes(res, {

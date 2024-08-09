@@ -49,6 +49,10 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       teacher_id: {
         type: Sequelize.UUID,
         allowNull: false,

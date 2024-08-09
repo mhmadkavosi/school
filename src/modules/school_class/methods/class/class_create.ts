@@ -12,7 +12,8 @@ export class ClassCreate {
 					class_level_id: builder.getClassLevelId(),
 					count: builder.getCount(),
 					link: builder.getLink(),
-					teacher_id: builder.getTeacherId()
+					teacher_id: builder.getTeacherId(),
+					name: builder.getName()
 				},
 				{ isNewRecord: true }
 			);

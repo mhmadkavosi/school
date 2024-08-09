@@ -7,6 +7,7 @@ export class ClassBuilder {
 	private count!: number;
 	private link!: string;
 	private teacher_id!: string;
+	private name!: string;
 
 	public setSchoolId(schoolId: string): this {
 		this.school_id = schoolId;
@@ -38,6 +39,11 @@ export class ClassBuilder {
 		return this;
 	}
 
+	public setName(name: string): this {
+		this.name = name;
+		return this;
+	}
+
 	public getSchoolId(): string {
 		return this.school_id;
 	}
@@ -60,6 +66,10 @@ export class ClassBuilder {
 
 	public getTeacherId(): string {
 		return this.teacher_id;
+	}
+
+	public getName(): string {
+		return this.name;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

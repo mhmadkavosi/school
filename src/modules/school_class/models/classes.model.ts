@@ -13,6 +13,10 @@ const ClassesModel = DB.instance().define(
 			primaryKey: true,
 			defaultValue: DataTypes.UUIDV4
 		},
+		name: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
 		school_id: {
 			type: DataTypes.UUID,
 			allowNull: false
