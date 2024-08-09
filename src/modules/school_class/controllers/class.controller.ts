@@ -72,14 +72,16 @@ export const update_class = async (req: Request, res: Response) => {
 			school_id: req.body.school_id,
 			major_id: req.body.major_id,
 			class_level_id: req.body.class_level_id,
-			count: req.body.count
+			count: req.body.count,
+			name: req.body.name
 		},
 		{
 			class_id: ['required', 'string'],
 			school_id: ['string'],
 			major_id: ['string'],
 			class_level_id: ['string'],
-			count: ['numeric']
+			count: ['numeric'],
+			name: ['string']
 		}
 	);
 
@@ -93,7 +95,8 @@ export const update_class = async (req: Request, res: Response) => {
 		req.body.school_id,
 		req.body.major_id,
 		req.body.class_level_id,
-		req.body.count
+		req.body.count,
+		req.body.name
 	);
 	return ApiRes(res, {
 		status: update.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND

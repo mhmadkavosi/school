@@ -8,7 +8,8 @@ export class ClassUpdate {
 		school_id: string,
 		major_id: string,
 		class_level_id: string,
-		count: number
+		count: number,
+		name: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await ClassesModel.update(
@@ -16,7 +17,8 @@ export class ClassUpdate {
 					school_id,
 					major_id,
 					class_level_id,
-					count
+					count,
+					name
 				},
 				{ where: { id, teacher_id } }
 			);
