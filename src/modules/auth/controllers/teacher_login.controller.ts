@@ -19,6 +19,7 @@ import { add_day } from '../../../utils/date_generator.utility';
 import { BaseConfig } from '../../../config/base.config';
 import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
+import { EmailProvider } from '../../../utils/mail.service';
 
 export const login_request = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -59,6 +60,20 @@ export const login_request = async (req: Request, res: Response) => {
 
 	if (result === 'NOK') {
 		return new InternalServerError(res);
+	}
+
+	const send_email = await new EmailProvider().send_email(
+		req.body.email,
+		'Teacher Login',
+		'teacher_email.template',
+		String(code)
+	);
+
+	if (!send_email) {
+		return ApiRes(res, {
+			status: HttpStatus.INTERNAL_SERVER_ERROR,
+			msg: 'email send failed'
+		});
 	}
 
 	return ApiRes(res, {

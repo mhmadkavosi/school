@@ -22,6 +22,7 @@ import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
 import { TeacherCreate } from '../../teacher/methods/teacher_create';
 import { TeacherUpdate } from '../../teacher/methods/teacher_update';
+import { EmailProvider } from '../../../utils/mail.service';
 
 export const register_request = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -59,6 +60,21 @@ export const register_request = async (req: Request, res: Response) => {
 		return new InternalServerError(res);
 	}
 
+	const send_email = await new EmailProvider().send_email(
+		req.body.email,
+		'Teacher Register',
+		'teacher_email.template',
+		String(code)
+	);
+
+	if (!send_email) {
+		return ApiRes(res, {
+			status: HttpStatus.INTERNAL_SERVER_ERROR,
+			msg: 'email send failed'
+		});
+	}
+
+	console.log(send_email);
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {

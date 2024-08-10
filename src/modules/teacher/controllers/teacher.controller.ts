@@ -15,6 +15,7 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { ApiRes } from '../../../lib/http/api_response';
 import { TeacherInfo } from '../methods/teacher_info';
 import { TeacherUpdate } from '../methods/teacher_update';
+import { EmailProvider } from '../../../utils/mail.service';
 
 export const request_update_phone_number = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -126,6 +127,20 @@ export const request_update_email = async (req: Request, res: Response) => {
 
 	if (result === 'NOK') {
 		return new InternalServerError(res);
+	}
+
+	const send_email = await new EmailProvider().send_email(
+		req.body.email,
+		'Teacher Change email',
+		'teacher_email.template',
+		String(code)
+	);
+
+	if (!send_email) {
+		return ApiRes(res, {
+			status: HttpStatus.INTERNAL_SERVER_ERROR,
+			msg: 'email send failed'
+		});
 	}
 
 	return ApiRes(res, {
