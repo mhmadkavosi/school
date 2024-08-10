@@ -79,8 +79,7 @@ export const login_request = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
-			access_address: access_address,
-			code: code
+			access_address: access_address
 		}
 	});
 };
