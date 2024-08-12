@@ -2,6 +2,8 @@ import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middlew
 import * as TeacherLoginController from '../controllers/teacher_login.controller';
 import * as TeacherLogoutController from '../controllers/teacher_logout.controller';
 import * as TeacherRegisterController from '../controllers/teacher_register.controller';
+import * as TeacherGoogleAuthController from '../controllers/google_oauth.controller';
+
 import { Router } from 'express';
 
 const AuthRouter: Router = Router();
@@ -17,5 +19,7 @@ AuthRouter.post(
 	TeacherRegisterController.confirm_password
 );
 AuthRouter.get(`${route_prefix}/teacher/logout`, TeacherAuthMiddleware, TeacherLogoutController.logout);
+
+AuthRouter.post(`${route_prefix}/teacher/google`, TeacherGoogleAuthController.google_auth);
 
 export default AuthRouter;
