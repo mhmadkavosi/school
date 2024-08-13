@@ -6,6 +6,8 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
 import { StudentBuilder } from '../methods/student.builder';
 import { StudentInfo } from '../methods/student_info';
+import { StudentDestroy } from '../methods/student_destroy';
+import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work/student_home_work_destroy';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -92,5 +94,27 @@ export const get_info = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const delete_student = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			student_id: req.body.student_id
+		},
+		{
+			student_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	await new StudentHomeWorDestroy().destroy_by_student_id(req.body.student_id);
+	await new StudentDestroy().destroy(req.body.student_id);
+
+	return ApiRes(res, {
+		status: HttpStatus.OK
 	});
 };

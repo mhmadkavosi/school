@@ -8,7 +8,7 @@ const route_prefix = '/home-work';
 
 HomeWorkRouter.post(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.create);
 HomeWorkRouter.post(
-	`${route_prefix}/class`,
+	`${route_prefix}/update`,
 	TeacherAuthMiddleware,
 	HomeWorkController.add_home_work_for_classes
 );
@@ -25,5 +25,6 @@ HomeWorkRouter.get(
 );
 
 HomeWorkRouter.put(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.update);
+HomeWorkRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.delete_home_work);
 
 export default HomeWorkRouter;

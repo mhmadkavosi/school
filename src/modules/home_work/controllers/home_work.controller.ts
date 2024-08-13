@@ -13,6 +13,9 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { HomeWorkUpdate } from '../methods/home_work/home_work_update';
 import { ClassHomeWorkInfo } from '../methods/class_home_work/class_home_work_info';
 import { HomeWorkInfo } from '../methods/home_work/home_work_info';
+import { HomeWorkDestroy } from '../methods/home_work/home_work_destroy';
+import { StudentHomeWorDestroy } from '../methods/student_home_work/student_home_work_destroy';
+import { ClassHomeWorkDestroy } from '../methods/class_home_work/class_home_work_destroy';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -106,11 +109,13 @@ export const add_home_work_for_classes = async (req: Request, res: Response) => 
 	const validate = new Validator(
 		{
 			home_work_id: req.body.home_work_id,
-			classes_id: req.body.classes_id
+			classes_id: req.body.classes_id,
+			students_id: req.body.students_id
 		},
 		{
 			home_work_id: ['required', 'string'],
-			classes_id: ['required', 'array']
+			classes_id: ['array'],
+			students_id: ['array']
 		}
 	);
 
@@ -142,6 +147,26 @@ export const add_home_work_for_classes = async (req: Request, res: Response) => 
 			}
 		}
 	}
+
+	if (req.body.students_id && req.body.students_id.length > 0) {
+		for (let i = 0; i < req.body.students_id.length; i++) {
+			const student_home_work = await new StudentHomeWrkInfo().get_info_by_student_id_home_work_id(
+				req.body.students_id[i],
+				req.body.home_work_id
+			);
+
+			if (student_home_work.is_success) {
+				return new InternalServerError(res, 'add home work for student failed');
+			}
+
+			await new StudentHomeWorkBuilder()
+				.setHomeWorkId(req.body.home_work_id)
+				.setStudentId(req.body.students_id[i])
+				.setStatus(StudentHomeWorkStatusEnum.undone)
+				.build();
+		}
+	}
+
 	return ApiRes(res, { status: HttpStatus.OK });
 };
 
@@ -205,5 +230,28 @@ export const get_count_of_home_work = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const delete_home_work = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			home_work_id: req.body.home_work_id
+		},
+		{
+			home_work_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	await new ClassHomeWorkDestroy().destroy_by_home_work_id(req.body.home_work_id);
+	await new StudentHomeWorDestroy().destroy_by_home_work_id(req.body.home_work_id);
+	await new HomeWorkDestroy().destroy(req.body.home_work_id);
+
+	return ApiRes(res, {
+		status: HttpStatus.OK
 	});
 };

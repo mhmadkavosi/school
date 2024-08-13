@@ -6,6 +6,8 @@ const StudentRouter: Router = Router();
 const route_prefix = '/student';
 
 StudentRouter.post(route_prefix, StudentController.create);
+StudentRouter.delete(route_prefix, StudentController.delete_student);
+
 StudentRouter.get(`${route_prefix}/class/all`, StudentController.get_all_student_of_class);
 StudentRouter.get(`${route_prefix}/:student_id/info`, StudentController.get_info);
 

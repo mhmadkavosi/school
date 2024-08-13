@@ -8,6 +8,9 @@ import { ClassBuilder } from '../methods/class/class.builder';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { ApiRes } from '../../../lib/http/api_response';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
+import { ClassHomeWorkInfo } from '../../home_work/methods/class_home_work/class_home_work_info';
+import { HomeWorkDestroy } from '../../home_work/methods/home_work/home_work_destroy';
+import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work/student_home_work_destroy';
 
 export const get_all_class_of_teacher = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_all_by_teacher_id(req.user_id);
@@ -58,8 +61,15 @@ export const destroy_class = async (req: Request, res: Response) => {
 	if (validate.fails()) {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
+	const get_all_home_work = await new ClassHomeWorkInfo().get_info_by_class(req.body.class_id);
+
+	for (let i = 0; i < get_all_home_work.data.length; i++) {
+		await new HomeWorkDestroy().destroy(get_all_home_work.data[i].home_work_id);
+		await new StudentHomeWorDestroy().destroy_by_home_work_id(get_all_home_work.data[i].home_work_id);
+	}
 
 	const result = await new ClassDestroy().destroy(req.body.class_id, req.user_id);
+
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
 	});

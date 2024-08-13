@@ -18,4 +18,21 @@ export class ClassHomeWorkInfo {
 			};
 		}
 	}
+
+	async get_info_by_class(class_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await ClassHomeWorkModel.findAll({ where: { class_id } });
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in ClassHomeWorkInfo get_info', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

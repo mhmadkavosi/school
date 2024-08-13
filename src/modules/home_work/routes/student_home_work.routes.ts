@@ -6,11 +6,6 @@ const StudentHomeWorkRouter: Router = Router();
 
 const route_prefix = '/student-home-work';
 
-StudentHomeWorkRouter.post(
-	route_prefix,
-	TeacherAuthMiddleware,
-	StudentHomeWorkController.add_students_home_work
-);
 StudentHomeWorkRouter.put(
 	`${route_prefix}/desc`,
 	TeacherAuthMiddleware,
