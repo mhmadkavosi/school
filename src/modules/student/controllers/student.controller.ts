@@ -25,9 +25,9 @@ export const create = async (req: Request, res: Response) => {
 			class_id: ['required', 'string'],
 			family: ['required', 'string'],
 			email: ['required', 'email'],
-			phone: ['required', 'string'],
+			phone: ['string'],
 			national_code: ['required', 'string'],
-			student_status: ['required', 'string'],
+			student_status: ['string'],
 			birth_date: ['required', 'date'],
 			profile_picture: ['string']
 		}
@@ -74,7 +74,7 @@ export const get_all_student_of_class = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new StudentInfo().get_all_student_of_class(
+	const result = await new StudentInfo().get_all_student_of_class_with_pagination(
 		Number(req.query.page),
 		Number(req.query.limit),
 		<string>req.query.class_id

@@ -29,7 +29,7 @@ const StudentModel = DB.instance().define(
 		},
 		phone: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
 			unique: true
 		},
 		national_code: {

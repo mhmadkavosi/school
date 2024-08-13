@@ -3,7 +3,7 @@ import { paginate } from '../../../utils/paginate.utility';
 import StudentModel from '../models/student.model';
 
 export class StudentInfo {
-	async get_all_student_of_class(
+	async get_all_student_of_class_with_pagination(
 		page: number,
 		limit: number,
 		class_id: string
@@ -22,6 +22,25 @@ export class StudentInfo {
 			return {
 				is_success: true,
 				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_all_student_of_class_with_pagination', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_student_of_class(class_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentModel.findAll({
+				where: { class_id }
+			});
+
+			return {
+				is_success: true,
+				data: result
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentInfo get_all_student_of_class', error);

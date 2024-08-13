@@ -7,6 +7,8 @@ import MajorRouter from '../modules/school_class/routes/major.routes';
 import SchoolRouter from '../modules/school/routes/school.routes';
 import TeacherRouter from '../modules/teacher/routes/teacher.routes';
 import StudentRouter from '../modules/student/routes/student.routes';
+import HomeWorkRouter from '../modules/home_work/routes/home_work.routes';
+import StudentHomeWorkRouter from '../modules/home_work/routes/student_home_work.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -26,4 +28,8 @@ export function RegisterRoutes(app: Application) {
 
 	// student
 	app.use(routePrefix, StudentRouter);
+
+	// Home Work
+	app.use(routePrefix, HomeWorkRouter);
+	app.use(routePrefix, StudentHomeWorkRouter);
 }
