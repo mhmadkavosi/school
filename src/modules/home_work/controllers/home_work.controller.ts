@@ -1,3 +1,4 @@
+import { ClassHomeWorkInfo } from './../methods/class_home_work/class_home_work_info';
 import { Response, Request } from 'express';
 import Validator from 'validatorjs';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
@@ -11,8 +12,6 @@ import { StudentHomeWrkInfo } from '../methods/student_home_work/student_home_wo
 import { ApiRes } from '../../../lib/http/api_response';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { HomeWorkUpdate } from '../methods/home_work/home_work_update';
-import { ClassHomeWorkInfo } from '../methods/class_home_work/class_home_work_info';
-import { HomeWorkInfo } from '../methods/home_work/home_work_info';
 import { HomeWorkDestroy } from '../methods/home_work/home_work_destroy';
 import { StudentHomeWorDestroy } from '../methods/student_home_work/student_home_work_destroy';
 import { ClassHomeWorkDestroy } from '../methods/class_home_work/class_home_work_destroy';
@@ -216,7 +215,16 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const get_all_home_work_of_teacher = async (req: Request, res: Response) => {
-	const result = await new HomeWorkInfo().get_all_home_work_of_teacher(req.user_id);
+	const result = await new ClassHomeWorkInfo().get_home_work_of_teacher(req.user_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_all_student_of_home_work = async (req: Request, res: Response) => {
+	const result = await new StudentHomeWrkInfo().get_student_of_home_work(req.params.home_work_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
