@@ -25,7 +25,7 @@ const ClassHomeWorkModel = DB.instance().define(
 	}
 );
 
-ClassHomeWorkModel.hasOne(ClassesModel, {
+ClassHomeWorkModel.hasMany(ClassesModel, {
 	sourceKey: 'class_id',
 	foreignKey: 'id'
 });
