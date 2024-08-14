@@ -14,6 +14,11 @@ ClassRouter.get(
 	TeacherAuthMiddleware,
 	ClassController.get_all_by_school_id
 );
+ClassRouter.get(
+	`${route_prefix}/student/:school_id/all`,
+	TeacherAuthMiddleware,
+	ClassController.get_all_student_by_school_id
+);
 ClassRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, ClassController.destroy_class);
 ClassRouter.put(`${route_prefix}`, TeacherAuthMiddleware, ClassController.update_class);
 ClassRouter.post(`${route_prefix}`, TeacherAuthMiddleware, ClassController.create_class);

@@ -11,6 +11,7 @@ import { PreconditionFailedError } from '../../../lib/http/error/precondition_fa
 import { ClassHomeWorkInfo } from '../../home_work/methods/class_home_work/class_home_work_info';
 import { HomeWorkDestroy } from '../../home_work/methods/home_work/home_work_destroy';
 import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work/student_home_work_destroy';
+import { StudentInfo } from '../../student/methods/student_info';
 
 export const get_all_class_of_teacher = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_all_by_teacher_id(req.user_id);
@@ -41,6 +42,34 @@ export const get_by_id = async (req: Request, res: Response) => {
 
 export const get_all_by_school_id = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_all_by_school_id(req.params.school_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		data: result.data
+	});
+};
+
+export const get_all_student_by_school_id = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit
+		},
+		{
+			page: ['numeric', 'required'],
+			limit: ['numeric', 'required']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentInfo().get_all_student_by_school_id(
+		Number(req.query.page),
+		Number(req.query.limit),
+		req.params.school_id
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,

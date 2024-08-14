@@ -1,5 +1,7 @@
 import { AppLogger } from '../../../lib/logger/Logger';
 import { paginate } from '../../../utils/paginate.utility';
+import SchoolModel from '../../school/models/school.model';
+import ClassesModel from '../../school_class/models/classes.model';
 import StudentModel from '../models/student.model';
 
 export class StudentInfo {
@@ -44,6 +46,47 @@ export class StudentInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentInfo get_all_student_of_class', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_student_by_school_id(
+		page: number,
+		limit: number,
+		school_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+
+			const result = await StudentModel.findAndCountAll({
+				distinct: true,
+				limit: limit,
+				offset: skip,
+				order: [['created_at', 'DESC']],
+				include: [
+					{
+						model: ClassesModel,
+						include: [
+							{
+								model: SchoolModel,
+								where: {
+									id: school_id
+								}
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_all_student_by_school_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

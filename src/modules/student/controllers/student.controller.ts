@@ -8,6 +8,7 @@ import { StudentBuilder } from '../methods/student.builder';
 import { StudentInfo } from '../methods/student_info';
 import { StudentDestroy } from '../methods/student_destroy';
 import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work/student_home_work_destroy';
+import { StudentUpdate } from '../methods/student_update';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -55,6 +56,56 @@ export const create = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const update = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			student_id: req.body.student_id,
+			name: req.body.name,
+			class_id: req.body.class_id,
+			family: req.body.family,
+			email: req.body.email,
+			phone: req.body.phone,
+			national_code: req.body.national_code,
+			student_status: req.body.student_status,
+			birth_date: req.body.birth_date,
+			profile_picture: req.body.profile_picture
+		},
+		{
+			student_id: ['required', 'string'],
+			name: ['string'],
+			class_id: ['string'],
+			family: ['string'],
+			email: ['email'],
+			phone: ['string'],
+			national_code: ['string'],
+			student_status: ['string'],
+			birth_date: ['date'],
+			profile_picture: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentUpdate().update(
+		req.body.student_id,
+		req.body.name,
+		req.body.class_id,
+		req.body.family,
+		req.body.email,
+		req.body.phone,
+		req.body.national_code,
+		req.body.student_status,
+		req.body.birth_date,
+		req.body.profile_picture
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
 
