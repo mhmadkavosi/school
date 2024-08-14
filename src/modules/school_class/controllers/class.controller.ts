@@ -17,7 +17,7 @@ export const get_all_class_of_teacher = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_all_by_teacher_id(req.user_id);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
 	});
 };
@@ -26,7 +26,7 @@ export const get_by_link = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_by_link(req.params.link);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
 	});
 };
@@ -35,7 +35,7 @@ export const get_by_id = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_by_id(req.params.class_id);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
 	});
 };
@@ -44,7 +44,7 @@ export const get_all_by_school_id = async (req: Request, res: Response) => {
 	const result = await new ClassInfo().get_all_by_school_id(req.params.school_id);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
 	});
 };
@@ -72,7 +72,7 @@ export const get_all_student_by_school_id = async (req: Request, res: Response) 
 	);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
 	});
 };
@@ -100,7 +100,7 @@ export const destroy_class = async (req: Request, res: Response) => {
 	const result = await new ClassDestroy().destroy(req.body.class_id, req.user_id);
 
 	return ApiRes(res, {
-		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
 
@@ -138,7 +138,7 @@ export const update_class = async (req: Request, res: Response) => {
 		req.body.name
 	);
 	return ApiRes(res, {
-		status: update.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
 

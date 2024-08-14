@@ -15,6 +15,7 @@ import { HomeWorkUpdate } from '../methods/home_work/home_work_update';
 import { HomeWorkDestroy } from '../methods/home_work/home_work_destroy';
 import { StudentHomeWorDestroy } from '../methods/student_home_work/student_home_work_destroy';
 import { ClassHomeWorkDestroy } from '../methods/class_home_work/class_home_work_destroy';
+import { HomeWorkInfo } from '../methods/home_work/home_work_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -216,6 +217,15 @@ export const update = async (req: Request, res: Response) => {
 
 export const get_all_home_work_of_teacher = async (req: Request, res: Response) => {
 	const result = await new ClassHomeWorkInfo().get_home_work_of_teacher(req.user_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_home_work_info = async (req: Request, res: Response) => {
+	const result = await new HomeWorkInfo().get_home_work_info(req.params.home_work_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

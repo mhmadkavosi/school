@@ -1,6 +1,8 @@
+import { Sequelize } from 'sequelize';
 import { AppLogger } from '../../../../lib/logger/Logger';
 import { make_random_string } from '../../../../utils/random_generator.utility';
 import SchoolModel from '../../../school/models/school.model';
+import StudentModel from '../../../student/models/student.model';
 import ClassLevelModel from '../../models/class_level.model';
 import ClassesModel from '../../models/classes.model';
 import MajorModel from '../../models/major.model';
@@ -10,7 +12,15 @@ export class ClassInfo {
 		try {
 			const result = await ClassesModel.findAll({
 				where: { teacher_id },
-				include: [{ model: MajorModel }, { model: ClassLevelModel }, { model: SchoolModel }]
+				include: [
+					{ model: MajorModel },
+					{ model: ClassLevelModel },
+					{ model: SchoolModel },
+					{
+						model: StudentModel,
+						attributes: ['id']
+					}
+				]
 			});
 
 			return {

@@ -122,12 +122,14 @@ export const get_all_news_by_category_id = async (req: Request, res: Response) =
 		{
 			page: req.query.page,
 			limit: req.query.limit,
-			category_id: req.query.category_id
+			category_id: req.query.category_id,
+			sort: req.query.sort
 		},
 		{
 			page: ['required', 'numeric'],
 			limit: ['required', 'numeric'],
-			category_id: ['required', 'string']
+			category_id: ['required', 'string'],
+			sort: ['required', { in: ['max_count', 'min_count'] }]
 		}
 	);
 
@@ -138,7 +140,8 @@ export const get_all_news_by_category_id = async (req: Request, res: Response) =
 	const result = await new NewsInfo().get_all_news_by_category_id(
 		<string>req.query.category_id,
 		Number(req.query.page),
-		Number(req.query.limit)
+		Number(req.query.limit),
+		<string>req.query.sort
 	);
 
 	return ApiRes(res, {
@@ -148,6 +151,7 @@ export const get_all_news_by_category_id = async (req: Request, res: Response) =
 };
 
 export const get_info = async (req: Request, res: Response) => {
+	new NewsUpdate().auto_increment_view(req.params.news_id);
 	const result = await new NewsInfo().get_info_by_id(req.params.news_id);
 
 	return ApiRes(res, {

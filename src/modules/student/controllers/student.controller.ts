@@ -40,6 +40,30 @@ export const create = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
+	const email_info = await new StudentInfo().get_by_email(req.body.email);
+	const national_code_info = await new StudentInfo().get_by_national_code(req.body.national_code);
+	const phone_info = await new StudentInfo().get_by_phone_number(req.body.phone);
+
+	if (email_info.is_success || phone_info.is_success) {
+		return ApiRes(res, {
+			status: HttpStatus.BAD_REQUEST,
+			msg: 'Email Duplicate Error'
+		});
+	}
+	if (national_code_info.is_success) {
+		return ApiRes(res, {
+			status: HttpStatus.BAD_REQUEST,
+			msg: 'National code Duplicate Error'
+		});
+	}
+
+	if (phone_info.is_success) {
+		return ApiRes(res, {
+			status: HttpStatus.BAD_REQUEST,
+			msg: 'Phone Duplicate Error'
+		});
+	}
+
 	const result = await new StudentBuilder()
 		.setName(req.body.name)
 		.setClassId(req.body.class_id)

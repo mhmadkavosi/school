@@ -40,4 +40,20 @@ export class NewsUpdate {
 			};
 		}
 	}
+
+	async auto_increment_view(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			await NewsModel.increment('views', { by: 1, where: { id } });
+
+			return {
+				is_success: true
+			};
+		} catch (error) {
+			AppLogger.error('Error in NewsUpdate auto_increment_view', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

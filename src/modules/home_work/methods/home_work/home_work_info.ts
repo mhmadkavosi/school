@@ -1,4 +1,5 @@
 import { AppLogger } from '../../../../lib/logger/Logger';
+import TeacherModel from '../../../teacher/models/teacher.model';
 import HomeWorkModel from '../../models/home_work.model';
 
 export class HomeWorkInfo {
@@ -14,6 +15,23 @@ export class HomeWorkInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in HomeWorkInfo get_all_home_work_of_teacher', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_home_work_info(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await HomeWorkModel.findOne({ where: { id }, include: [{ model: TeacherModel }] });
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in HomeWorkInfo get_home_work_info', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

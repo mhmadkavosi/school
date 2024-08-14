@@ -66,4 +66,10 @@ StudentModel.hasOne(ClassesModel, {
 	foreignKey: 'id',
 	sourceKey: 'class_id'
 });
+
+ClassesModel.hasMany(StudentModel, {
+	foreignKey: 'class_id',
+	sourceKey: 'id'
+});
+
 export default StudentModel;

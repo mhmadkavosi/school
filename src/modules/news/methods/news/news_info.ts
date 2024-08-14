@@ -37,17 +37,25 @@ export class NewsInfo {
 	async get_all_news_by_category_id(
 		news_category_id: string,
 		page: number,
-		limit: number
+		limit: number,
+		sort: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
+
+			let sort_value = '';
+			if (sort === 'max_count') {
+				sort_value = 'DESC';
+			} else if (sort === 'min_count') {
+				sort_value = 'ASC';
+			}
 
 			const result = await NewsModel.findAndCountAll({
 				where: { news_category_id },
 				distinct: true,
 				limit: limit,
 				offset: skip,
-				order: [['created_at', 'DESC']],
+				order: [['views', sort_value]],
 				include: [{ model: NewsCategoryModel }]
 			});
 

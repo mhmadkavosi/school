@@ -33,6 +33,10 @@ const NewsModel = DB.instance().define(
 		},
 		priority: {
 			type: DataTypes.INTEGER
+		},
+		views: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
 		}
 	},
 	{

@@ -11,5 +11,6 @@ NewsRouter.put(route_prefix, TeacherAuthMiddleware, NewsController.update);
 NewsRouter.delete(route_prefix, TeacherAuthMiddleware, NewsController.destroy);
 NewsRouter.get(`${route_prefix}/category/info`, NewsController.get_all_news_by_category_id);
 NewsRouter.get(`${route_prefix}/school/info`, NewsController.get_all_news_by_school_id);
+NewsRouter.get(`${route_prefix}/:news_id/details`, NewsController.get_info);
 
 export default NewsRouter;
