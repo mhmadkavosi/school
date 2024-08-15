@@ -28,7 +28,7 @@ const StudentHomeWorkModel = DB.instance().define(
 		status: {
 			type: DataTypes.ENUM(
 				StudentHomeWorkStatusEnum.done,
-				StudentHomeWorkStatusEnum.late,
+				StudentHomeWorkStatusEnum.later,
 				StudentHomeWorkStatusEnum.not_send,
 				StudentHomeWorkStatusEnum.pending,
 				StudentHomeWorkStatusEnum.undone

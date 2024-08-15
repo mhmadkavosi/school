@@ -234,7 +234,31 @@ export const get_home_work_info = async (req: Request, res: Response) => {
 };
 
 export const get_all_student_of_home_work = async (req: Request, res: Response) => {
-	const result = await new StudentHomeWrkInfo().get_student_of_home_work(req.params.home_work_id);
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit,
+			home_work_id: req.query.home_work_id,
+			sort: req.query.sort
+		},
+		{
+			page: ['required', 'numeric'],
+			limit: ['required', 'numeric'],
+			home_work_id: ['required', 'string'],
+			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentHomeWrkInfo().get_student_of_home_work(
+		Number(req.query.page),
+		Number(req.query.limit),
+		<string>req.query.home_work_id,
+		<string>req.query.status
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

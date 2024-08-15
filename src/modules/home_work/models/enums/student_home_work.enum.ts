@@ -1,7 +1,7 @@
 export enum StudentHomeWorkStatusEnum {
 	'done' = 'done',
 	'undone' = 'undone',
-	'late' = 'late',
+	'later' = 'later',
 	'not_send' = 'not_send',
 	'pending' = 'pending'
 }

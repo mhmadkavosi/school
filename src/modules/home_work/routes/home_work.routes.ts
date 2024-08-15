@@ -31,7 +31,7 @@ HomeWorkRouter.get(
 );
 
 HomeWorkRouter.get(
-	`${route_prefix}/student/:home_work_id/all`,
+	`${route_prefix}/student/all`,
 	TeacherAuthMiddleware,
 	HomeWorkController.get_all_student_of_home_work
 );
