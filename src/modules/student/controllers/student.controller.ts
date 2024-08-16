@@ -117,8 +117,8 @@ export const update = async (req: Request, res: Response) => {
 
 	const result = await new StudentUpdate().update(
 		req.body.student_id,
-		req.body.name,
 		req.body.class_id,
+		req.body.name,
 		req.body.family,
 		req.body.email,
 		req.body.phone,

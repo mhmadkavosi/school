@@ -239,13 +239,15 @@ export const get_all_student_of_home_work = async (req: Request, res: Response) 
 			page: req.query.page,
 			limit: req.query.limit,
 			home_work_id: req.query.home_work_id,
-			sort: req.query.sort
+			status: req.query.status,
+			class_id: req.query.class_id
 		},
 		{
 			page: ['required', 'numeric'],
 			limit: ['required', 'numeric'],
-			home_work_id: ['required', 'string'],
-			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }]
+			home_work_id: ['string'],
+			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }],
+			class_id: ['string']
 		}
 	);
 
@@ -257,7 +259,8 @@ export const get_all_student_of_home_work = async (req: Request, res: Response) 
 		Number(req.query.page),
 		Number(req.query.limit),
 		<string>req.query.home_work_id,
-		<string>req.query.status
+		<string>req.query.status,
+		<string>req.query.class_id
 	);
 
 	return ApiRes(res, {

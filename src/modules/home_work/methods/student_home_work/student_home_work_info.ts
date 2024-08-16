@@ -50,26 +50,41 @@ export class StudentHomeWrkInfo {
 		page: number,
 		limit: number,
 		home_work_id: string,
-		status: string
+		status: string,
+		class_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
-			const match: any = [{ home_work_id }];
+			const match: any = [];
+			const class_id_match: any = [];
 			if (status) {
 				match.push({
 					status: status
 				});
 			}
+
+			if (class_id) {
+				class_id_match.push({
+					class_id: class_id
+				});
+			}
+
+			if (home_work_id) {
+				match.push({
+					home_work_id
+				});
+			}
+
 			const result = await StudentHomeWorkModel.findAndCountAll({
 				where: { [Op.and]: match },
 				distinct: true,
 				limit: limit,
 				offset: skip,
-
 				include: [
 					{
 						model: StudentModel,
-						attributes: ['name', 'family']
+						attributes: ['name', 'family', 'id', 'class_id'],
+						where: { [Op.and]: class_id_match }
 					}
 				]
 			});
