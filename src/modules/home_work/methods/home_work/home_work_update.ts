@@ -38,4 +38,36 @@ export class HomeWorkUpdate {
 			};
 		}
 	}
+
+	async update_add_file(id: string, file: string, file_type: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await HomeWorkModel.update({ file, file_type }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in HomeWorkUpdate update_add_file', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async remove_file(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await HomeWorkModel.update({ file: null, file_type: null }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in HomeWorkUpdate remove_file', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

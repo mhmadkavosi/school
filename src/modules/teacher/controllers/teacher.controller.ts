@@ -16,6 +16,8 @@ import { ApiRes } from '../../../lib/http/api_response';
 import { TeacherInfo } from '../methods/teacher_info';
 import { TeacherUpdate } from '../methods/teacher_update';
 import { EmailProvider } from '../../../utils/mail.service';
+import { remove_file } from '../../../lib/file_upload/aws/remove';
+import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 
 export const request_update_phone_number = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -204,6 +206,18 @@ export const update_profile_picture = async (req: Request, res: Response) => {
 	}
 
 	const result = await new TeacherUpdate().update_profile_picture(req.user_id, req.body.profile_picture);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+	});
+};
+
+export const delete_profile_picture = async (req: Request, res: Response) => {
+	const teacher = await new TeacherInfo().get_by_id(req.user_id);
+
+	remove_file(teacher.data.file);
+	await new FileDestroy().destroy_for_admin(teacher.data.file);
+	const result = await new TeacherUpdate().delete_profile_picture(req.user_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND

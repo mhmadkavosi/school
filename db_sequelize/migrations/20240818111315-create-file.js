@@ -3,58 +3,53 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable('news', {
+		await queryInterface.createTable('files', {
 			id: {
-				type: Sequelize.UUID,
-				primaryKey: true,
-				defaultValue: Sequelize.UUIDV4,
-				allowNull: false
-			},
-			school_id: {
-				type: Sequelize.UUID,
-				allowNull: false
-			},
-			title: {
-				type: Sequelize.STRING,
-				allowNull: false
-			},
-			news_category_id: {
-				type: Sequelize.UUID,
-				allowNull: false
-			},
-			description: {
-				type: Sequelize.TEXT,
-				allowNull: false
-			},
-			file: {
-				type: Sequelize.STRING,
-				allowNull: true
-			},
-			file_type: {
-				type: Sequelize.STRING,
-				allowNull: true
-			},
-			priority: {
-				type: Sequelize.INTEGER
-			},
-			views: {
 				type: Sequelize.INTEGER,
-				defaultValue: 0
+				primaryKey: true,
+				autoIncrement: true,
+				allowNull: false
+			},
+			url: {
+				type: Sequelize.STRING,
+				unique: true,
+				allowNull: false
+			},
+			bucket_name: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
+			user_id: {
+				type: Sequelize.UUID,
+				allowNull: true
+			},
+			file_key: {
+				type: Sequelize.STRING,
+				unique: true,
+				allowNull: false
+			},
+			size: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
+			mim_type: {
+				type: Sequelize.STRING,
+				allowNull: false
 			},
 			created_at: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: Sequelize.fn('NOW')
+				defaultValue: Sequelize.NOW
 			},
 			updated_at: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: Sequelize.fn('NOW')
+				defaultValue: Sequelize.NOW
 			}
 		});
 	},
 
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.dropTable('news');
+		await queryInterface.dropTable('files');
 	}
 };

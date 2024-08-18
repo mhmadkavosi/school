@@ -7,6 +7,8 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { NewsUpdate } from '../methods/news/news_update';
 import { NewsInfo } from '../methods/news/news_info';
 import { NewsDestroy } from '../methods/news/news_destroy';
+import { remove_file } from '../../../lib/file_upload/aws/remove';
+import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -56,6 +58,7 @@ export const update = async (req: Request, res: Response) => {
 			news_category_id: req.body.news_category_id,
 			description: req.body.description,
 			file: req.body.file,
+			file_type: req.body.file_type,
 			priority: req.body.priority
 		},
 		{
@@ -65,6 +68,7 @@ export const update = async (req: Request, res: Response) => {
 			news_category_id: ['string'],
 			description: ['string'],
 			file: ['string'],
+			file_type: ['string'],
 			priority: ['numeric']
 		}
 	);
@@ -80,6 +84,7 @@ export const update = async (req: Request, res: Response) => {
 		req.body.news_category_id,
 		req.body.description,
 		req.body.file,
+		req.body.file_type,
 		req.body.priority
 	);
 	return ApiRes(res, {
@@ -178,5 +183,59 @@ export const destroy = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const update_file = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			news_id: req.body.news_id,
+			file: req.body.file,
+			file_type: req.body.file_type
+		},
+		{
+			news_id: ['required', 'string'],
+			file: ['string', 'required'],
+			file_type: ['string', 'required']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const update_is_active = await new NewsUpdate().update_add_file(
+		req.body.news_id,
+		req.body.file,
+		req.body.file_type
+	);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};
+
+export const delete_file = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			news_id: req.body.news_id
+		},
+		{
+			news_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const original_data = await new NewsInfo().get_info_by_id(req.body.news_id);
+
+	remove_file(original_data.data.file);
+	await new FileDestroy().destroy_for_admin(original_data.data.file);
+	const update_is_active = await new NewsUpdate().remove_file(req.body.news_id);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };

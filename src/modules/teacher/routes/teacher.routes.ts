@@ -29,6 +29,11 @@ TeacherRouter.put(
 	TeacherAuthMiddleware,
 	TeacherController.update_profile_picture
 );
+TeacherRouter.delete(
+	`${route_prefix}/profile-picture`,
+	TeacherAuthMiddleware,
+	TeacherController.delete_profile_picture
+);
 TeacherRouter.put(`${route_prefix}/details`, TeacherAuthMiddleware, TeacherController.update_details);
 TeacherRouter.put(`${route_prefix}/password`, TeacherAuthMiddleware, TeacherController.update_password);
 

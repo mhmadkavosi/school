@@ -11,8 +11,7 @@ export class StudentUpdate {
 		phone: string,
 		national_code: string,
 		student_status: string,
-		birth_date: Date,
-		profile_picture: string
+		birth_date: Date
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await StudentModel.update(
@@ -24,8 +23,7 @@ export class StudentUpdate {
 					phone,
 					national_code,
 					student_status,
-					birth_date,
-					profile_picture
+					birth_date
 				},
 				{
 					where: {
@@ -39,6 +37,38 @@ export class StudentUpdate {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentUpdate update', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async update_profile_picture(id: string, profile_picture: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentModel.update({ profile_picture }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentUpdate update_profile_picture', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async delete_profile_picture(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentModel.update({ profile_picture: null }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentUpdate delete_profile_picture', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

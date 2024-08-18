@@ -26,6 +26,10 @@ module.exports = {
 			file: {
 				type: Sequelize.STRING
 			},
+			file_type: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			max_score: {
 				type: Sequelize.INTEGER
 			},

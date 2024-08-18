@@ -24,7 +24,12 @@ const HomeWorkModel = DB.instance().define(
 			type: DataTypes.STRING
 		},
 		file: {
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		file_type: {
+			type: DataTypes.STRING,
+			allowNull: true
 		},
 		max_score: {
 			type: DataTypes.INTEGER

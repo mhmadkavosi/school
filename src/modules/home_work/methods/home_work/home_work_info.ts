@@ -38,4 +38,21 @@ export class HomeWorkInfo {
 			};
 		}
 	}
+
+	async get_info_by_id(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await HomeWorkModel.findOne({ where: { id } });
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in HomeWorkInfo get_info_by_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

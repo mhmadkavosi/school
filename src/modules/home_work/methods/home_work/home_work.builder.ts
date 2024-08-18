@@ -6,6 +6,7 @@ export class HomeWorkBuilder {
 	private end_date!: Date;
 	private description!: string;
 	private file!: string;
+	private file_type!: string;
 	private max_score!: number;
 	private min_score!: number;
 	private teacher_id!: string;
@@ -53,6 +54,15 @@ export class HomeWorkBuilder {
 
 	public getFile(): string {
 		return this.file;
+	}
+
+	public setFileType(file_type: string): this {
+		this.file_type = file_type;
+		return this;
+	}
+
+	public getFileType(): string {
+		return this.file_type;
 	}
 
 	public setMaxScore(max_score: number): this {

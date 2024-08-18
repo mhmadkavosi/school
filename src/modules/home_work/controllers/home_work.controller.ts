@@ -16,6 +16,8 @@ import { HomeWorkDestroy } from '../methods/home_work/home_work_destroy';
 import { StudentHomeWorDestroy } from '../methods/student_home_work/student_home_work_destroy';
 import { ClassHomeWorkDestroy } from '../methods/class_home_work/class_home_work_destroy';
 import { HomeWorkInfo } from '../methods/home_work/home_work_info';
+import { remove_file } from '../../../lib/file_upload/aws/remove';
+import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -25,6 +27,7 @@ export const create = async (req: Request, res: Response) => {
 			end_date: req.body.end_date,
 			description: req.body.description,
 			file: req.body.file,
+			file_type: req.body.file_type,
 			max_score: req.body.max_score,
 			min_score: req.body.min_score,
 			classes_id: req.body.classes_id,
@@ -36,6 +39,7 @@ export const create = async (req: Request, res: Response) => {
 			end_date: ['string'],
 			description: ['string'],
 			file: ['string'],
+			file_type: ['string'],
 			max_score: ['numeric'],
 			min_score: ['numeric'],
 			classes_id: ['array'],
@@ -53,6 +57,7 @@ export const create = async (req: Request, res: Response) => {
 		.setEndDate(req.body.end_date)
 		.setDescription(req.body.description)
 		.setFile(req.body.file)
+		.setFileType(req.body.file_type)
 		.setMaxScore(req.body.max_score)
 		.setMinScore(req.body.min_score)
 		.setTeacherId(req.user_id)
@@ -298,5 +303,59 @@ export const delete_home_work = async (req: Request, res: Response) => {
 
 	return ApiRes(res, {
 		status: HttpStatus.OK
+	});
+};
+
+export const update_file = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			home_work_id: req.body.home_work_id,
+			file: req.body.file,
+			file_type: req.body.file_type
+		},
+		{
+			home_work_id: ['required', 'string'],
+			file: ['string', 'required'],
+			file_type: ['string', 'required']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const update_is_active = await new HomeWorkUpdate().update_add_file(
+		req.body.home_work_id,
+		req.body.file,
+		req.body.file_type
+	);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};
+
+export const delete_file = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			home_work_id: req.body.home_work_id
+		},
+		{
+			home_work_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const original_data = await new HomeWorkInfo().get_info_by_id(req.body.home_work_id);
+
+	remove_file(original_data.data.file);
+	await new FileDestroy().destroy_for_admin(original_data.data.file);
+	const update_is_active = await new HomeWorkUpdate().remove_file(req.body.home_work_id);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };

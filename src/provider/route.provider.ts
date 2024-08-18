@@ -11,6 +11,7 @@ import HomeWorkRouter from '../modules/home_work/routes/home_work.routes';
 import StudentHomeWorkRouter from '../modules/home_work/routes/student_home_work.routes';
 import NewsCategoryRouter from '../modules/news/routes/news_category.routes';
 import NewsRouter from '../modules/news/routes/news.routes';
+import FileRouter from '../modules/file-upload/routers/file.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -38,4 +39,7 @@ export function RegisterRoutes(app: Application) {
 	// News
 	app.use(routePrefix, NewsCategoryRouter);
 	app.use(routePrefix, NewsRouter);
+
+	// File Upload
+	app.use(routePrefix, FileRouter);
 }

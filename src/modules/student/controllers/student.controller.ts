@@ -9,6 +9,8 @@ import { StudentInfo } from '../methods/student_info';
 import { StudentDestroy } from '../methods/student_destroy';
 import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work/student_home_work_destroy';
 import { StudentUpdate } from '../methods/student_update';
+import { remove_file } from '../../../lib/file_upload/aws/remove';
+import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -94,8 +96,7 @@ export const update = async (req: Request, res: Response) => {
 			phone: req.body.phone,
 			national_code: req.body.national_code,
 			student_status: req.body.student_status,
-			birth_date: req.body.birth_date,
-			profile_picture: req.body.profile_picture
+			birth_date: req.body.birth_date
 		},
 		{
 			student_id: ['required', 'string'],
@@ -106,8 +107,7 @@ export const update = async (req: Request, res: Response) => {
 			phone: ['string'],
 			national_code: ['string'],
 			student_status: ['string'],
-			birth_date: ['date'],
-			profile_picture: ['string']
+			birth_date: ['date']
 		}
 	);
 
@@ -124,8 +124,7 @@ export const update = async (req: Request, res: Response) => {
 		req.body.phone,
 		req.body.national_code,
 		req.body.student_status,
-		req.body.birth_date,
-		req.body.profile_picture
+		req.body.birth_date
 	);
 
 	return ApiRes(res, {
@@ -191,5 +190,56 @@ export const delete_student = async (req: Request, res: Response) => {
 
 	return ApiRes(res, {
 		status: HttpStatus.OK
+	});
+};
+
+export const update_profile_picture = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			student_id: req.body.student_id,
+			profile_picture: req.body.profile_picture
+		},
+		{
+			student_id: ['required', 'string'],
+			profile_picture: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentUpdate().update_profile_picture(
+		req.body.student_id,
+		req.body.profile_picture
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};
+
+export const delete_profile_picture = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			student_id: req.body.student_id
+		},
+		{
+			student_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const teacher = await new StudentInfo().get_by_id(req.body.student_id);
+
+	remove_file(teacher.data.file);
+	await new FileDestroy().destroy_for_admin(teacher.data.file);
+	const result = await new StudentUpdate().delete_profile_picture(req.body.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };

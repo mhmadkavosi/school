@@ -36,6 +36,10 @@ HomeWorkRouter.get(
 	HomeWorkController.get_all_student_of_home_work
 );
 
+HomeWorkRouter.put(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.update_file);
+
+HomeWorkRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.delete_file);
+
 HomeWorkRouter.put(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.update);
 HomeWorkRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.delete_home_work);
 

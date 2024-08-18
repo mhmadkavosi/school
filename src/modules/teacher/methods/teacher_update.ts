@@ -66,6 +66,22 @@ export class TeacherUpdate {
 		}
 	}
 
+	async delete_profile_picture(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await TeacherModel.update({ profile_picture: null }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in TeacherUpdate delete_profile_picture', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
 	async update_details(
 		id: string,
 		name: string,

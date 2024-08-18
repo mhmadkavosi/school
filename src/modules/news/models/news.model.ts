@@ -31,6 +31,10 @@ const NewsModel = DB.instance().define(
 			type: DataTypes.STRING,
 			allowNull: true
 		},
+		file_type: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		priority: {
 			type: DataTypes.INTEGER
 		},
