@@ -12,6 +12,8 @@ import StudentHomeWorkRouter from '../modules/home_work/routes/student_home_work
 import NewsCategoryRouter from '../modules/news/routes/news_category.routes';
 import NewsRouter from '../modules/news/routes/news.routes';
 import FileRouter from '../modules/file-upload/routers/file.routes';
+import SectionRouter from '../modules/school/routes/section.routes';
+import StateRouter from '../modules/school/routes/state.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -28,6 +30,8 @@ export function RegisterRoutes(app: Application) {
 
 	// school
 	app.use(routePrefix, SchoolRouter);
+	app.use(routePrefix, SectionRouter);
+	app.use(routePrefix, StateRouter);
 
 	// student
 	app.use(routePrefix, StudentRouter);

@@ -30,11 +30,15 @@ export const create_school = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			name: req.body.name,
-			sex: req.body.sex
+			sex: req.body.sex,
+			section_id: req.body.section_id,
+			state_id: req.body.state_id
 		},
 		{
 			name: ['required', 'string'],
-			sex: ['required', 'string', { in: Object.keys(SexEnum) }]
+			sex: ['required', 'string', { in: Object.keys(SexEnum) }],
+			section_id: ['required', 'string'],
+			state_id: ['required', 'string']
 		}
 	);
 
@@ -42,7 +46,12 @@ export const create_school = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new SchoolCreate().create(req.body.name, req.body.sex);
+	const result = await new SchoolCreate().create(
+		req.body.name,
+		req.body.sex,
+		req.body.section_id,
+		req.body.state_id
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
@@ -55,12 +64,16 @@ export const update_school = async (req: Request, res: Response) => {
 		{
 			school_id: req.body.school_id,
 			name: req.body.name,
-			sex: req.body.sex
+			sex: req.body.sex,
+			section_id: req.body.section_id,
+			state_id: req.body.state_id
 		},
 		{
 			school_id: ['required', 'string'],
 			name: ['string'],
-			sex: ['string', { in: Object.keys(SexEnum) }]
+			sex: ['string', { in: Object.keys(SexEnum) }],
+			section_id: ['string'],
+			state_id: ['string']
 		}
 	);
 
@@ -68,7 +81,13 @@ export const update_school = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new SchoolUpdate().update(req.body.school_id, req.body.name, req.body.sex);
+	const result = await new SchoolUpdate().update(
+		req.body.school_id,
+		req.body.name,
+		req.body.sex,
+		req.body.section_id,
+		req.body.state_id
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND

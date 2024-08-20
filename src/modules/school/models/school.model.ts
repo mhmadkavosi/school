@@ -1,6 +1,8 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
 import { SexEnum } from './enums/sex.enum';
+import SectionModel from './section.model';
+import StateModel from './state.model';
 
 const SchoolModel = DB.instance().define(
 	'school',
@@ -17,6 +19,14 @@ const SchoolModel = DB.instance().define(
 		sex: {
 			type: DataTypes.ENUM(SexEnum.f, SexEnum.m)
 		},
+		section_id: {
+			type: DataTypes.UUID,
+			allowNull: true
+		},
+		state_id: {
+			type: DataTypes.UUID,
+			allowNull: true
+		},
 		is_active: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true
@@ -26,5 +36,15 @@ const SchoolModel = DB.instance().define(
 		tableName: 'schools'
 	}
 );
+
+SchoolModel.hasOne(SectionModel, {
+	sourceKey: 'section_id',
+	foreignKey: 'id'
+});
+
+SchoolModel.hasOne(StateModel, {
+	sourceKey: 'state_id',
+	foreignKey: 'id'
+});
 
 export default SchoolModel;
