@@ -146,14 +146,12 @@ export const create_class = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			school_id: req.body.school_id,
-			major_id: req.body.major_id,
 			class_level_id: req.body.class_level_id,
 			count: req.body.count,
 			name: req.body.name
 		},
 		{
 			school_id: ['required', 'string'],
-			major_id: ['required', 'string'],
 			class_level_id: ['required', 'string'],
 			count: ['required', 'numeric'],
 			name: ['required', 'string']
@@ -165,7 +163,6 @@ export const create_class = async (req: Request, res: Response) => {
 	}
 
 	const link = await new ClassInfo().get_link();
-	console.log(req.user_id);
 	if (!link) {
 		return new InternalServerError(res);
 	}
@@ -174,7 +171,6 @@ export const create_class = async (req: Request, res: Response) => {
 		.setClassLevelId(req.body.class_level_id)
 		.setCount(req.body.count)
 		.setLink(link)
-		.setMajorId(req.body.major_id)
 		.setSchoolId(req.body.school_id)
 		.setTeacherId(req.user_id)
 		.setName(req.body.name)

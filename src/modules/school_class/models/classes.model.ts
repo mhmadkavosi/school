@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
-import MajorModel from './major.model';
 import ClassLevelModel from './class_level.model';
 import SchoolModel from '../../school/models/school.model';
 import TeacherModel from '../../teacher/models/teacher.model';
@@ -18,10 +17,6 @@ const ClassesModel = DB.instance().define(
 			allowNull: false
 		},
 		school_id: {
-			type: DataTypes.UUID,
-			allowNull: false
-		},
-		major_id: {
 			type: DataTypes.UUID,
 			allowNull: false
 		},
@@ -51,11 +46,6 @@ const ClassesModel = DB.instance().define(
 ClassesModel.hasOne(SchoolModel, {
 	foreignKey: 'id',
 	sourceKey: 'school_id'
-});
-
-ClassesModel.hasOne(MajorModel, {
-	foreignKey: 'id',
-	sourceKey: 'major_id'
 });
 
 ClassesModel.hasOne(ClassLevelModel, {

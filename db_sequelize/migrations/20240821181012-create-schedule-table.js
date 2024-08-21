@@ -3,51 +3,61 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable('classes', {
+		await queryInterface.createTable('schedules', {
 			id: {
 				type: Sequelize.UUID,
 				primaryKey: true,
-				defaultValue: Sequelize.UUIDV4,
+				defaultValue: Sequelize.UUIDV4
+			},
+			title: {
+				type: Sequelize.STRING,
+				allowNull: false
+			},
+			event_date: {
+				type: Sequelize.DATE,
+				allowNull: false
+			},
+			event_start_hour: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
+			event_end_hour: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
+			event_description: {
+				type: Sequelize.TEXT,
+				allowNull: true
+			},
+			event_category_id: {
+				type: Sequelize.UUID,
+				allowNull: true,
+				references: {
+					model: 'event_categories',
+					key: 'id'
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'SET NULL'
+			},
+			event_type: {
+				type: Sequelize.ENUM('private', 'public'),
 				allowNull: false
 			},
 			school_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
 				references: {
-					model: 'schools', // references the table name
+					model: 'schools',
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',
 				onDelete: 'CASCADE'
-			},
-			class_level_id: {
-				type: Sequelize.UUID,
-				allowNull: false,
-				references: {
-					model: 'class_levels', // references the table name
-					key: 'id'
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE'
-			},
-			count: {
-				type: Sequelize.INTEGER,
-				allowNull: false
-			},
-			link: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				unique: true
-			},
-			name: {
-				type: Sequelize.STRING,
-				allowNull: false
 			},
 			teacher_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
 				references: {
-					model: 'teachers', // Assuming there's a `teachers` table
+					model: 'teachers',
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',
@@ -56,17 +66,17 @@ module.exports = {
 			created_at: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+				defaultValue: Sequelize.fn('NOW')
 			},
 			updated_at: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+				defaultValue: Sequelize.fn('NOW')
 			}
 		});
 	},
 
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.dropTable('classes');
+		await queryInterface.dropTable('schedules');
 	}
 };

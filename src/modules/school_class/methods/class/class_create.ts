@@ -8,7 +8,6 @@ export class ClassCreate {
 			const result = await ClassesModel.create(
 				{
 					school_id: builder.getSchoolId(),
-					major_id: builder.getMajorId(),
 					class_level_id: builder.getClassLevelId(),
 					count: builder.getCount(),
 					link: builder.getLink(),

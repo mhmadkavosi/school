@@ -21,7 +21,7 @@ export class StateInfo {
 
 	async get_info_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await StateModel.findAll({ where: { id } });
+			const result = await StateModel.findOne({ where: { id } });
 
 			return {
 				is_success: !!result,

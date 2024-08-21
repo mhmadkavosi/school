@@ -1,17 +1,17 @@
 import { AppLogger } from '../../../../lib/logger/Logger';
-import SectionModel from '../../models/section.model';
+import EventCategoryModel from '../../models/event_category.model';
 
-export class SectionInfo {
+export class EventCategoryInfo {
 	async get_all(): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await SectionModel.findAll({ where: { is_active: true } });
+			const result = await EventCategoryModel.findAll({ where: { is_active: true } });
 
 			return {
 				is_success: true,
 				data: result
 			};
 		} catch (error) {
-			AppLogger.error('Error in SectionInfo get_all', error);
+			AppLogger.error('Error in EventCategoryInfo get_all', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
@@ -21,14 +21,14 @@ export class SectionInfo {
 
 	async get_info_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await SectionModel.findOne({ where: { id } });
+			const result = await EventCategoryModel.findOne({ where: { id } });
 
 			return {
 				is_success: !!result,
 				data: result
 			};
 		} catch (error) {
-			AppLogger.error('Error in SectionInfo get_info_by_id', error);
+			AppLogger.error('Error in EventCategoryInfo get_info_by_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

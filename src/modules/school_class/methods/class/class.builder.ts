@@ -2,7 +2,6 @@ import { ClassCreate } from './class_create';
 
 export class ClassBuilder {
 	private school_id!: string;
-	private major_id!: string;
 	private class_level_id!: string;
 	private count!: number;
 	private link!: string;
@@ -11,11 +10,6 @@ export class ClassBuilder {
 
 	public setSchoolId(schoolId: string): this {
 		this.school_id = schoolId;
-		return this;
-	}
-
-	public setMajorId(majorId: string): this {
-		this.major_id = majorId;
 		return this;
 	}
 
@@ -46,10 +40,6 @@ export class ClassBuilder {
 
 	public getSchoolId(): string {
 		return this.school_id;
-	}
-
-	public getMajorId(): string {
-		return this.major_id;
 	}
 
 	public getClassLevelId(): string {

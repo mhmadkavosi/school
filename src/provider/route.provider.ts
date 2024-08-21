@@ -14,6 +14,8 @@ import NewsRouter from '../modules/news/routes/news.routes';
 import FileRouter from '../modules/file-upload/routers/file.routes';
 import SectionRouter from '../modules/school/routes/section.routes';
 import StateRouter from '../modules/school/routes/state.routes';
+import EventCategoryRouter from '../modules/schedule/routes/event_category.routes';
+import ScheduleRouter from '../modules/schedule/routes/schedule.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -46,4 +48,8 @@ export function RegisterRoutes(app: Application) {
 
 	// File Upload
 	app.use(routePrefix, FileRouter);
+
+	// Schedule
+	app.use(routePrefix, EventCategoryRouter);
+	app.use(routePrefix, ScheduleRouter);
 }
