@@ -13,6 +13,11 @@ const EventCategoryModel = DB.instance().define(
 			type: DataTypes.STRING,
 			allowNull: false
 		},
+		color: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+
 		is_active: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true

@@ -13,6 +13,11 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false
 			},
+
+			color: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			is_active: {
 				type: Sequelize.BOOLEAN,
 				defaultValue: true

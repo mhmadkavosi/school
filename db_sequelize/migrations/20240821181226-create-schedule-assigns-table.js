@@ -14,7 +14,7 @@ module.exports = {
 				allowNull: false
 			},
 			assign_to_target: {
-				type: Sequelize.ENUM('class', 'student'),
+				type: Sequelize.ENUM('class', 'student', 'teacher'),
 				allowNull: false
 			},
 			schedule_id: {

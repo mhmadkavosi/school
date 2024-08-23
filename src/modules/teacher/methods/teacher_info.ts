@@ -52,4 +52,21 @@ export class TeacherInfo {
 			};
 		}
 	}
+
+	async get_all_by_school_id(school_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await TeacherModel.findAll({ where: { school_id } });
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in TeacherInfo get_all_by_school_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

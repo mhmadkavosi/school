@@ -1,4 +1,5 @@
 export enum AssignToTargetEnum {
 	class = 'class',
-	student = 'student'
+	student = 'student',
+	teacher = 'teacher'
 }

@@ -26,10 +26,12 @@ export const get_info_by_id = async (req: Request, res: Response) => {
 export const create_event_category = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			name: req.body.name
+			name: req.body.name,
+			color: req.body.color
 		},
 		{
-			name: ['required', 'string']
+			name: ['required', 'string'],
+			color: ['string']
 		}
 	);
 
@@ -37,7 +39,7 @@ export const create_event_category = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new EventCategoryCreate().create(req.body.name);
+	const result = await new EventCategoryCreate().create(req.body.name, req.body.color);
 
 	return ApiRes(res, {
 		status: result ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

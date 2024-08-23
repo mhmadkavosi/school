@@ -7,6 +7,7 @@ const TeacherRouter: Router = Router();
 const route_prefix = '/teacher';
 
 TeacherRouter.get(`${route_prefix}/me`, TeacherAuthMiddleware, TeacherController.get_by_id);
+TeacherRouter.get(`${route_prefix}/school/:school_id/all`, TeacherController.get_all_by_school_id);
 
 TeacherRouter.post(
 	`${route_prefix}/request/phone-number`,

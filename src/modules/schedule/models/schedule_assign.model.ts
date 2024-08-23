@@ -15,7 +15,7 @@ const ScheduleAssignModel = DB.instance().define(
 			allowNull: false
 		},
 		assign_to_target: {
-			type: DataTypes.ENUM(AssignToTargetEnum.class, AssignToTargetEnum.student),
+			type: DataTypes.ENUM(AssignToTargetEnum.class, AssignToTargetEnum.student, AssignToTargetEnum.teacher),
 			allowNull: false
 		},
 		schedule_id: {
