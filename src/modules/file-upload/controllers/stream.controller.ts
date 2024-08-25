@@ -10,7 +10,7 @@ export const stream = async (req: any, res: Response) => {
 	try {
 		new FileCrate()
 			.save(
-				BaseConfig.BUCKET_DOMAIN_URL + '/' + req.file.key,
+				BaseConfig.BUCKET_DOMAIN_URL + '/file/' + req.file.key,
 				req.file.bucket,
 				null,
 				req.file.key,
@@ -21,7 +21,7 @@ export const stream = async (req: any, res: Response) => {
 				return ApiRes(res, {
 					status: HttpStatus.OK,
 					data: {
-						path: BaseConfig.BUCKET_DOMAIN_URL + '/' + req.file.key,
+						path: BaseConfig.BUCKET_DOMAIN_URL + '/file/' + req.file.key,
 						size: req.file.size,
 						mime_type: req.file.mimetype,
 						content_type: req.file.contentType
