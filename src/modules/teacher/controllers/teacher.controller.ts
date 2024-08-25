@@ -215,8 +215,8 @@ export const update_profile_picture = async (req: Request, res: Response) => {
 export const delete_profile_picture = async (req: Request, res: Response) => {
 	const teacher = await new TeacherInfo().get_by_id(req.user_id);
 
-	remove_file(teacher.data.file);
-	await new FileDestroy().destroy_for_admin(teacher.data.file);
+	remove_file(teacher.data.profile_picture);
+	await new FileDestroy().destroy_for_admin(teacher.data.profile_picture);
 	const result = await new TeacherUpdate().delete_profile_picture(req.user_id);
 
 	return ApiRes(res, {

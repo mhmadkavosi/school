@@ -23,21 +23,21 @@ export class ScheduleInfo {
 
 			if (start_date && end_date) {
 				match.push({
-					created_at: {
+					event_date: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
 			} else if (start_date) {
 				match.push({
-					created_at: {
+					event_date: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
 			} else if (end_date) {
 				match.push({
-					created_at: {
+					event_date: {
 						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
 					}
