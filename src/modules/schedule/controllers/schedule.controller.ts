@@ -107,7 +107,7 @@ export const update = async (req: Request, res: Response) => {
 			event_type: req.body.event_type
 		},
 		{
-			schedule_id: ['required', 'id'],
+			schedule_id: ['required', 'string'],
 			title: ['string'],
 			event_date: ['date'],
 			event_start_hour: ['string'],

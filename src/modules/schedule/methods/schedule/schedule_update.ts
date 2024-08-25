@@ -25,7 +25,7 @@ export class ScheduleUpdate {
 				},
 				{
 					where: {
-						schedule_id
+						id: schedule_id
 					}
 				}
 			);
