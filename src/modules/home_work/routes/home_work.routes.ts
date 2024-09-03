@@ -36,6 +36,12 @@ HomeWorkRouter.get(
 	HomeWorkController.get_all_student_of_home_work
 );
 
+HomeWorkRouter.get(
+	`${route_prefix}/student/:student_id/all`,
+	TeacherAuthMiddleware,
+	HomeWorkController.get_all_by_student_id
+);
+
 HomeWorkRouter.put(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.update_file);
 
 HomeWorkRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.delete_file);

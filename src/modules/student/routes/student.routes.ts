@@ -13,6 +13,8 @@ StudentRouter.put(`${route_prefix}/profile-picture`, StudentController.update_pr
 StudentRouter.delete(`${route_prefix}/profile-picture`, StudentController.delete_profile_picture);
 
 StudentRouter.get(`${route_prefix}/class/all`, StudentController.get_all_student_of_class);
+StudentRouter.get(`${route_prefix}/class/search`, StudentController.get_all_student_of_class_with_search);
+
 StudentRouter.get(`${route_prefix}/:student_id/info`, StudentController.get_info);
 
 export default StudentRouter;

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { AppLogger } from '../../../lib/logger/Logger';
 import { paginate } from '../../../utils/paginate.utility';
 import SchoolModel from '../../school/models/school.model';
@@ -15,6 +16,42 @@ export class StudentInfo {
 
 			const result = await StudentModel.findAndCountAll({
 				where: { class_id },
+				distinct: true,
+				limit: limit,
+				offset: skip,
+				order: [['created_at', 'DESC']]
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_all_student_of_class_with_pagination', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_student_of_class_with_search(
+		page: number,
+		limit: number,
+		class_id: string,
+		search: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+			const attributes = ['name', 'family', 'email', 'phone', 'national_code'];
+			let conditions: any = [];
+
+			conditions = attributes.map((attribute) => ({
+				[attribute]: { [Op.like]: `%${search}%` }
+			}));
+
+			const result = await StudentModel.findAndCountAll({
+				where: { class_id, [Op.or]: conditions },
 				distinct: true,
 				limit: limit,
 				offset: skip,

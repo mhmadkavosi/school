@@ -3,6 +3,7 @@ import { AppLogger } from '../../../../lib/logger/Logger';
 import StudentHomeWorkModel from '../../models/student_home_work.model';
 import StudentModel from '../../../student/models/student.model';
 import { paginate } from '../../../../utils/paginate.utility';
+import HomeWorkModel from '../../models/home_work.model';
 
 export class StudentHomeWrkInfo {
 	async get_info_by_student_id_home_work_id(
@@ -18,6 +19,26 @@ export class StudentHomeWrkInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentHomeWrkInfo get_info_by_student_id_home_work_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_by_student_id(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentHomeWorkModel.findAll({
+				where: { student_id },
+				include: [{ model: HomeWorkModel }]
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_all_by_student_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

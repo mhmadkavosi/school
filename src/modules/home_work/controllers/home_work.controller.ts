@@ -283,6 +283,15 @@ export const get_count_of_home_work = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_all_by_student_id = async (req: Request, res: Response) => {
+	const result = await new StudentHomeWrkInfo().get_all_by_student_id(req.params.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const delete_home_work = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
