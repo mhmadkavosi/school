@@ -16,6 +16,9 @@ import SectionRouter from '../modules/school/routes/section.routes';
 import StateRouter from '../modules/school/routes/state.routes';
 import EventCategoryRouter from '../modules/schedule/routes/event_category.routes';
 import ScheduleRouter from '../modules/schedule/routes/schedule.routes';
+import AttendanceRouter from '../modules/attendance/routes/attendance.routes';
+import AttendanceReasonRouter from '../modules/attendance/routes/attendance_reason.routes';
+import ExamRouter from '../modules/exam/routes/exam.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -52,4 +55,11 @@ export function RegisterRoutes(app: Application) {
 	// Schedule
 	app.use(routePrefix, EventCategoryRouter);
 	app.use(routePrefix, ScheduleRouter);
+
+	// Attendance
+	app.use(routePrefix, AttendanceRouter);
+	app.use(routePrefix, AttendanceReasonRouter);
+
+	// Exam
+	app.use(routePrefix, ExamRouter);
 }
