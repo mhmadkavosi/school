@@ -8,55 +8,6 @@ import StudentExamModel from '../../models/student_exam.model';
 import StudentModel from '../../../student/models/student.model';
 
 export class ExamClassInfo {
-	async get_count_of_exam_of_date(
-		start_date: string,
-		end_date: string,
-		teacher_id: string
-	): Promise<RestApi.ObjectResInterface> {
-		try {
-			const match: any = [];
-
-			if (start_date && end_date) {
-				match.push({
-					date: {
-						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
-						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
-					}
-				});
-			} else if (start_date) {
-				match.push({
-					date: {
-						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
-						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
-					}
-				});
-			} else if (end_date) {
-				match.push({
-					date: {
-						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),
-						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
-					}
-				});
-			}
-
-			const result = await ExamClassModel.count({
-				where: { [Op.and]: match },
-				include: [{ model: ExamModel, where: { teacher_id } }]
-			});
-
-			return {
-				is_success: true,
-				data: result
-			};
-		} catch (error) {
-			AppLogger.error('Error in ExamClassInfo get_count_of_exam_of_date', error);
-			return {
-				is_success: false,
-				msg: 'Internal Server Error'
-			};
-		}
-	}
-
 	async get_all(
 		page: number,
 		limit: number,
@@ -128,15 +79,17 @@ export class ExamClassInfo {
 				},
 				include: [
 					{
-						model: ExamModel
-					},
-					{
-						model: StudentExamModel,
-						attributes: ['id', 'points'],
+						model: ExamModel,
 						include: [
 							{
-								model: StudentModel,
-								attributes: ['id', 'name', 'family']
+								model: StudentExamModel,
+								attributes: ['id', 'points'],
+								include: [
+									{
+										model: StudentModel,
+										attributes: ['id', 'name', 'family']
+									}
+								]
 							}
 						]
 					}

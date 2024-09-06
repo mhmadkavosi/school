@@ -138,7 +138,7 @@ export const get_all = async (req: Request, res: Response) => {
 		{
 			page: ['required', 'numeric'],
 			limit: ['required', 'numeric'],
-			class_id: ['required', 'numeric'],
+			class_id: ['required', 'string'],
 			start_date: ['string'],
 			end_date: ['string'],
 			attendance_type: ['required', 'string', { in: Object.keys(AttendanceTypeEnum) }]
@@ -198,7 +198,7 @@ export const get_by_attendance_type = async (req: Request, res: Response) => {
 
 	const result = await new AttendanceInfo().get_by_attendance_type(
 		<string>req.query.class_id,
-		<string>req.query.attendance_id
+		<string>req.query.attendance_type
 	);
 
 	return ApiRes(res, {

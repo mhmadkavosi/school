@@ -21,7 +21,7 @@ export class AttendanceReasonInfo {
 
 	async get_info_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await AttendanceReasonModel.findAll({ where: { id } });
+			const result = await AttendanceReasonModel.findOne({ where: { id } });
 
 			return {
 				is_success: !!result,

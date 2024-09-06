@@ -16,6 +16,7 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { ExamClassInfo } from '../methods/exam_class/exam_class_info';
 import { StudentExamInfo } from '../methods/student_exam/student_exam_info';
 import { StudentExamUpdate } from '../methods/student_exam/student_exam_update';
+import { ExamInfo } from '../methods/exam/exam_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -53,6 +54,7 @@ export const create = async (req: Request, res: Response) => {
 		.setDescription(req.body.description)
 		.setType(req.body.type)
 		.setTeacherId(req.user_id)
+		.setColor(req.body.color)
 		.build();
 
 	if (!exam_create.is_success) {
@@ -153,12 +155,12 @@ export const update_exam = async (req: Request, res: Response) => {
 export const get_count_of_exams = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			start_hour: req.query.start_hour,
-			end_hour: req.query.end_hour
+			start_date: req.query.start_date,
+			end_date: req.query.end_date
 		},
 		{
-			start_hour: ['required', 'string'],
-			end_hour: ['required', 'string']
+			start_date: ['required', 'string'],
+			end_date: ['required', 'string']
 		}
 	);
 
@@ -166,7 +168,7 @@ export const get_count_of_exams = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new ExamClassInfo().get_count_of_exam_of_date(
+	const result = await new ExamInfo().get_count_of_exam_of_date(
 		<string>req.query.start_date,
 		<string>req.query.end_date,
 		req.user_id
@@ -184,15 +186,15 @@ export const get_all = async (req: Request, res: Response) => {
 			page: req.query.page,
 			limit: req.query.limit,
 			class_id: req.query.class_id,
-			start_hour: req.query.start_hour,
-			end_hour: req.query.end_hour
+			start_date: req.query.start_date,
+			end_date: req.query.end_date
 		},
 		{
 			page: ['required', 'numeric'],
 			limit: ['required', 'numeric'],
 			class_id: ['required', 'string'],
-			start_hour: ['required', 'string'],
-			end_hour: ['required', 'string']
+			start_date: ['string'],
+			end_date: ['string']
 		}
 	);
 
