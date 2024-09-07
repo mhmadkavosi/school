@@ -19,6 +19,7 @@ import ScheduleRouter from '../modules/schedule/routes/schedule.routes';
 import AttendanceRouter from '../modules/attendance/routes/attendance.routes';
 import AttendanceReasonRouter from '../modules/attendance/routes/attendance_reason.routes';
 import ExamRouter from '../modules/exam/routes/exam.routes';
+import ClassTimingRouter from '../modules/school_class/routes/class_timing.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -32,6 +33,7 @@ export function RegisterRoutes(app: Application) {
 	app.use(routePrefix, ClassLevelRouter);
 	app.use(routePrefix, ClassRouter);
 	app.use(routePrefix, MajorRouter);
+	app.use(routePrefix, ClassTimingRouter);
 
 	// school
 	app.use(routePrefix, SchoolRouter);
