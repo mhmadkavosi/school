@@ -21,4 +21,4 @@ const LogReportSchema = new Schema(
 	},
 	{ timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
-export const LogReportModel = Mongo.instance().model('logs', LogReportSchema);
+// export const LogReportModel = Mongo.instance().model('logs', LogReportSchema);
