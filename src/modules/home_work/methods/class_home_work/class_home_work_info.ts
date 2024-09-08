@@ -39,6 +39,23 @@ export class ClassHomeWorkInfo {
 		}
 	}
 
+	async get_count_of_class_home_work(class_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await ClassHomeWorkModel.count({ where: { class_id } });
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in ClassHomeWorkInfo get_info', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
 	async get_home_work_of_teacher(teacher_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await ClassHomeWorkModel.findAll({

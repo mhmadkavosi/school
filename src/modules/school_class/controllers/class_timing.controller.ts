@@ -205,3 +205,34 @@ export const destroy = async (req: Request, res: Response) => {
 		status: result.is_success ? 204 : 500
 	});
 };
+
+export const get_class_time = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			class_id: req.query.class_id,
+			day: req.query.day
+		},
+		{
+			class_id: ['required', 'string'],
+			day: ['required', { in: Object.keys(WeekDays) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return ApiRes(res, {
+			status: 412,
+			msg: 'validation error',
+			data: validate.errors.all()
+		});
+	}
+
+	const result = await new ClassTimingInfo().get_class_time(
+		<string>req.query.class_id,
+		<string>req.query.day
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};

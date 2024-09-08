@@ -85,4 +85,18 @@ export class NewsInfo {
 			};
 		}
 	}
+
+	async get_counts(school_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await NewsModel.count({ where: { school_id } });
+
+			return { is_success: !!result, data: result };
+		} catch (error) {
+			AppLogger.error('Error in NewsInfo get_counts', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

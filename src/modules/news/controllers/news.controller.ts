@@ -9,6 +9,7 @@ import { NewsInfo } from '../methods/news/news_info';
 import { NewsDestroy } from '../methods/news/news_destroy';
 import { remove_file } from '../../../lib/file_upload/aws/remove';
 import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
+import { ClassInfo } from '../../school_class/methods/class/class_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -237,5 +238,18 @@ export const delete_file = async (req: Request, res: Response) => {
 
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};
+
+export const get_count_of_news = async (req: Request, res: Response) => {
+	const get_school_id = await new ClassInfo().get_by_id(req.params.class_id);
+	if (!get_school_id.is_success) {
+		return ApiRes(res, { status: HttpStatus.INTERNAL_SERVER_ERROR });
+	}
+	const result = await new NewsInfo().get_counts(get_school_id.data.school_id);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
 	});
 };

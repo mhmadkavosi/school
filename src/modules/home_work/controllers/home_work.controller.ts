@@ -368,3 +368,11 @@ export const delete_file = async (req: Request, res: Response) => {
 		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
+
+export const get_count_of_home_work_class = async (req: Request, res: Response) => {
+	const result = await new ClassHomeWorkInfo().get_count_of_class_home_work(req.params.class_id);
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};

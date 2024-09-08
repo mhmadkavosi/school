@@ -7,6 +7,13 @@ const HomeWorkRouter: Router = Router();
 const route_prefix = '/home-work';
 
 HomeWorkRouter.post(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.create);
+
+HomeWorkRouter.get(
+	`${route_prefix}/class/:class_id/count`,
+	TeacherAuthMiddleware,
+	HomeWorkController.get_count_of_home_work_class
+);
+
 HomeWorkRouter.post(
 	`${route_prefix}/update`,
 	TeacherAuthMiddleware,
