@@ -141,7 +141,7 @@ export const get_all = async (req: Request, res: Response) => {
 			class_id: ['required', 'string'],
 			start_date: ['string'],
 			end_date: ['string'],
-			attendance_type: ['required', 'string', { in: Object.keys(AttendanceTypeEnum) }]
+			attendance_type: ['string', { in: Object.keys(AttendanceTypeEnum) }]
 		}
 	);
 
