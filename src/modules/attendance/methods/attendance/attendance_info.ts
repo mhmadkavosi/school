@@ -12,11 +12,18 @@ export class AttendanceInfo {
 		class_id: string,
 		start_date: string,
 		end_date: string,
-		attendance_type: string
+		attendance_type: string,
+		student_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
 			const match: any = [{ class_id }];
+
+			if (!!student_id) {
+				match.push({
+					student_id
+				});
+			}
 
 			if (start_date && end_date) {
 				match.push({

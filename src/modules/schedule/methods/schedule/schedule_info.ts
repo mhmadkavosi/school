@@ -15,7 +15,8 @@ export class ScheduleInfo {
 		end_date: string,
 		event_type: string,
 		event_category_id: string,
-		class_id: string
+		class_id: string,
+		student_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
@@ -61,6 +62,12 @@ export class ScheduleInfo {
 				class_match.push({
 					assign_to_target: AssignToTargetEnum.class,
 					assign_to: class_id
+				});
+			}
+			if (!!student_id) {
+				class_match.push({
+					assign_to_target: AssignToTargetEnum.student,
+					assign_to: student_id
 				});
 			}
 

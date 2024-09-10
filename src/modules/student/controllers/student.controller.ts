@@ -142,7 +142,7 @@ export const get_all_student_of_class = async (req: Request, res: Response) => {
 		{
 			page: ['numeric', 'required'],
 			limit: ['numeric', 'required'],
-			class_id: ['string', 'required']
+			class_id: ['string']
 		}
 	);
 

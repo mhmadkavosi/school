@@ -13,9 +13,16 @@ export class StudentInfo {
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
+			const match: any = [];
+
+			if (!!class_id) {
+				match.push({
+					class_id
+				});
+			}
 
 			const result = await StudentModel.findAndCountAll({
-				where: { class_id },
+				where: { [Op.and]: match },
 				distinct: true,
 				limit: limit,
 				offset: skip,

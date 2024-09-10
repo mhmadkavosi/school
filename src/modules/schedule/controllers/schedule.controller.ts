@@ -242,7 +242,8 @@ export const get_all = async (req: Request, res: Response) => {
 			end_date: req.query.end_date,
 			event_type: req.query.event_type,
 			event_category_id: req.query.event_category_id,
-			class_id: req.query.class_id
+			class_id: req.query.class_id,
+			student_id: req.query.student_id
 		},
 		{
 			page: ['required', 'numeric'],
@@ -251,7 +252,8 @@ export const get_all = async (req: Request, res: Response) => {
 			end_date: ['string'],
 			event_type: ['string', { in: Object.keys(EventTypes) }],
 			event_category_id: ['string'],
-			class_id: ['string']
+			class_id: ['string'],
+			student_id: ['string']
 		}
 	);
 
@@ -267,7 +269,8 @@ export const get_all = async (req: Request, res: Response) => {
 		<string>req.query.end_date,
 		<string>req.query.event_type,
 		<string>req.query.event_category_id,
-		<string>req.query.class_id
+		<string>req.query.class_id,
+		<string>req.query.student_id
 	);
 
 	return ApiRes(res, {
