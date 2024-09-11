@@ -153,7 +153,8 @@ export const get_all_student_of_class = async (req: Request, res: Response) => {
 	const result = await new StudentInfo().get_all_student_of_class_with_pagination(
 		Number(req.query.page),
 		Number(req.query.limit),
-		<string>req.query.class_id
+		<string>req.query.class_id,
+		req.user_id
 	);
 
 	return ApiRes(res, {

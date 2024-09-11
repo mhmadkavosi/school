@@ -9,7 +9,8 @@ export class StudentInfo {
 	async get_all_student_of_class_with_pagination(
 		page: number,
 		limit: number,
-		class_id: string
+		class_id: string,
+		teacher_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
@@ -26,6 +27,13 @@ export class StudentInfo {
 				distinct: true,
 				limit: limit,
 				offset: skip,
+				include: [
+					{
+						model: ClassesModel,
+						attributes: ['name', 'id', 'teacher_id'],
+						where: { teacher_id }
+					}
+				],
 				order: [['created_at', 'DESC']]
 			});
 

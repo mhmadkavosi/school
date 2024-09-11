@@ -4,6 +4,7 @@ import AttendanceModel from '../../models/attendance.model';
 import { paginate } from '../../../../utils/paginate.utility';
 import StudentModel from '../../../student/models/student.model';
 import AttendanceReasonModel from '../../models/attendance_reason.model';
+import ClassesModel from '../../../school_class/models/classes.model';
 
 export class AttendanceInfo {
 	async get_all(
@@ -13,11 +14,18 @@ export class AttendanceInfo {
 		start_date: string,
 		end_date: string,
 		attendance_type: string,
-		student_id: string
+		student_id: string,
+		teacher_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
-			const match: any = [{ class_id }];
+			const match: any = [];
+
+			if (!!class_id) {
+				match.push({
+					class_id
+				});
+			}
 
 			if (!!student_id) {
 				match.push({
@@ -57,7 +65,10 @@ export class AttendanceInfo {
 			const result = await AttendanceModel.findAndCountAll({
 				where: { [Op.and]: match },
 				distinct: true,
-				include: [{ model: AttendanceReasonModel }],
+				include: [
+					{ model: AttendanceReasonModel },
+					{ model: ClassesModel, where: { teacher_id }, attributes: ['name', 'id', 'teacher_id'] }
+				],
 				limit: limit,
 				offset: skip
 			});
