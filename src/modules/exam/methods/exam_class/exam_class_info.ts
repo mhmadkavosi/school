@@ -14,7 +14,8 @@ export class ExamClassInfo {
 		class_id: string,
 		teacher_id: string,
 		start_date: string,
-		end_date: string
+		end_date: string,
+		student_id: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
@@ -42,13 +43,36 @@ export class ExamClassInfo {
 					}
 				});
 			}
+			const exam_class_match: any = [];
+
+			if (!!class_id) {
+				exam_class_match.push({
+					class_id
+				});
+			}
+
+			const student_match: any = [];
+
+			if (!!student_id) {
+				student_match.push({
+					student_id
+				});
+			}
 
 			const result = await ExamClassModel.findAndCountAll({
-				where: { class_id },
+				where: { [Op.and]: exam_class_match },
 				include: [
 					{
 						model: ExamModel,
-						where: { [Op.and]: match }
+						where: { [Op.and]: match },
+						include: [
+							{
+								model: StudentExamModel,
+								where: {
+									[Op.and]: student_match
+								}
+							}
+						]
 					},
 					{ model: ClassesModel, attributes: ['id', 'name'] }
 				],
