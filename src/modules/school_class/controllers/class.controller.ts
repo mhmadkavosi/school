@@ -77,6 +77,54 @@ export const get_all_student_by_school_id = async (req: Request, res: Response) 
 	});
 };
 
+export const get_students_for_exports = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			class_id: req.query.class_id,
+			search: req.query.search,
+			home_work: req.query.home_work,
+			exam: req.query.exam,
+			sort: req.query.sort,
+			attendance: req.query.attendance,
+			student_status: req.query.student_status,
+			start_date: req.query.start_date,
+			end_date: req.query.end_date
+		},
+		{
+			sort: ['required', { in: ['desc', 'asc'] }],
+			class_id: ['string'],
+			search: ['string'],
+			home_work: ['string', { in: ['true'] }],
+			exam: ['string', { in: ['true'] }],
+			attendance: ['string', { in: ['true'] }],
+			student_status: ['string'],
+			start_date: ['string'],
+			end_date: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	const result = await new ClassInfo().get_student_for_exports(
+		<string>req.query.class_id,
+		req.user_id,
+		<string>req.query.search,
+		<string>req.query.home_work,
+		<string>req.query.exam,
+		<string>req.query.attendance,
+		<string>req.query.sort,
+		<string>req.query.student_status,
+		<string>req.query.start_date,
+		<string>req.query.end_date
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const destroy_class = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{

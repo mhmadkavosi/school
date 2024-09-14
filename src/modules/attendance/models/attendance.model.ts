@@ -59,4 +59,9 @@ AttendanceModel.hasOne(AttendanceReasonModel, {
 	sourceKey: 'attendance_reason_id'
 });
 
+StudentModel.hasMany(AttendanceModel, {
+	sourceKey: 'id',
+	foreignKey: 'student_id'
+});
+
 export default AttendanceModel;

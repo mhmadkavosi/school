@@ -49,6 +49,11 @@ StudentExamModel.hasOne(StudentModel, {
 	foreignKey: 'id'
 });
 
+StudentModel.hasMany(StudentExamModel, {
+	sourceKey: 'id',
+	foreignKey: 'student_id'
+});
+
 StudentExamModel.hasOne(ClassesModel, {
 	sourceKey: 'class_id',
 	foreignKey: 'id'

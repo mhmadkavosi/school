@@ -19,6 +19,13 @@ ClassRouter.get(
 	TeacherAuthMiddleware,
 	ClassController.get_all_student_by_school_id
 );
+
+ClassRouter.get(
+	`${route_prefix}/student/export`,
+	TeacherAuthMiddleware,
+	ClassController.get_students_for_exports
+);
+
 ClassRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, ClassController.destroy_class);
 ClassRouter.put(`${route_prefix}`, TeacherAuthMiddleware, ClassController.update_class);
 ClassRouter.post(`${route_prefix}`, TeacherAuthMiddleware, ClassController.create_class);

@@ -69,4 +69,9 @@ StudentHomeWorkModel.hasOne(StudentModel, {
 	foreignKey: 'id'
 });
 
+StudentModel.hasMany(StudentHomeWorkModel, {
+	sourceKey: 'id',
+	foreignKey: 'student_id'
+});
+
 export default StudentHomeWorkModel;
