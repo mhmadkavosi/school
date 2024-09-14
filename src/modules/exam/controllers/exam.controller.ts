@@ -256,6 +256,24 @@ export const get_avg_exam = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_avg_class = async (req: Request, res: Response) => {
+	const result = await new StudentExamInfo().get_avg_class(req.params.class_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_avg_student = async (req: Request, res: Response) => {
+	const result = await new StudentExamInfo().get_avg_student(req.params.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const add_points = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
