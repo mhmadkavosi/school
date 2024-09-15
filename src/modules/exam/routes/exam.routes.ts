@@ -18,6 +18,8 @@ ExamRouter.get(
 );
 ExamRouter.get(`${route_prefix}/class/:class_id/avg`, TeacherAuthMiddleware, ExamController.get_avg_class);
 
+ExamRouter.get(`${route_prefix}/avg/all`, TeacherAuthMiddleware, ExamController.get_avg_all_class);
+
 ExamRouter.get(`${route_prefix}/counts`, TeacherAuthMiddleware, ExamController.get_count_of_exams);
 ExamRouter.get(`${route_prefix}/info`, TeacherAuthMiddleware, ExamController.get_info);
 ExamRouter.put(`${route_prefix}`, TeacherAuthMiddleware, ExamController.update_exam);
