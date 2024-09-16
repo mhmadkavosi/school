@@ -157,21 +157,21 @@ export class ClassInfo {
 
 			if (start_date && end_date) {
 				match.push({
-					date: {
+					created_at: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
 			} else if (start_date) {
 				match.push({
-					date: {
+					created_at: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
 			} else if (end_date) {
 				match.push({
-					date: {
+					created_at: {
 						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
 					}
@@ -202,7 +202,7 @@ export class ClassInfo {
 					where: {
 						attendance_type: { [Op.ne]: AttendanceTypeEnum.present }
 					},
-					attributes: ['id'],
+					attributes: ['id', 'attendance_type'],
 					required: false
 				});
 			}
