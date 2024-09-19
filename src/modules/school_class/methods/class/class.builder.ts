@@ -7,6 +7,7 @@ export class ClassBuilder {
 	private link!: string;
 	private teacher_id!: string;
 	private name!: string;
+	private color!: string;
 
 	public setSchoolId(schoolId: string): this {
 		this.school_id = schoolId;
@@ -38,6 +39,11 @@ export class ClassBuilder {
 		return this;
 	}
 
+	public setColor(color: string): this {
+		this.color = color;
+		return this;
+	}
+
 	public getSchoolId(): string {
 		return this.school_id;
 	}
@@ -60,6 +66,10 @@ export class ClassBuilder {
 
 	public getName(): string {
 		return this.name;
+	}
+
+	public getColor(): string {
+		return this.color;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

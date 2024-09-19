@@ -64,7 +64,8 @@ export const create = async (req: Request, res: Response) => {
 	}
 
 	return ApiRes(res, {
-		status: 200
+		status: 200,
+		data: result.data
 	});
 };
 

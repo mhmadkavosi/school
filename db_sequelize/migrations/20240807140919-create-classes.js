@@ -39,6 +39,10 @@ module.exports = {
 				allowNull: false,
 				unique: true
 			},
+			color: {
+				type: Sequelize.STRING,
+				unique: true
+			},
 			name: {
 				type: Sequelize.STRING,
 				allowNull: false

@@ -12,7 +12,8 @@ export class ClassCreate {
 					count: builder.getCount(),
 					link: builder.getLink(),
 					teacher_id: builder.getTeacherId(),
-					name: builder.getName()
+					name: builder.getName(),
+					color: builder.getColor()
 				},
 				{ isNewRecord: true }
 			);

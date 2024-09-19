@@ -36,6 +36,10 @@ const ClassesModel = DB.instance().define(
 		teacher_id: {
 			type: DataTypes.UUID,
 			allowNull: false
+		},
+		color: {
+			type: DataTypes.STRING,
+			unique: true
 		}
 	},
 	{

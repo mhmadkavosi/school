@@ -196,13 +196,15 @@ export const create_class = async (req: Request, res: Response) => {
 			school_id: req.body.school_id,
 			class_level_id: req.body.class_level_id,
 			count: req.body.count,
-			name: req.body.name
+			name: req.body.name,
+			color: req.body.color
 		},
 		{
 			school_id: ['required', 'string'],
 			class_level_id: ['required', 'string'],
 			count: ['required', 'numeric'],
-			name: ['required', 'string']
+			name: ['required', 'string'],
+			color: ['required', 'string']
 		}
 	);
 
@@ -222,6 +224,7 @@ export const create_class = async (req: Request, res: Response) => {
 		.setSchoolId(req.body.school_id)
 		.setTeacherId(req.user_id)
 		.setName(req.body.name)
+		.setColor(req.body.color)
 		.build();
 
 	return ApiRes(res, {
