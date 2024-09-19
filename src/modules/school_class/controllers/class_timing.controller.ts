@@ -213,8 +213,8 @@ export const get_class_time = async (req: Request, res: Response) => {
 			day: req.query.day
 		},
 		{
-			class_id: ['required', 'string'],
-			day: ['required', { in: Object.keys(WeekDays) }]
+			class_id: ['string'],
+			day: ['string', { in: Object.keys(WeekDays) }]
 		}
 	);
 
@@ -228,7 +228,8 @@ export const get_class_time = async (req: Request, res: Response) => {
 
 	const result = await new ClassTimingInfo().get_class_time(
 		<string>req.query.class_id,
-		<string>req.query.day
+		<string>req.query.day,
+		req.user_id
 	);
 
 	return ApiRes(res, {

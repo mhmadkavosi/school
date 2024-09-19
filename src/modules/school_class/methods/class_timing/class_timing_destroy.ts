@@ -7,7 +7,7 @@ export class ClassTimingDestroy {
 			const result = await ClassTimingModel.destroy({ where: { id } });
 
 			return {
-				is_success: result === 0
+				is_success: true
 			};
 		} catch (error) {
 			AppLogger.error('Error in ClassTimingDestroy destroy', error);

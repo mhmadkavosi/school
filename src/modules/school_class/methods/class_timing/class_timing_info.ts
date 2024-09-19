@@ -1,6 +1,6 @@
 import { AppLogger } from '../../../../lib/logger/Logger';
 import ClassTimingModel from '../../models/class_timing.mode';
-import { WeekDays } from '../../models/enums/week_days.enum';
+import ClassesModel from '../../models/classes.model';
 
 export class ClassTimingInfo {
 	async get_all_by_class_id(class_id: string): Promise<RestApi.ObjectResInterface> {
@@ -37,9 +37,24 @@ export class ClassTimingInfo {
 		}
 	}
 
-	async get_class_time(class_id: string, day: string): Promise<RestApi.ObjectResInterface> {
+	async get_class_time(
+		class_id: string,
+		day: string,
+		teacher_id: string
+	): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassTimingModel.findAll({ where: { class_id, day } });
+			const match: any = [];
+			if (day) {
+				match.push({ day });
+			}
+			if (class_id) {
+				match.push({ class_id });
+			}
+
+			const result = await ClassTimingModel.findAll({
+				where: match,
+				include: [{ model: ClassesModel, where: { teacher_id }, attributes: ['name', 'id'] }]
+			});
 
 			return {
 				is_success: !!result,
