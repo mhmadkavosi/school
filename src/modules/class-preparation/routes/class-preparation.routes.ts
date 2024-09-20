@@ -14,6 +14,19 @@ ClassPreparationRouter.get(
 );
 ClassPreparationRouter.post(`${route_prefix}`, TeacherAuthMiddleware, ClassPreparationController.create);
 ClassPreparationRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, ClassPreparationController.destroy);
-ClassPreparationRouter.put(`${route_prefix}`, TeacherAuthMiddleware, ClassPreparationController.update);
-
+ClassPreparationRouter.put(
+	`${route_prefix}/update/skills`,
+	TeacherAuthMiddleware,
+	ClassPreparationController.add_skills
+);
+ClassPreparationRouter.put(
+	`${route_prefix}/update/apply`,
+	TeacherAuthMiddleware,
+	ClassPreparationController.add_apply
+);
+ClassPreparationRouter.put(
+	`${route_prefix}/update/objectives`,
+	TeacherAuthMiddleware,
+	ClassPreparationController.add_objectives
+);
 export default ClassPreparationRouter;

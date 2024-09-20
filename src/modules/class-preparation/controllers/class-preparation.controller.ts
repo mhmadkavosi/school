@@ -5,36 +5,20 @@ import { ClassPreparationBuilder } from '../methods/class-preparation/class_prep
 import { ClassPreparationAssignCreate } from '../methods/class-preparation-assign/class_preparation_assign_create';
 import { InternalServerError } from '../../../lib/http/error/internal_server.error';
 import { ApiRes } from '../../../lib/http/api_response';
-import { ClassPreparationUpdate } from '../methods/class-preparation/class-preparation_update';
 import { ClassPreparationAssignDestroy } from '../methods/class-preparation-assign/class_preparation_assign_destroy';
 import { ClassPreparationDestroy } from '../methods/class-preparation/class-preparation_destroy';
 import { ClassPreparationAssignInfo } from '../methods/class-preparation-assign/class_preparation_assign_info';
+import { ClassPreparationUpdate } from '../methods/class-preparation/class-preparation_update';
+
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			date: req.body.date,
 			subject: req.body.subject,
-			knowledge_objectives: req.body.knowledge_objectives,
-			skill_objectives: req.body.skill_objectives,
-			emotional_objectives: req.body.emotional_objectives,
-			teaching_aids: req.body.teaching_aids,
-			acquired_skills: req.body.acquired_skills,
-			present: req.body.present,
-			apply: req.body.apply,
-			value_and_expand: req.body.value_and_expand,
 			classes_id: req.body.classes_id
 		},
 		{
 			subject: ['required', 'string'],
-			date: ['required', 'date'],
-			knowledge_objectives: ['string'],
-			skill_objectives: ['string'],
-			emotional_objectives: ['string'],
-			teaching_aids: ['string'],
-			acquired_skills: ['string'],
-			present: ['string'],
-			apply: ['string'],
-			value_and_expand: ['string'],
 			classes_id: ['required', 'array']
 		}
 	);
@@ -44,16 +28,9 @@ export const create = async (req: Request, res: Response) => {
 	}
 
 	const result = await new ClassPreparationBuilder()
-		.setAcquiredSkills(req.body.acquired_skills)
-		.setApply(req.body.apply)
 		.setDate(req.body.date)
-		.setEmotionalObjectives(req.body.emotional_objectives)
-		.setPresent(req.body.present)
-		.setSkillObjectives(req.body.skill_objectives)
 		.setSubject(req.body.subject)
 		.setTeacherId(req.user_id)
-		.setTeachingAids(req.body.teaching_aids)
-		.setValueAndExpand(req.body.value_and_expand)
 		.build();
 
 	if (req.body.classes_id && req.body.classes_id.length > 0) {
@@ -69,31 +46,75 @@ export const create = async (req: Request, res: Response) => {
 	});
 };
 
-export const update = async (req: Request, res: Response) => {
+export const add_objectives = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			id: req.body.id,
-			date: req.body.date,
-			subject: req.body.subject,
 			knowledge_objectives: req.body.knowledge_objectives,
 			skill_objectives: req.body.skill_objectives,
-			emotional_objectives: req.body.emotional_objectives,
-			teaching_aids: req.body.teaching_aids,
-			acquired_skills: req.body.acquired_skills,
-			present: req.body.present,
-			apply: req.body.apply,
-			value_and_expand: req.body.value_and_expand,
-			classes_id: req.body.classes_id
+			emotional_objectives: req.body.emotional_objectives
 		},
 		{
 			id: ['required', 'string'],
-			subject: ['string'],
-			date: ['date'],
 			knowledge_objectives: ['string'],
 			skill_objectives: ['string'],
-			emotional_objectives: ['string'],
+			emotional_objectives: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new ClassPreparationUpdate().add_objectives(
+		req.body.id,
+		req.body.knowledge_objectives,
+		req.body.skill_objectives,
+		req.body.emotional_objectives,
+		req.user_id
+	);
+
+	return ApiRes(res, { status: result.is_success ? 200 : 500 });
+};
+
+export const add_skills = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			id: req.body.id,
+			teaching_aids: req.body.teaching_aids,
+			acquired_skills: req.body.acquired_skills
+		},
+		{
+			id: ['required', 'string'],
 			teaching_aids: ['string'],
-			acquired_skills: ['string'],
+			acquired_skills: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new ClassPreparationUpdate().add_skills(
+		req.body.id,
+		req.body.teaching_aids,
+		req.body.acquired_skills,
+		req.user_id
+	);
+
+	return ApiRes(res, { status: result.is_success ? 200 : 500 });
+};
+
+export const add_apply = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			id: req.body.id,
+			present: req.body.present,
+			apply: req.body.apply,
+			value_and_expand: req.body.value_and_expand
+		},
+		{
+			id: ['required', 'string'],
 			present: ['string'],
 			apply: ['string'],
 			value_and_expand: ['string']
@@ -104,24 +125,15 @@ export const update = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const result = await new ClassPreparationUpdate().update(
+	const result = await new ClassPreparationUpdate().add_apply(
 		req.body.id,
-		req.body.date,
-		req.body.subject,
-		req.body.knowledge_objectives,
-		req.body.skill_objectives,
-		req.body.emotional_objectives,
-		req.body.teaching_aids,
-		req.body.acquired_skills,
 		req.body.present,
 		req.body.apply,
 		req.body.value_and_expand,
 		req.user_id
 	);
 
-	return ApiRes(res, {
-		status: result.is_success ? 200 : 500
-	});
+	return ApiRes(res, { status: result.is_success ? 200 : 500 });
 };
 
 export const destroy = async (req: Request, res: Response) => {

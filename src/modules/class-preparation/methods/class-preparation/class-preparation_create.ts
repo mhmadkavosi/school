@@ -9,14 +9,6 @@ export class ClassPreparationCreate {
 				{
 					date: builder.getDate(),
 					subject: builder.getSubject(),
-					knowledge_objectives: builder.getKnowledgeObjectives(),
-					skill_objectives: builder.getSkillObjectives(),
-					emotional_objectives: builder.getEmotionalObjectives(),
-					teaching_aids: builder.getTeachingAids(),
-					acquired_skills: builder.getAcquiredSkills(),
-					present: builder.getPresent(),
-					apply: builder.getApply(),
-					value_and_expand: builder.getValueAndExpand(),
 					teacher_id: builder.getTeacherId()
 				},
 				{ isNewRecord: true }
