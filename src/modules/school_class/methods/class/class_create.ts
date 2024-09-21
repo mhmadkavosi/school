@@ -13,7 +13,9 @@ export class ClassCreate {
 					link: builder.getLink(),
 					teacher_id: builder.getTeacherId(),
 					name: builder.getName(),
-					color: builder.getColor()
+					color: builder.getColor(),
+					major: builder.getMajor(),
+					major_type: builder.getMajorType()
 				},
 				{ isNewRecord: true }
 			);

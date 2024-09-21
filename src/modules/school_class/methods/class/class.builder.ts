@@ -8,6 +8,8 @@ export class ClassBuilder {
 	private teacher_id!: string;
 	private name!: string;
 	private color!: string;
+	private major!: string;
+	private major_type!: string;
 
 	public setSchoolId(schoolId: string): this {
 		this.school_id = schoolId;
@@ -21,6 +23,16 @@ export class ClassBuilder {
 
 	public setCount(count: number): this {
 		this.count = count;
+		return this;
+	}
+
+	public setMajor(major: string): this {
+		this.major = major;
+		return this;
+	}
+
+	public setMajorType(major_type: string): this {
+		this.major_type = major_type;
 		return this;
 	}
 
@@ -66,6 +78,14 @@ export class ClassBuilder {
 
 	public getName(): string {
 		return this.name;
+	}
+
+	public getMajor(): string {
+		return this.major;
+	}
+
+	public getMajorType(): string {
+		return this.major_type;
 	}
 
 	public getColor(): string {

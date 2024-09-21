@@ -33,6 +33,14 @@ const ClassesModel = DB.instance().define(
 			allowNull: false,
 			unique: true
 		},
+		major: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+		major_type: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		teacher_id: {
 			type: DataTypes.UUID,
 			allowNull: false

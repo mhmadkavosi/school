@@ -157,18 +157,20 @@ export const update_class = async (req: Request, res: Response) => {
 		{
 			class_id: req.body.class_id,
 			school_id: req.body.school_id,
-			major_id: req.body.major_id,
 			class_level_id: req.body.class_level_id,
 			count: req.body.count,
-			name: req.body.name
+			name: req.body.name,
+			major_type: req.body.major_type,
+			major: req.body.major
 		},
 		{
 			class_id: ['required', 'string'],
 			school_id: ['string'],
-			major_id: ['string'],
 			class_level_id: ['string'],
 			count: ['numeric'],
-			name: ['string']
+			name: ['string'],
+			major: ['string'],
+			major_type: ['string']
 		}
 	);
 
@@ -180,10 +182,11 @@ export const update_class = async (req: Request, res: Response) => {
 		req.body.class_id,
 		req.user_id,
 		req.body.school_id,
-		req.body.major_id,
 		req.body.class_level_id,
 		req.body.count,
-		req.body.name
+		req.body.name,
+		req.body.major,
+		req.body.major_type
 	);
 	return ApiRes(res, {
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
@@ -197,14 +200,18 @@ export const create_class = async (req: Request, res: Response) => {
 			class_level_id: req.body.class_level_id,
 			count: req.body.count,
 			name: req.body.name,
-			color: req.body.color
+			color: req.body.color,
+			major: req.body.major,
+			major_type: req.body.major_type
 		},
 		{
 			school_id: ['required', 'string'],
 			class_level_id: ['required', 'string'],
 			count: ['required', 'numeric'],
 			name: ['required', 'string'],
-			color: ['required', 'string']
+			color: ['required', 'string'],
+			major: ['string'],
+			major_type: ['string']
 		}
 	);
 
@@ -225,6 +232,8 @@ export const create_class = async (req: Request, res: Response) => {
 		.setTeacherId(req.user_id)
 		.setName(req.body.name)
 		.setColor(req.body.color)
+		.setMajor(req.body.major)
+		.setMajorType(req.body.major_type)
 		.build();
 
 	return ApiRes(res, {

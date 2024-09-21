@@ -43,6 +43,14 @@ module.exports = {
 				type: Sequelize.STRING,
 				unique: true
 			},
+			major: {
+				type: Sequelize.STRING,
+				unique: true
+			},
+			major_type: {
+				type: Sequelize.STRING,
+				unique: true
+			},
 			name: {
 				type: Sequelize.STRING,
 				allowNull: false
