@@ -15,12 +15,19 @@ export class ExamClassInfo {
 		teacher_id: string,
 		start_date: string,
 		end_date: string,
-		student_id: string
+		student_id: string,
+		sort: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
 			const match: any = [{ teacher_id }];
 
+			let sort_value = '';
+			if (sort === 'last_exam') {
+				sort_value = 'DESC';
+			} else if (sort === 'first_exam') {
+				sort_value = 'ASC';
+			}
 			if (start_date && end_date) {
 				match.push({
 					date: {
@@ -65,6 +72,7 @@ export class ExamClassInfo {
 					{
 						model: ExamModel,
 						where: { [Op.and]: match },
+						order: ['created_at', sort_value],
 						include: [
 							{
 								model: StudentExamModel,

@@ -27,7 +27,7 @@ const AttendanceModel = DB.instance().define(
 		},
 		attendance_reason_id: {
 			type: DataTypes.UUID,
-			allowNull: false
+			allowNull: true
 		},
 		attendance_type: {
 			type: DataTypes.ENUM(

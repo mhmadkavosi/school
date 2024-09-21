@@ -20,7 +20,7 @@ export const create = async (req: Request, res: Response) => {
 			date: ['required', 'date'],
 			student_id: ['required', 'string'],
 			class_id: ['required', 'string'],
-			attendance_reason_id: ['required', 'string'],
+			attendance_reason_id: ['string'],
 			attendance_type: ['required', 'string', { in: Object.keys(AttendanceTypeEnum) }],
 			time_of_delayed: ['numeric']
 		}

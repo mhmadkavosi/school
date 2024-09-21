@@ -188,7 +188,8 @@ export const get_all = async (req: Request, res: Response) => {
 			class_id: req.query.class_id,
 			start_date: req.query.start_date,
 			end_date: req.query.end_date,
-			student_id: req.query.student_id
+			student_id: req.query.student_id,
+			sort: req.query.sort
 		},
 		{
 			page: ['required', 'numeric'],
@@ -196,7 +197,8 @@ export const get_all = async (req: Request, res: Response) => {
 			class_id: ['string'],
 			start_date: ['string'],
 			end_date: ['string'],
-			student_id: ['string']
+			student_id: ['string'],
+			sort: [{ in: ['last_exam', 'first_exam'] }]
 		}
 	);
 
@@ -211,7 +213,8 @@ export const get_all = async (req: Request, res: Response) => {
 		req.user_id,
 		<string>req.query.start_date,
 		<string>req.query.end_date,
-		<string>req.query.student_id
+		<string>req.query.student_id,
+		<string>req.query.sort
 	);
 
 	return ApiRes(res, {

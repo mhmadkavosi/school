@@ -4,6 +4,7 @@ export class StudentBuilder {
 	public class_id!: string;
 	public name!: string;
 	public family!: string;
+	public middle_name!: string;
 	public email!: string;
 	public phone!: string;
 	public national_code!: string;
@@ -19,6 +20,11 @@ export class StudentBuilder {
 
 	public setName(name: string): this {
 		this.name = name;
+		return this;
+	}
+
+	public setMiddleName(middle_name: string): this {
+		this.middle_name = middle_name;
 		return this;
 	}
 
@@ -68,6 +74,10 @@ export class StudentBuilder {
 
 	public getName(): string {
 		return this.name;
+	}
+
+	public getMiddleName(): string {
+		return this.middle_name;
 	}
 
 	public getFamily(): string {

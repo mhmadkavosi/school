@@ -22,6 +22,10 @@ const StudentModel = DB.instance().define(
 			type: DataTypes.STRING,
 			allowNull: false
 		},
+		middle_name: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,

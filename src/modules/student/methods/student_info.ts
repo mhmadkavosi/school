@@ -58,7 +58,7 @@ export class StudentInfo {
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
-			const attributes = ['name', 'family', 'email', 'phone', 'national_code'];
+			const attributes = ['middle_name', 'name', 'family', 'email', 'phone', 'national_code'];
 			let conditions: any = [];
 
 			conditions = attributes.map((attribute) => ({

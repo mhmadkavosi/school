@@ -16,6 +16,7 @@ export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			name: req.body.name,
+			middle_name: req.body.middle_name,
 			class_id: req.body.class_id,
 			family: req.body.family,
 			email: req.body.email,
@@ -27,6 +28,7 @@ export const create = async (req: Request, res: Response) => {
 		},
 		{
 			name: ['required', 'string'],
+			middle_name: ['required', 'string'],
 			class_id: ['required', 'string'],
 			family: ['required', 'string'],
 			email: ['required', 'email'],
@@ -70,6 +72,7 @@ export const create = async (req: Request, res: Response) => {
 		.setName(req.body.name)
 		.setClassId(req.body.class_id)
 		.setFamily(req.body.family)
+		.setMiddleName(req.body.middle_name)
 		.setEmail(req.body.email)
 		.setPhone(req.body.phone)
 		.setNationalCode(req.body.national_code)

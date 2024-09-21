@@ -16,7 +16,8 @@ export class StudentCreate {
 					student_status: builder.getStudentStatus(),
 					birth_date: builder.getBirthDate(),
 					password: builder.getPassword(),
-					profile_picture: builder.getProfilePicture()
+					profile_picture: builder.getProfilePicture(),
+					middle_name: builder.getMiddleName()
 				},
 				{ isNewRecord: true }
 			);
