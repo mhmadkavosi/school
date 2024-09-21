@@ -28,7 +28,7 @@ export const create = async (req: Request, res: Response) => {
 		},
 		{
 			name: ['required', 'string'],
-			middle_name: ['required', 'string'],
+			middle_name: ['string'],
 			class_id: ['required', 'string'],
 			family: ['required', 'string'],
 			email: ['required', 'email'],
@@ -99,7 +99,8 @@ export const update = async (req: Request, res: Response) => {
 			phone: req.body.phone,
 			national_code: req.body.national_code,
 			student_status: req.body.student_status,
-			birth_date: req.body.birth_date
+			birth_date: req.body.birth_date,
+			middle_name: req.body.middle_name
 		},
 		{
 			student_id: ['required', 'string'],
@@ -110,7 +111,8 @@ export const update = async (req: Request, res: Response) => {
 			phone: ['string'],
 			national_code: ['string'],
 			student_status: ['string'],
-			birth_date: ['date']
+			birth_date: ['date'],
+			middle_name: ['string']
 		}
 	);
 
@@ -127,7 +129,8 @@ export const update = async (req: Request, res: Response) => {
 		req.body.phone,
 		req.body.national_code,
 		req.body.student_status,
-		req.body.birth_date
+		req.body.birth_date,
+		req.body.middle_name
 	);
 
 	return ApiRes(res, {

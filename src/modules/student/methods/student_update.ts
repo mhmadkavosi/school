@@ -11,7 +11,8 @@ export class StudentUpdate {
 		phone: string,
 		national_code: string,
 		student_status: string,
-		birth_date: Date
+		birth_date: Date,
+		middle_name: string
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await StudentModel.update(
@@ -23,7 +24,8 @@ export class StudentUpdate {
 					phone,
 					national_code,
 					student_status,
-					birth_date
+					birth_date,
+					middle_name
 				},
 				{
 					where: {
