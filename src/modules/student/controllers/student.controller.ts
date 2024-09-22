@@ -46,9 +46,18 @@ export const create = async (req: Request, res: Response) => {
 
 	const email_info = await new StudentInfo().get_by_email(req.body.email);
 	const national_code_info = await new StudentInfo().get_by_national_code(req.body.national_code);
-	const phone_info = await new StudentInfo().get_by_phone_number(req.body.phone);
 
-	if (email_info.is_success || phone_info.is_success) {
+	if (req.body.phone) {
+		const phone_info = await new StudentInfo().get_by_phone_number(req.body.phone);
+		if (phone_info.is_success) {
+			return ApiRes(res, {
+				status: HttpStatus.BAD_REQUEST,
+				msg: 'Phone Duplicate Error'
+			});
+		}
+	}
+
+	if (email_info.is_success) {
 		return ApiRes(res, {
 			status: HttpStatus.BAD_REQUEST,
 			msg: 'Email Duplicate Error'
@@ -58,13 +67,6 @@ export const create = async (req: Request, res: Response) => {
 		return ApiRes(res, {
 			status: HttpStatus.BAD_REQUEST,
 			msg: 'National code Duplicate Error'
-		});
-	}
-
-	if (phone_info.is_success) {
-		return ApiRes(res, {
-			status: HttpStatus.BAD_REQUEST,
-			msg: 'Phone Duplicate Error'
 		});
 	}
 
@@ -273,10 +275,10 @@ export const delete_profile_picture = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const teacher = await new StudentInfo().get_by_id(req.body.student_id);
+	const student = await new StudentInfo().get_by_id(req.body.student_id);
 
-	remove_file(teacher.data.profile_picture);
-	await new FileDestroy().destroy_for_admin(teacher.data.profile_picture);
+	remove_file(student.data.profile_picture);
+	await new FileDestroy().destroy_for_admin(student.data.profile_picture);
 	const result = await new StudentUpdate().delete_profile_picture(req.body.student_id);
 
 	return ApiRes(res, {
