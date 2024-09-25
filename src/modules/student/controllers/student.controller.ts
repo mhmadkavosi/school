@@ -31,7 +31,7 @@ export const create = async (req: Request, res: Response) => {
 			middle_name: ['string'],
 			class_id: ['required', 'string'],
 			family: ['required', 'string'],
-			email: ['required', 'email'],
+			email: ['email'],
 			phone: ['string'],
 			national_code: ['required', 'string'],
 			student_status: ['string'],
@@ -44,8 +44,17 @@ export const create = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const email_info = await new StudentInfo().get_by_email(req.body.email);
 	const national_code_info = await new StudentInfo().get_by_national_code(req.body.national_code);
+
+	if (req.body.email) {
+		const email_info = await new StudentInfo().get_by_email(req.body.email);
+		if (email_info.is_success) {
+			return ApiRes(res, {
+				status: HttpStatus.BAD_REQUEST,
+				msg: 'Email Duplicate Error'
+			});
+		}
+	}
 
 	if (req.body.phone) {
 		const phone_info = await new StudentInfo().get_by_phone_number(req.body.phone);
@@ -57,12 +66,6 @@ export const create = async (req: Request, res: Response) => {
 		}
 	}
 
-	if (email_info.is_success) {
-		return ApiRes(res, {
-			status: HttpStatus.BAD_REQUEST,
-			msg: 'Email Duplicate Error'
-		});
-	}
 	if (national_code_info.is_success) {
 		return ApiRes(res, {
 			status: HttpStatus.BAD_REQUEST,
