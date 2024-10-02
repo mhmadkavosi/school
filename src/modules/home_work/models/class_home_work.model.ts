@@ -35,4 +35,9 @@ ClassHomeWorkModel.hasOne(HomeWorkModel, {
 	foreignKey: 'id'
 });
 
+HomeWorkModel.hasOne(ClassHomeWorkModel, {
+	sourceKey: 'id',
+	foreignKey: 'home_work_id'
+});
+
 export default ClassHomeWorkModel;

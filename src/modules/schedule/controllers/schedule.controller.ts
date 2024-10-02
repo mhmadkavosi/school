@@ -32,7 +32,7 @@ export const create = async (req: Request, res: Response) => {
 			event_start_hour: ['string'],
 			event_end_hour: ['string'],
 			event_description: ['string'],
-			assign_to: ['required', 'array'],
+			assign_to: ['array'],
 			event_category_id: ['required', 'string'],
 			event_type: ['required', { in: Object.keys(EventTypes) }],
 			school_id: ['required', 'string']
@@ -59,31 +59,33 @@ export const create = async (req: Request, res: Response) => {
 		return new InternalServerError(res);
 	}
 
-	if (req.body.assign_to && req.body.assign_to.length > 0) {
-		for (let i = 0; i < req.body.assign_to.length; i++) {
-			const validate = new Validator(
-				{
-					assign_to_id: req.body.assign_to[i].assign_to_id,
-					assign_to_target: req.body.assign_to[i].assign_to_target
-				},
-				{
-					assign_to_id: ['required', 'string'],
-					assign_to_target: ['required', { in: Object.keys(AssignToTargetEnum) }]
+	if (req.body.event_type === EventTypes.public) {
+		if (req.body.assign_to && req.body.assign_to.length > 0) {
+			for (let i = 0; i < req.body.assign_to.length; i++) {
+				const validate = new Validator(
+					{
+						assign_to_id: req.body.assign_to[i].assign_to_id,
+						assign_to_target: req.body.assign_to[i].assign_to_target
+					},
+					{
+						assign_to_id: ['required', 'string'],
+						assign_to_target: ['required', { in: Object.keys(AssignToTargetEnum) }]
+					}
+				);
+
+				if (validate.fails()) {
+					return new PreconditionFailedError(res, validate.errors.all());
 				}
-			);
 
-			if (validate.fails()) {
-				return new PreconditionFailedError(res, validate.errors.all());
-			}
+				const schedule_assign = await new ScheduleAssignCreate().create(
+					req.body.assign_to[i].assign_to_id,
+					req.body.assign_to[i].assign_to_target,
+					result.data.id
+				);
 
-			const schedule_assign = await new ScheduleAssignCreate().create(
-				req.body.assign_to[i].assign_to_id,
-				req.body.assign_to[i].assign_to_target,
-				result.data.id
-			);
-
-			if (!schedule_assign.is_success) {
-				return new InternalServerError(res);
+				if (!schedule_assign.is_success) {
+					return new InternalServerError(res);
+				}
 			}
 		}
 	}
