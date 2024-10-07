@@ -11,7 +11,6 @@ export class HomeWorkCreate {
 					start_date: builder.getStartDate(),
 					end_date: builder.getEndDate(),
 					description: builder.getDescription(),
-					file: builder.getFile(),
 					max_score: builder.getMaxScore(),
 					min_score: builder.getMinScore(),
 					teacher_id: builder.getTeacherId()

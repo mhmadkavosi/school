@@ -1,7 +1,9 @@
 import { AppLogger } from '../../../../lib/logger/Logger';
 import ClassesModel from '../../../school_class/models/classes.model';
+import StudentModel from '../../../student/models/student.model';
 import ClassHomeWorkModel from '../../models/class_home_work.model';
 import HomeWorkModel from '../../models/home_work.model';
+import HomeWorkFilesModel from '../../models/home_work_files.model';
 import StudentHomeWorkModel from '../../models/student_home_work.model';
 
 export class ClassHomeWorkInfo {
@@ -65,11 +67,14 @@ export class ClassHomeWorkInfo {
 				include: [
 					{
 						model: StudentHomeWorkModel,
-						where: {
-							class_home_work_id: null
-						},
 						required: false,
-						attributes: ['id', 'student_id', 'status']
+						attributes: ['id', 'student_id', 'status'],
+						include: [
+							{
+								model: StudentModel,
+								attributes: ['id', 'name', 'family']
+							}
+						]
 					},
 					{
 						model: ClassHomeWorkModel,
@@ -80,6 +85,10 @@ export class ClassHomeWorkInfo {
 								attributes: ['name', 'id']
 							}
 						]
+					},
+					{
+						model: HomeWorkFilesModel,
+						required: false
 					}
 				]
 			});

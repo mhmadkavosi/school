@@ -4,6 +4,7 @@ import StudentHomeWorkModel from '../../models/student_home_work.model';
 import StudentModel from '../../../student/models/student.model';
 import { paginate } from '../../../../utils/paginate.utility';
 import HomeWorkModel from '../../models/home_work.model';
+import HomeWorkFilesModel from '../../models/home_work_files.model';
 
 export class StudentHomeWrkInfo {
 	async get_info_by_student_id_home_work_id(
@@ -30,7 +31,17 @@ export class StudentHomeWrkInfo {
 		try {
 			const result = await StudentHomeWorkModel.findAll({
 				where: { student_id },
-				include: [{ model: HomeWorkModel }]
+				include: [
+					{
+						model: HomeWorkModel,
+						include: [
+							{
+								model: HomeWorkFilesModel,
+								required: false
+							}
+						]
+					}
+				]
 			});
 
 			return {

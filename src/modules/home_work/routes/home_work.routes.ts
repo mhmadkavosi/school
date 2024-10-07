@@ -1,5 +1,7 @@
 import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as HomeWorkController from '../controllers/home_work.controller';
+import * as HomeWorkFileController from '../controllers/home_work_files.controller';
+
 import { Router } from 'express';
 
 const HomeWorkRouter: Router = Router();
@@ -49,9 +51,9 @@ HomeWorkRouter.get(
 	HomeWorkController.get_all_by_student_id
 );
 
-HomeWorkRouter.put(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.update_file);
+HomeWorkRouter.put(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkFileController.update_file);
 
-HomeWorkRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkController.delete_file);
+HomeWorkRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkFileController.delete_file);
 
 HomeWorkRouter.put(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.update);
 HomeWorkRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.delete_home_work);

@@ -16,8 +16,7 @@ import { HomeWorkDestroy } from '../methods/home_work/home_work_destroy';
 import { StudentHomeWorDestroy } from '../methods/student_home_work/student_home_work_destroy';
 import { ClassHomeWorkDestroy } from '../methods/class_home_work/class_home_work_destroy';
 import { HomeWorkInfo } from '../methods/home_work/home_work_info';
-import { remove_file } from '../../../lib/file_upload/aws/remove';
-import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
+import { HomeWorkFilesCreate } from '../methods/home_work_files/home_work_files_create';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -26,24 +25,22 @@ export const create = async (req: Request, res: Response) => {
 			start_date: req.body.start_date,
 			end_date: req.body.end_date,
 			description: req.body.description,
-			file: req.body.file,
-			file_type: req.body.file_type,
 			max_score: req.body.max_score,
 			min_score: req.body.min_score,
 			classes_id: req.body.classes_id,
-			students_id: req.body.students_id
+			students_id: req.body.students_id,
+			files: req.body.files
 		},
 		{
 			title: ['required', 'string'],
 			start_date: ['string'],
 			end_date: ['string'],
 			description: ['string'],
-			file: ['string'],
-			file_type: ['string'],
 			max_score: ['numeric'],
 			min_score: ['numeric'],
 			classes_id: ['array'],
-			students_id: ['array']
+			students_id: ['array'],
+			files: ['array']
 		}
 	);
 
@@ -56,8 +53,6 @@ export const create = async (req: Request, res: Response) => {
 		.setStartDate(req.body.start_date)
 		.setEndDate(req.body.end_date)
 		.setDescription(req.body.description)
-		.setFile(req.body.file)
-		.setFileType(req.body.file_type)
 		.setMaxScore(req.body.max_score)
 		.setMinScore(req.body.min_score)
 		.setTeacherId(req.user_id)
@@ -65,6 +60,31 @@ export const create = async (req: Request, res: Response) => {
 
 	if (!home_work.is_success) {
 		return new InternalServerError(res, 'Create Home work failed!');
+	}
+
+	if (req.body.files && req.body.files.length > 0) {
+		for (let i = 0; i < req.body.files.length; i++) {
+			const validate = new Validator(
+				{
+					file: req.body.files[i].file,
+					file_keys: req.body.files[i].file_keys
+				},
+				{
+					file: ['required', 'string'],
+					file_keys: ['required', 'string']
+				}
+			);
+
+			if (validate.fails()) {
+				return new PreconditionFailedError(res, validate.errors.all());
+			}
+
+			await new HomeWorkFilesCreate().create(
+				home_work.data.id,
+				req.body.files[i].file,
+				req.body.file[i].file_type
+			);
+		}
 	}
 
 	if (req.body.classes_id && req.body.classes_id.length > 0) {
@@ -76,14 +96,12 @@ export const create = async (req: Request, res: Response) => {
 			const student_of_class = await new StudentInfo().get_all_student_of_class(req.body.classes_id[i]);
 
 			for (let j = 0; j < student_of_class.data.length; j++) {
-				const student_home_work = await new StudentHomeWorkBuilder()
+				await new StudentHomeWorkBuilder()
 					.setClassHomeWorkId(class_home_work.data.id)
 					.setHomeWorkId(home_work.data.id)
 					.setStudentId(student_of_class.data[j].id)
 					.setStatus(StudentHomeWorkStatusEnum.undone)
 					.build();
-
-				console.log(student_home_work);
 			}
 		}
 	}
@@ -183,7 +201,6 @@ export const update = async (req: Request, res: Response) => {
 			start_date: req.body.start_date,
 			end_date: req.body.end_date,
 			description: req.body.description,
-			file: req.body.file,
 			max_score: req.body.max_score,
 			min_score: req.body.min_score
 		},
@@ -193,7 +210,6 @@ export const update = async (req: Request, res: Response) => {
 			start_date: ['string'],
 			end_date: ['string'],
 			description: ['string'],
-			file: ['string'],
 			max_score: ['numeric'],
 			min_score: ['numeric']
 		}
@@ -210,7 +226,6 @@ export const update = async (req: Request, res: Response) => {
 		req.body.start_date,
 		req.body.end_date,
 		req.body.description,
-		req.body.file,
 		req.body.max_score,
 		req.body.min_score
 	);
@@ -312,60 +327,6 @@ export const delete_home_work = async (req: Request, res: Response) => {
 
 	return ApiRes(res, {
 		status: HttpStatus.OK
-	});
-};
-
-export const update_file = async (req: Request, res: Response) => {
-	const validate = new Validator(
-		{
-			home_work_id: req.body.home_work_id,
-			file: req.body.file,
-			file_type: req.body.file_type
-		},
-		{
-			home_work_id: ['required', 'string'],
-			file: ['string', 'required'],
-			file_type: ['string', 'required']
-		}
-	);
-
-	if (validate.fails()) {
-		return new PreconditionFailedError(res, validate.errors.all());
-	}
-
-	const update_is_active = await new HomeWorkUpdate().update_add_file(
-		req.body.home_work_id,
-		req.body.file,
-		req.body.file_type
-	);
-
-	return ApiRes(res, <RestApi.ResInterface>{
-		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
-	});
-};
-
-export const delete_file = async (req: Request, res: Response) => {
-	const validate = new Validator(
-		{
-			home_work_id: req.body.home_work_id
-		},
-		{
-			home_work_id: ['required', 'string']
-		}
-	);
-
-	if (validate.fails()) {
-		return new PreconditionFailedError(res, validate.errors.all());
-	}
-
-	const original_data = await new HomeWorkInfo().get_info_by_id(req.body.home_work_id);
-
-	remove_file(original_data.data.file);
-	await new FileDestroy().destroy_for_admin(original_data.data.file);
-	const update_is_active = await new HomeWorkUpdate().remove_file(req.body.home_work_id);
-
-	return ApiRes(res, <RestApi.ResInterface>{
-		status: update_is_active.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
 
