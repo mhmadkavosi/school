@@ -27,11 +27,7 @@ HomeWorkRouter.get(
 	HomeWorkController.get_all_home_work_of_teacher
 );
 
-HomeWorkRouter.get(
-	`${route_prefix}/:home_work_id/count`,
-	TeacherAuthMiddleware,
-	HomeWorkController.get_count_of_home_work
-);
+HomeWorkRouter.get(`${route_prefix}/count`, TeacherAuthMiddleware, HomeWorkController.get_count_of_home_work);
 
 HomeWorkRouter.get(
 	`${route_prefix}/:home_work_id/info`,

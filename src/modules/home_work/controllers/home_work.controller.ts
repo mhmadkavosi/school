@@ -236,7 +236,23 @@ export const update = async (req: Request, res: Response) => {
 };
 
 export const get_all_home_work_of_teacher = async (req: Request, res: Response) => {
-	const result = await new ClassHomeWorkInfo().get_home_work_of_teacher(req.user_id);
+	const validate = new Validator(
+		{
+			status: req.query.status
+		},
+		{
+			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new ClassHomeWorkInfo().get_home_work_of_teacher(
+		req.user_id,
+		<string>req.query.status
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
@@ -290,7 +306,25 @@ export const get_all_student_of_home_work = async (req: Request, res: Response) 
 };
 
 export const get_count_of_home_work = async (req: Request, res: Response) => {
-	const result = await new StudentHomeWrkInfo().get_count_of_status_home_works(req.params.home_work_id);
+	const validate = new Validator(
+		{
+			home_work_id: req.query.home_work_id,
+			status: req.query.status
+		},
+		{
+			home_work_id: ['string'],
+			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentHomeWrkInfo().get_count_of_status_home_works(
+		<string>req.query.home_work_id,
+		<string>req.query.status
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

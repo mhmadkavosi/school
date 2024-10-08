@@ -78,11 +78,13 @@ export class ScheduleInfo {
 				offset: skip,
 				include: [
 					{
-						model: EventCategoryModel
+						model: EventCategoryModel,
+						required: false
 					},
 					{
 						model: ScheduleAssignModel,
-						where: { [Op.and]: class_match }
+						where: { [Op.and]: class_match },
+						required: false
 					}
 				]
 			});

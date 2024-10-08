@@ -58,8 +58,16 @@ export class ClassHomeWorkInfo {
 		}
 	}
 
-	async get_home_work_of_teacher(teacher_id: string): Promise<RestApi.ObjectResInterface> {
+	async get_home_work_of_teacher(teacher_id: string, status: string): Promise<RestApi.ObjectResInterface> {
 		try {
+			const match: any = [{}];
+
+			if (status) {
+				match.push({
+					status
+				});
+			}
+
 			const result = await HomeWorkModel.findAll({
 				where: {
 					teacher_id
@@ -69,6 +77,7 @@ export class ClassHomeWorkInfo {
 						model: StudentHomeWorkModel,
 						required: false,
 						attributes: ['id', 'student_id', 'status'],
+						where: match,
 						include: [
 							{
 								model: StudentModel,

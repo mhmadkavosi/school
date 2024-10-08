@@ -57,10 +57,26 @@ export class StudentHomeWrkInfo {
 		}
 	}
 
-	async get_count_of_status_home_works(home_work_id: string): Promise<RestApi.ObjectResInterface> {
+	async get_count_of_status_home_works(
+		home_work_id: string,
+		status: string
+	): Promise<RestApi.ObjectResInterface> {
 		try {
+			const match = [{}];
+			if (home_work_id) {
+				match.push({
+					home_work_id
+				});
+			}
+
+			if (status) {
+				match.push({
+					status
+				});
+			}
+
 			const result = await StudentHomeWorkModel.findAll({
-				where: { home_work_id },
+				where: match,
 				attributes: ['status', [Sequelize.fn('COUNT', 'id'), 'count']],
 				group: ['status']
 			});
