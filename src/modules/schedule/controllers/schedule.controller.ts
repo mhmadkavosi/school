@@ -59,33 +59,31 @@ export const create = async (req: Request, res: Response) => {
 		return new InternalServerError(res);
 	}
 
-	if (req.body.event_type === EventTypes.public) {
-		if (req.body.assign_to && req.body.assign_to.length > 0) {
-			for (let i = 0; i < req.body.assign_to.length; i++) {
-				const validate = new Validator(
-					{
-						assign_to_id: req.body.assign_to[i].assign_to_id,
-						assign_to_target: req.body.assign_to[i].assign_to_target
-					},
-					{
-						assign_to_id: ['required', 'string'],
-						assign_to_target: ['required', { in: Object.keys(AssignToTargetEnum) }]
-					}
-				);
-
-				if (validate.fails()) {
-					return new PreconditionFailedError(res, validate.errors.all());
+	if (req.body.assign_to && req.body.assign_to.length > 0) {
+		for (let i = 0; i < req.body.assign_to.length; i++) {
+			const validate = new Validator(
+				{
+					assign_to_id: req.body.assign_to[i].assign_to_id,
+					assign_to_target: req.body.assign_to[i].assign_to_target
+				},
+				{
+					assign_to_id: ['required', 'string'],
+					assign_to_target: ['required', { in: Object.keys(AssignToTargetEnum) }]
 				}
+			);
 
-				const schedule_assign = await new ScheduleAssignCreate().create(
-					req.body.assign_to[i].assign_to_id,
-					req.body.assign_to[i].assign_to_target,
-					result.data.id
-				);
+			if (validate.fails()) {
+				return new PreconditionFailedError(res, validate.errors.all());
+			}
 
-				if (!schedule_assign.is_success) {
-					return new InternalServerError(res);
-				}
+			const schedule_assign = await new ScheduleAssignCreate().create(
+				req.body.assign_to[i].assign_to_id,
+				req.body.assign_to[i].assign_to_target,
+				result.data.id
+			);
+
+			if (!schedule_assign.is_success) {
+				return new InternalServerError(res);
 			}
 		}
 	}
