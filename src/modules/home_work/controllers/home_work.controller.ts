@@ -241,7 +241,7 @@ export const get_all_home_work_of_teacher = async (req: Request, res: Response) 
 			status: req.query.status
 		},
 		{
-			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }]
+			status: ['string']
 		}
 	);
 

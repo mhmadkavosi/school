@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { AppLogger } from '../../../../lib/logger/Logger';
 import ClassesModel from '../../../school_class/models/classes.model';
 import StudentModel from '../../../student/models/student.model';
@@ -63,8 +64,11 @@ export class ClassHomeWorkInfo {
 			const match: any = [{}];
 
 			if (status) {
+				const statuses = status.split(',');
 				match.push({
-					status
+					status: {
+						[Op.in]: statuses
+					}
 				});
 			}
 
