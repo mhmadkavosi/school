@@ -67,11 +67,11 @@ export const create = async (req: Request, res: Response) => {
 			const validate = new Validator(
 				{
 					file: req.body.files[i].file,
-					file_keys: req.body.files[i].file_keys
+					file_type: req.body.files[i].file_type
 				},
 				{
 					file: ['required', 'string'],
-					file_keys: ['required', 'string']
+					file_type: ['required', 'string']
 				}
 			);
 
@@ -82,7 +82,7 @@ export const create = async (req: Request, res: Response) => {
 			await new HomeWorkFilesCreate().create(
 				home_work.data.id,
 				req.body.files[i].file,
-				req.body.file[i].file_type
+				req.body.files[i].file_type
 			);
 		}
 	}
@@ -93,6 +93,11 @@ export const create = async (req: Request, res: Response) => {
 				req.body.classes_id[i],
 				home_work.data.id
 			);
+
+			if (!class_home_work.is_success) {
+				return new InternalServerError(res, 'Create Home work failed!');
+			}
+
 			const student_of_class = await new StudentInfo().get_all_student_of_class(req.body.classes_id[i]);
 
 			for (let j = 0; j < student_of_class.data.length; j++) {
@@ -113,7 +118,7 @@ export const create = async (req: Request, res: Response) => {
 				home_work.data.id
 			);
 
-			if (student_home_work.is_success) {
+			if (!student_home_work.is_success) {
 				return new InternalServerError(res, 'Create Home work failed!');
 			}
 

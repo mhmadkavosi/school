@@ -85,7 +85,7 @@ export class ClassHomeWorkInfo {
 						include: [
 							{
 								model: StudentModel,
-								attributes: ['id', 'name', 'family']
+								attributes: ['id', 'name', 'family', 'class_id']
 							}
 						]
 					},

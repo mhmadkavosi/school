@@ -35,7 +35,7 @@ ClassHomeWorkModel.hasOne(HomeWorkModel, {
 	foreignKey: 'id'
 });
 
-HomeWorkModel.hasOne(ClassHomeWorkModel, {
+HomeWorkModel.hasMany(ClassHomeWorkModel, {
 	sourceKey: 'id',
 	foreignKey: 'home_work_id'
 });
