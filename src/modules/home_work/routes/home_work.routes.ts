@@ -53,5 +53,15 @@ HomeWorkRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, HomeWorkFil
 
 HomeWorkRouter.put(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.update);
 HomeWorkRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, HomeWorkController.delete_home_work);
+HomeWorkRouter.delete(
+	`${route_prefix}/class`,
+	TeacherAuthMiddleware,
+	HomeWorkController.delete_class_from_home_work
+);
+HomeWorkRouter.delete(
+	`${route_prefix}/student`,
+	TeacherAuthMiddleware,
+	HomeWorkController.delete_student_from_home_work
+);
 
 export default HomeWorkRouter;

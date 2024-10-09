@@ -369,6 +369,52 @@ export const delete_home_work = async (req: Request, res: Response) => {
 	});
 };
 
+export const delete_class_from_home_work = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			class_id: req.body.class_id
+		},
+		{
+			class_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const info = await new ClassHomeWorkInfo().get_info_by_class(req.body.class_id);
+	await new ClassHomeWorkDestroy().destroy_by_class_id(req.body.class_id);
+	await new StudentHomeWorDestroy().destroy_by_class_home_work_id(info.data.id);
+
+	return ApiRes(res, {
+		status: HttpStatus.OK
+	});
+};
+
+export const delete_student_from_home_work = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			home_work_id: req.body.home_work_id,
+			student_id: req.body.student_id
+		},
+		{
+			home_work_id: ['required', 'string'],
+			student_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	await new StudentHomeWorDestroy().destroy(req.body.student_id, req.body.home_work_id);
+
+	return ApiRes(res, {
+		status: HttpStatus.OK
+	});
+};
+
 export const get_count_of_home_work_class = async (req: Request, res: Response) => {
 	const result = await new ClassHomeWorkInfo().get_count_of_class_home_work(req.params.class_id);
 	return ApiRes(res, {
