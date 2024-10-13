@@ -2,9 +2,9 @@ import { AppLogger } from '../../../../lib/logger/Logger';
 import ClassHomeWorkModel from '../../models/class_home_work.model';
 
 export class ClassHomeWorkDestroy {
-	async destroy_by_class_id(class_id: string): Promise<RestApi.ObjectResInterface> {
+	async destroy_by_class_id(class_id: string, home_work_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassHomeWorkModel.destroy({ where: { class_id } });
+			const result = await ClassHomeWorkModel.destroy({ where: { class_id, home_work_id } });
 
 			return {
 				is_success: result === 0

@@ -372,10 +372,12 @@ export const delete_home_work = async (req: Request, res: Response) => {
 export const delete_class_from_home_work = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			class_id: req.body.class_id
+			class_id: req.body.class_id,
+			home_work_id: req.body.home_work_id
 		},
 		{
-			class_id: ['required', 'string']
+			class_id: ['required', 'string'],
+			home_work_id: ['required', 'string']
 		}
 	);
 
@@ -383,9 +385,8 @@ export const delete_class_from_home_work = async (req: Request, res: Response) =
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const info = await new ClassHomeWorkInfo().get_info_by_class(req.body.class_id);
-	await new ClassHomeWorkDestroy().destroy_by_class_id(req.body.class_id);
-	await new StudentHomeWorDestroy().destroy_by_class_home_work_id(info.data.id);
+	await new ClassHomeWorkDestroy().destroy_by_class_id(req.body.class_id, req.body.home_work_id);
+	await new StudentHomeWorDestroy().destroy_by_home_work_id(req.body.home_work_id);
 
 	return ApiRes(res, {
 		status: HttpStatus.OK
