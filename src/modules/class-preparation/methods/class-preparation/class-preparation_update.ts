@@ -5,7 +5,7 @@ export class ClassPreparationUpdate {
 	async update(
 		id: string,
 		date: Date,
-		subject: string,
+		preparation_id: string,
 		knowledge_objectives: string,
 		skill_objectives: string,
 		emotional_objectives: string,
@@ -20,7 +20,7 @@ export class ClassPreparationUpdate {
 			const result = await ClassPreparationModel.update(
 				{
 					date,
-					subject,
+					preparation_id,
 					knowledge_objectives,
 					skill_objectives,
 					emotional_objectives,

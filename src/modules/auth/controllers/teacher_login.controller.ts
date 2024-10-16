@@ -68,7 +68,7 @@ export const login_request = async (req: Request, res: Response) => {
 		'teacher_email.template',
 		String(code)
 	);
-
+	console.log(code);
 	if (!send_email) {
 		return ApiRes(res, {
 			status: HttpStatus.INTERNAL_SERVER_ERROR,

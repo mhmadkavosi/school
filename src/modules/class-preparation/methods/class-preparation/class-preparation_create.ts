@@ -8,7 +8,7 @@ export class ClassPreparationCreate {
 			const result = await ClassPreparationModel.create(
 				{
 					date: builder.getDate(),
-					subject: builder.getSubject(),
+					preparation_id: builder.getPreparationId(),
 					teacher_id: builder.getTeacherId()
 				},
 				{ isNewRecord: true }

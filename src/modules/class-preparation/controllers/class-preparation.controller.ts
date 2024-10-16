@@ -14,11 +14,11 @@ export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			date: req.body.date,
-			subject: req.body.subject,
+			preparation_id: req.body.preparation_id,
 			classes_id: req.body.classes_id
 		},
 		{
-			subject: ['required', 'string'],
+			preparation_id: ['required', 'string'],
 			classes_id: ['required', 'array']
 		}
 	);
@@ -29,7 +29,7 @@ export const create = async (req: Request, res: Response) => {
 
 	const result = await new ClassPreparationBuilder()
 		.setDate(req.body.date)
-		.setSubject(req.body.subject)
+		.setPreparationId(req.body.preparation_id)
 		.setTeacherId(req.user_id)
 		.build();
 

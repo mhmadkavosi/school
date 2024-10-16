@@ -4,6 +4,7 @@ import ClassPreparationAssignModel from '../../models/class_preparation_assign.m
 import ClassesModel from '../../../school_class/models/classes.model';
 import ClassPreparationModel from '../../models/classـpreparatoin.model';
 import { paginate } from '../../../../utils/paginate.utility';
+import PreparationModel from '../../models/preparation.model';
 
 export class ClassPreparationAssignInfo {
 	async get_all(
@@ -52,7 +53,12 @@ export class ClassPreparationAssignInfo {
 				include: [
 					{
 						model: ClassPreparationModel,
-						where: { [Op.and]: match }
+						where: { [Op.and]: match },
+						include: [
+							{
+								model: PreparationModel
+							}
+						]
 					},
 					{ model: ClassesModel, attributes: ['id', 'name'] }
 				],

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
 import TeacherModel from '../../teacher/models/teacher.model';
+import PreparationModel from './preparation.model';
 
 const ClassPreparationModel = DB.instance().define(
 	'class_preparation',
@@ -14,8 +15,8 @@ const ClassPreparationModel = DB.instance().define(
 			type: DataTypes.DATE,
 			allowNull: false
 		},
-		subject: {
-			type: DataTypes.STRING,
+		preparation_id: {
+			type: DataTypes.UUID,
 			allowNull: false
 		},
 		knowledge_objectives: {
@@ -62,6 +63,11 @@ const ClassPreparationModel = DB.instance().define(
 
 ClassPreparationModel.hasOne(TeacherModel, {
 	sourceKey: 'teacher_id',
+	foreignKey: 'id'
+});
+
+ClassPreparationModel.hasOne(PreparationModel, {
+	sourceKey: 'preparation_id',
 	foreignKey: 'id'
 });
 

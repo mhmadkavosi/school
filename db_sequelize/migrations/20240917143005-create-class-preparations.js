@@ -14,9 +14,15 @@ module.exports = {
 				type: Sequelize.DATE,
 				allowNull: false
 			},
-			subject: {
-				type: Sequelize.STRING,
-				allowNull: false
+			preparation_id: {
+				type: Sequelize.UUID,
+				allowNull: false,
+				references: {
+					model: 'preparation', // The table name for the Teacher model
+					key: 'id'
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE'
 			},
 			knowledge_objectives: {
 				type: Sequelize.STRING,
