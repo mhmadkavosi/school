@@ -19,7 +19,6 @@ import { add_day } from '../../../utils/date_generator.utility';
 import { BaseConfig } from '../../../config/base.config';
 import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
-import { EmailProvider } from '../../../utils/mail.service';
 import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
 
 export const login_request = async (req: Request, res: Response) => {

@@ -18,7 +18,7 @@ export abstract class MailProviderAbstract {
 	 * @param context
 	 * @return boolean
 	 */
-	async send_email(to: string, subject: string, template_name: string, context: object): Promise<boolean> {
+	async send_email(to: string, subject: string, template_name: string, context?: object): Promise<boolean> {
 		try {
 			const templatePath = path.resolve(`./src/public/mails/${template_name}.handlebars`);
 			const emailTemplate = await fs.readFile(templatePath, 'utf-8');

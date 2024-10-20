@@ -18,6 +18,7 @@ import { TeacherUpdate } from '../methods/teacher_update';
 import { EmailProvider } from '../../../utils/mail.service';
 import { remove_file } from '../../../lib/file_upload/aws/remove';
 import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
+import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
 
 export const request_update_phone_number = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -291,6 +292,8 @@ export const update_password = async (req: Request, res: Response) => {
 	const new_password = hash_password(req.body.new_password);
 
 	const update = await new TeacherUpdate().add_password(req.user_id, new_password);
+
+	await new ZohoProvider().send_email(info.data.email, 'Change Password', 'teacher_change_password');
 
 	return ApiRes(res, {
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR

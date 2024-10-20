@@ -22,7 +22,6 @@ import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
 import { TeacherCreate } from '../../teacher/methods/teacher_create';
 import { TeacherUpdate } from '../../teacher/methods/teacher_update';
-import { EmailProvider } from '../../../utils/mail.service';
 import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
 
 export const register_request = async (req: Request, res: Response) => {
@@ -119,6 +118,8 @@ export const register_confirm = async (req: Request, res: Response) => {
 		return new BadRequestError(res, 'Code is wrong!');
 	}
 
+	await new ZohoProvider().send_email(request_info.value, 'Register Confirm', 'teacher_register_confirm');
+
 	return ApiRes(res, {
 		status: HttpStatus.OK,
 		data: {
@@ -211,6 +212,8 @@ export const confirm_password = async (req: Request, res: Response) => {
 	}
 
 	const token = TeacherJwtUtility.create(teacher_info.data.id, token_id);
+
+	await new ZohoProvider().send_email(request_info.value, 'Register Confirm', 'teacher_register_confirm');
 
 	return ApiRes(res, {
 		status: token ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
