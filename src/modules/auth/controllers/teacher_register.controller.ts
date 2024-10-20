@@ -23,6 +23,7 @@ import { TeacherInfo } from '../../teacher/methods/teacher_info';
 import { TeacherCreate } from '../../teacher/methods/teacher_create';
 import { TeacherUpdate } from '../../teacher/methods/teacher_update';
 import { EmailProvider } from '../../../utils/mail.service';
+import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
 
 export const register_request = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -60,12 +61,16 @@ export const register_request = async (req: Request, res: Response) => {
 		return new InternalServerError(res);
 	}
 
-	const send_email = await new EmailProvider().send_email(
-		req.body.email,
-		'Teacher Register',
-		'teacher_email.template',
-		String(code)
-	);
+	// const send_email = await new EmailProvider().send_email(
+	// 	req.body.email,
+	// 	'Teacher Register',
+	// 	'teacher_email.template',
+	// 	String(code)
+	// );
+
+	const send_email = await new ZohoProvider().send_email(req.body.email, 'Your Otp code', 'teacher_login', {
+		login_code: code
+	});
 
 	if (!send_email) {
 		return ApiRes(res, {
