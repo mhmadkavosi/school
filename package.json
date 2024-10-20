@@ -18,6 +18,7 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.633.0",
 		"@types/cookie-parser": "^1.4.7",
+		"@types/handlebars": "^4.0.40",
 		"axios": "^1.7.2",
 		"bcryptjs": "^2.4.3",
 		"commander": "^12.1.0",

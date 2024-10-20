@@ -20,6 +20,7 @@ import { BaseConfig } from '../../../config/base.config';
 import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
 import { EmailProvider } from '../../../utils/mail.service';
+import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
 
 export const login_request = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -62,12 +63,17 @@ export const login_request = async (req: Request, res: Response) => {
 		return new InternalServerError(res);
 	}
 
-	const send_email = await new EmailProvider().send_email(
-		req.body.email,
-		'Teacher Login',
-		'teacher_email.template',
-		String(code)
-	);
+	// const send_email = await new EmailProvider().send_email(
+	// 	req.body.email,
+	// 	'Teacher Login',
+	// 	'teacher_email.template',
+	// 	String(code)
+	// );
+
+	const send_email = await new ZohoProvider().send_email(req.body.email, 'Your Otp code', 'teacher_login', {
+		login_code: code
+	});
+
 	console.log(code);
 	if (!send_email) {
 		return ApiRes(res, {
