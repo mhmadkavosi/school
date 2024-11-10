@@ -6,7 +6,18 @@ export class PreparationPlanBuilder {
 	private basic_concept!: string;
 	private number_of_class!: number;
 	private preparation_id!: string;
+	private season!: string;
+	private subject!: string;
 
+	public setSeason(season: string): this {
+		this.season = season;
+		return this;
+	}
+
+	public setSubject(subject: string): this {
+		this.subject = subject;
+		return this;
+	}
 	// Set the week number
 	public setWeekNumber(weekNumber: number): this {
 		this.week_number = weekNumber;
@@ -56,6 +67,14 @@ export class PreparationPlanBuilder {
 
 	public getPreparationId(): string {
 		return this.preparation_id;
+	}
+
+	public getSeason(): string | undefined {
+		return this.season;
+	}
+
+	public getSubject(): string | undefined {
+		return this.subject;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

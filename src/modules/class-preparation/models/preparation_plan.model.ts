@@ -29,6 +29,15 @@ const PreparationPlanModel = DB.instance().define(
 		preparation_id: {
 			type: DataTypes.UUID,
 			allowNull: false
+		},
+
+		subject: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		season: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	},
 	{

@@ -11,7 +11,9 @@ export class PreparationPlanCreate {
 					field: builder.getField(),
 					basic_concept: builder.getBasicConcept(),
 					number_of_class: builder.getNumberOfClass(),
-					preparation_id: builder.getPreparationId()
+					preparation_id: builder.getPreparationId(),
+					subject: builder.getSubject(),
+					season: builder.getSeason()
 				},
 				{ isNewRecord: true }
 			);

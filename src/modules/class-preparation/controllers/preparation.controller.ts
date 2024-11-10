@@ -26,8 +26,7 @@ export const preparation_create = async (req: Request, res: Response) => {
 			class_level_id: ['required', 'string'],
 			grade: ['required', 'string'],
 			semester: ['required', 'string'],
-			part: ['required', 'string'],
-			season: ['required', 'string']
+			part: ['required', 'string']
 		}
 	);
 
@@ -43,7 +42,6 @@ export const preparation_create = async (req: Request, res: Response) => {
 		.setSubject(req.body.subject)
 		.setSemester(req.body.semester)
 		.setPart(req.body.part)
-		.setSeason(req.body.season)
 		.build();
 
 	return ApiRes(res, {
@@ -59,14 +57,18 @@ export const add_plan = async (req: Request, res: Response) => {
 			field: req.body.field,
 			basic_concept: req.body.basic_concept,
 			number_of_class: req.body.number_of_class,
-			preparation_id: req.body.preparation_id
+			preparation_id: req.body.preparation_id,
+			subject: req.body.subject,
+			season: req.body.season
 		},
 		{
 			week_number: ['required', 'numeric'],
 			field: ['required', 'string'],
 			basic_concept: ['required', 'string'],
 			number_of_class: ['required', 'numeric'],
-			preparation_id: ['required', 'string']
+			preparation_id: ['required', 'string'],
+			subject: ['required', 'string'],
+			season: ['required', 'string']
 		}
 	);
 
@@ -80,6 +82,8 @@ export const add_plan = async (req: Request, res: Response) => {
 		.setBasicConcept(req.body.basic_concept)
 		.setNumberOfClass(req.body.number_of_class)
 		.setPreparationId(req.body.preparation_id)
+		.setSeason(req.body.season)
+		.setSubject(req.body.subject)
 		.build();
 
 	return ApiRes(res, {

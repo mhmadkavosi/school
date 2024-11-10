@@ -22,6 +22,14 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false
 			},
+			subject: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
+			season: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			number_of_class: {
 				type: Sequelize.INTEGER,
 				allowNull: false
