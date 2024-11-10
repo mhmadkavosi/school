@@ -66,6 +66,10 @@ module.exports = {
 				onUpdate: 'CASCADE',
 				onDelete: 'CASCADE'
 			},
+			is_confirm: {
+				type: Sequelize.BOOLEAN,
+				defaultValue: false
+			},
 			created_at: {
 				allowNull: false,
 				type: Sequelize.DATE,

@@ -9,6 +9,7 @@ export class PreparationBuilder {
 	private semester?: string;
 	private part?: string;
 	private notes?: string;
+	private season?: string;
 
 	// Set the preparation year start
 	public setPreparationYearStart(preparationYearStart: string): this {
@@ -58,6 +59,11 @@ export class PreparationBuilder {
 		return this;
 	}
 
+	public setSeason(season: string): this {
+		this.season = season;
+		return this;
+	}
+
 	// Getters for the fields (if needed)
 	public getPreparationYearStart(): string {
 		return this.preparation_year_start;
@@ -89,6 +95,10 @@ export class PreparationBuilder {
 
 	public getNotes(): string | undefined {
 		return this.notes;
+	}
+
+	public getSeason(): string | undefined {
+		return this.season;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

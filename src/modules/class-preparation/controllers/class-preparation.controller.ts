@@ -206,3 +206,31 @@ export const get_info = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const update_is_confirm = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			id: req.body.id,
+			is_confirm: req.body.is_confirm
+		},
+		{
+			id: ['required', 'string'],
+			is_confirm: ['required', 'boolean']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new ClassPreparationUpdate().update_is_confirm(
+		req.body.id,
+		req.body.is_confirm,
+		req.user_id
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};

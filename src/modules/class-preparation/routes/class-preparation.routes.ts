@@ -29,4 +29,11 @@ ClassPreparationRouter.put(
 	TeacherAuthMiddleware,
 	ClassPreparationController.add_objectives
 );
+
+ClassPreparationRouter.put(
+	`${route_prefix}/update/is-confirm`,
+	TeacherAuthMiddleware,
+	ClassPreparationController.update_is_confirm
+);
+
 export default ClassPreparationRouter;

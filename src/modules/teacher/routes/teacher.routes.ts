@@ -20,6 +20,24 @@ TeacherRouter.put(
 	TeacherController.phone_number_confirm
 );
 TeacherRouter.post(
+	`${route_prefix}/request/forgot-password`,
+
+	TeacherController.request_forgot_password
+);
+
+TeacherRouter.post(
+	`${route_prefix}/confirm/forgot-password`,
+
+	TeacherController.forgot_password_confirm
+);
+
+TeacherRouter.put(
+	`${route_prefix}/set-password`,
+
+	TeacherController.forgot_password_set_password
+);
+
+TeacherRouter.post(
 	`${route_prefix}/request/email`,
 	TeacherAuthMiddleware,
 	TeacherController.request_update_email

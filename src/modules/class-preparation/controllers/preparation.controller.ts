@@ -16,7 +16,8 @@ export const preparation_create = async (req: Request, res: Response) => {
 			class_level_id: req.body.class_level_id,
 			grade: req.body.grade,
 			semester: req.body.semester,
-			part: req.body.part
+			part: req.body.part,
+			season: req.body.season
 		},
 		{
 			preparation_year_start: ['required', 'string'],
@@ -25,7 +26,8 @@ export const preparation_create = async (req: Request, res: Response) => {
 			class_level_id: ['required', 'string'],
 			grade: ['required', 'string'],
 			semester: ['required', 'string'],
-			part: ['required', 'string']
+			part: ['required', 'string'],
+			season: ['required', 'string']
 		}
 	);
 
@@ -41,6 +43,7 @@ export const preparation_create = async (req: Request, res: Response) => {
 		.setSubject(req.body.subject)
 		.setSemester(req.body.semester)
 		.setPart(req.body.part)
+		.setSeason(req.body.season)
 		.build();
 
 	return ApiRes(res, {

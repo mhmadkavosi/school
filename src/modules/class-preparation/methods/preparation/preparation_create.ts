@@ -14,7 +14,8 @@ export class PreparationCreate {
 					grade: builder.getGrade(),
 					semester: builder.getSemester(),
 					part: builder.getPart(),
-					notes: builder.getNotes()
+					notes: builder.getNotes(),
+					season: builder.getSeason()
 				},
 				{ isNewRecord: true }
 			);

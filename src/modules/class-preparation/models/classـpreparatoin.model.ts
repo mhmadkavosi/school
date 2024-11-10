@@ -54,6 +54,10 @@ const ClassPreparationModel = DB.instance().define(
 		teacher_id: {
 			type: DataTypes.UUID,
 			allowNull: false
+		},
+		is_confirm: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
 		}
 	},
 	{

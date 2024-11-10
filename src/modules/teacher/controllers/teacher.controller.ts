@@ -315,3 +315,136 @@ export const get_all_by_school_id = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const request_forgot_password = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			email: req.body.email
+		},
+		{
+			email: ['required', 'string', 'email']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const email_info = await new TeacherInfo().get_by_email(req.body.email);
+
+	if (!email_info.is_success) {
+		return new BadRequestError(res, 'this email not associated to any accounts');
+	}
+
+	const access_address = generate_access_address();
+	const code = await generate_random_code(6);
+	const result = await new AuthRequestManager().add_request(RequestType.forgot_password, access_address, {
+		code: String(code),
+		value: req.body.email
+	});
+
+	if (result === 'NOK') {
+		return new InternalServerError(res);
+	}
+
+	const send_email = await new EmailProvider().send_email(
+		req.body.email,
+		'Teacher Forgot Password',
+		'teacher_email.template',
+		String(code)
+	);
+
+	if (!send_email) {
+		return ApiRes(res, {
+			status: HttpStatus.INTERNAL_SERVER_ERROR,
+			msg: 'email send failed'
+		});
+	}
+
+	return ApiRes(res, {
+		status: HttpStatus.OK,
+		data: {
+			access_address: access_address
+		}
+	});
+};
+
+export const forgot_password_confirm = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			confirm_code: req.body.confirm_code,
+			access_address: req.body.access_address
+		},
+		{
+			confirm_code: ['required', 'string', 'min:6', 'max:6'],
+			access_address: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const request_info = await new AuthRequestManager().get_request(
+		RequestType.forgot_password,
+		req.body.access_address
+	);
+	if (request_info === null) {
+		return new BadRequestError(res, 'Expired!');
+	}
+
+	if (request_info.code !== req.body.confirm_code) {
+		return new BadRequestError(res, 'Code is wrong!');
+	}
+
+	return ApiRes(res, {
+		status: HttpStatus.OK,
+		data: {
+			access_address: req.body.access_address
+		}
+	});
+};
+
+export const forgot_password_set_password = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			access_address: req.body.access_address,
+			new_password: req.body.new_password
+		},
+		{
+			access_address: ['required', 'string'],
+			new_password: [
+				'required',
+				'string',
+				'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$/'
+			]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const request_info = await new AuthRequestManager().get_request(
+		RequestType.forgot_password,
+		req.body.access_address
+	);
+
+	if (request_info === null) {
+		return new BadRequestError(res);
+	}
+
+	const teacher_info = await new TeacherInfo().get_by_email(request_info?.value);
+
+	const new_password = hash_password(req.body.new_password);
+
+	const update = await new TeacherUpdate().add_password(teacher_info.data.id, new_password);
+
+	await new AuthRequestManager().remove_request(RequestType.forgot_password, req.body.access_address);
+
+	await new ZohoProvider().send_email(teacher_info.data.email, 'Change Password', 'teacher_change_password');
+
+	return ApiRes(res, {
+		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};

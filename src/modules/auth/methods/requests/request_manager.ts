@@ -4,7 +4,8 @@ export enum RequestType {
 	login = 'login',
 	register = 'register',
 	change_phone_number = 'change_phone_number',
-	change_email = 'change_email'
+	change_email = 'change_email',
+	forgot_password = 'forgot_password'
 }
 
 interface IRequest {

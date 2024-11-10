@@ -28,8 +28,7 @@ export class ClassPreparationUpdate {
 					acquired_skills,
 					present,
 					apply,
-					value_and_expand,
-					teacher_id
+					value_and_expand
 				},
 				{
 					where: { id, teacher_id }
@@ -60,8 +59,7 @@ export class ClassPreparationUpdate {
 				{
 					knowledge_objectives,
 					skill_objectives,
-					emotional_objectives,
-					teacher_id
+					emotional_objectives
 				},
 				{
 					where: { id, teacher_id }
@@ -89,8 +87,7 @@ export class ClassPreparationUpdate {
 			const result = await ClassPreparationModel.update(
 				{
 					teaching_aids,
-					acquired_skills,
-					teacher_id
+					acquired_skills
 				},
 				{
 					where: { id, teacher_id }
@@ -121,8 +118,34 @@ export class ClassPreparationUpdate {
 				{
 					present,
 					apply,
-					value_and_expand,
-					teacher_id
+					value_and_expand
+				},
+				{
+					where: { id, teacher_id }
+				}
+			);
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in ClassPreparationUpdate add_apply', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async update_is_confirm(
+		id: string,
+		is_confirm: boolean,
+		teacher_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await ClassPreparationModel.update(
+				{
+					is_confirm
 				},
 				{
 					where: { id, teacher_id }
