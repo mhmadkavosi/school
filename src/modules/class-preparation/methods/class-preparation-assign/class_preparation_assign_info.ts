@@ -5,6 +5,7 @@ import ClassesModel from '../../../school_class/models/classes.model';
 import ClassPreparationModel from '../../models/classـpreparatoin.model';
 import { paginate } from '../../../../utils/paginate.utility';
 import PreparationModel from '../../models/preparation.model';
+import PreparationPlanModel from '../../models/preparation_plan.model';
 
 export class ClassPreparationAssignInfo {
 	async get_all(
@@ -56,7 +57,12 @@ export class ClassPreparationAssignInfo {
 						where: { [Op.and]: match },
 						include: [
 							{
-								model: PreparationModel
+								model: PreparationModel,
+								include: [
+									{
+										model: PreparationPlanModel
+									}
+								]
 							}
 						]
 					},

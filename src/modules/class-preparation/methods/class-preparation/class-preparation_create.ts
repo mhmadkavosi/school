@@ -9,7 +9,8 @@ export class ClassPreparationCreate {
 				{
 					date: builder.getDate(),
 					preparation_id: builder.getPreparationId(),
-					teacher_id: builder.getTeacherId()
+					teacher_id: builder.getTeacherId(),
+					subject: builder.getSubject()
 				},
 				{ isNewRecord: true }
 			);

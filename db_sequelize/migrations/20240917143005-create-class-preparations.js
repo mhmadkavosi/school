@@ -52,6 +52,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true
 			},
+			subject: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			value_and_expand: {
 				type: Sequelize.STRING,
 				allowNull: true

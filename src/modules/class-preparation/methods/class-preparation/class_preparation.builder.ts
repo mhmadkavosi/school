@@ -4,6 +4,7 @@ export class ClassPreparationBuilder {
 	private date!: Date;
 	private preparation_id!: string;
 	private teacher_id!: string;
+	private subject!: string;
 
 	public setDate(date: Date): this {
 		this.date = date;
@@ -20,6 +21,11 @@ export class ClassPreparationBuilder {
 		return this;
 	}
 
+	public setSubject(subject: string): this {
+		this.subject = subject;
+		return this;
+	}
+
 	public getDate(): Date {
 		return this.date;
 	}
@@ -30,6 +36,10 @@ export class ClassPreparationBuilder {
 
 	public getTeacherId(): string {
 		return this.teacher_id;
+	}
+
+	public getSubject(): string {
+		return this.subject;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

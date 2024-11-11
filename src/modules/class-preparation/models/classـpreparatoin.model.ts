@@ -15,6 +15,10 @@ const ClassPreparationModel = DB.instance().define(
 			type: DataTypes.DATE,
 			allowNull: false
 		},
+		subject: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		preparation_id: {
 			type: DataTypes.UUID,
 			allowNull: false

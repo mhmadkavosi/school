@@ -15,11 +15,13 @@ export const create = async (req: Request, res: Response) => {
 		{
 			date: req.body.date,
 			preparation_id: req.body.preparation_id,
-			classes_id: req.body.classes_id
+			classes_id: req.body.classes_id,
+			subject: req.body.subject
 		},
 		{
 			preparation_id: ['required', 'string'],
-			classes_id: ['required', 'array']
+			classes_id: ['required', 'array'],
+			subject: ['required', 'string']
 		}
 	);
 
@@ -31,6 +33,7 @@ export const create = async (req: Request, res: Response) => {
 		.setDate(req.body.date)
 		.setPreparationId(req.body.preparation_id)
 		.setTeacherId(req.user_id)
+		.setSubject(req.body.subject)
 		.build();
 
 	if (req.body.classes_id && req.body.classes_id.length > 0) {

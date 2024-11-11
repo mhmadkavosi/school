@@ -74,6 +74,7 @@ export const login_request = async (req: Request, res: Response) => {
 	});
 
 	console.log(code);
+	console.log(access_address);
 	if (!send_email) {
 		return ApiRes(res, {
 			status: HttpStatus.INTERNAL_SERVER_ERROR,
