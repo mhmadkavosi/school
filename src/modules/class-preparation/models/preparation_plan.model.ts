@@ -38,6 +38,10 @@ const PreparationPlanModel = DB.instance().define(
 		season: {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		notes: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	},
 	{

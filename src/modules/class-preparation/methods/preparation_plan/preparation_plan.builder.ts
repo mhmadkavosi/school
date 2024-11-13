@@ -8,6 +8,12 @@ export class PreparationPlanBuilder {
 	private preparation_id!: string;
 	private season!: string;
 	private subject!: string;
+	private notes!: string;
+
+	public setNotes(notes: string): this {
+		this.notes = notes;
+		return this;
+	}
 
 	public setSeason(season: string): this {
 		this.season = season;
@@ -75,6 +81,10 @@ export class PreparationPlanBuilder {
 
 	public getSubject(): string | undefined {
 		return this.subject;
+	}
+
+	public getNotes(): string {
+		return this.notes;
 	}
 
 	public async build(): Promise<RestApi.ObjectResInterface> {

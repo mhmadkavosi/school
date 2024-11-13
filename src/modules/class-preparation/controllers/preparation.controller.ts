@@ -59,7 +59,8 @@ export const add_plan = async (req: Request, res: Response) => {
 			number_of_class: req.body.number_of_class,
 			preparation_id: req.body.preparation_id,
 			subject: req.body.subject,
-			season: req.body.season
+			season: req.body.season,
+			notes: req.body.notes
 		},
 		{
 			week_number: ['required', 'numeric'],
@@ -68,7 +69,8 @@ export const add_plan = async (req: Request, res: Response) => {
 			number_of_class: ['required', 'numeric'],
 			preparation_id: ['required', 'string'],
 			subject: ['required', 'string'],
-			season: ['required', 'string']
+			season: ['required', 'string'],
+			notes: ['required', 'string']
 		}
 	);
 
@@ -84,6 +86,7 @@ export const add_plan = async (req: Request, res: Response) => {
 		.setPreparationId(req.body.preparation_id)
 		.setSeason(req.body.season)
 		.setSubject(req.body.subject)
+		.setNotes(req.body.notes)
 		.build();
 
 	return ApiRes(res, {

@@ -34,6 +34,10 @@ module.exports = {
 				type: Sequelize.INTEGER,
 				allowNull: false
 			},
+			notes: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			preparation_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
