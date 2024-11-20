@@ -32,8 +32,8 @@ export function RegisterMiddleware(app: Application) {
 	app.use(helmet());
 	app.use(hpp());
 
-	i18n.configure(I18nConfig);
-	app.use(i18n.init);
+	// i18n.configure(I18nConfig);
+	// app.use(i18n.init);
 
 	app.use((req, res, next) => {
 		Validator.useLang(req.locale);
