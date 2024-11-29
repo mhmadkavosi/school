@@ -308,9 +308,10 @@ export const get_by_id = async (req: Request, res: Response) => {
 		is_admin = true;
 	}
 
+	// TODO : fix this
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
-		data: { is_admin, ...result.data }
+		data: { is_admin, ...result.data.dataValues }
 	});
 };
 
