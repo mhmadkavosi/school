@@ -36,7 +36,7 @@ export function RegisterMiddleware(app: Application) {
 	// app.use(i18n.init);
 
 	app.use((req, res, next) => {
-		Validator.useLang(req.locale);
+		Validator.useLang(req.locale ?? "en");
 		next();
 	});
 
