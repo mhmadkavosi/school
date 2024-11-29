@@ -13,6 +13,7 @@ export class PreparationPlanUpdate {
 					number_of_class: builder.getNumberOfClass(),
 					preparation_id: builder.getPreparationId(),
 					subject: builder.getSubject(),
+					notes: builder.getNotes(),
 					season: builder.getSeason()
 				},
 				{ where: { id: builder.getId() } }

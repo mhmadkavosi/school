@@ -13,7 +13,8 @@ export class PreparationPlanCreate {
 					number_of_class: builder.getNumberOfClass(),
 					preparation_id: builder.getPreparationId(),
 					subject: builder.getSubject(),
-					season: builder.getSeason()
+					season: builder.getSeason(),
+					notes: builder.getNotes()
 				},
 				{ isNewRecord: true }
 			);
