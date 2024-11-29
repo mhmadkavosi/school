@@ -7,6 +7,7 @@ import { HttpStatus } from '../../../lib/http/http_status';
 import { PreparationPlanBuilder } from '../methods/preparation_plan/preparation_plan.builder';
 import { PreparationInfo } from '../methods/preparation/preparation_info';
 import { PreparationDestroy } from '../methods/preparation/preparation_delete';
+import { PreparationPlanDestroy } from '../methods/preparation_plan/preparation_plan_delete';
 
 export const preparation_create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -112,6 +113,7 @@ export const destroy_preparation = async (req: Request, res: Response) => {
 	}
 	// TODO : delete assoieted models
 	await new PreparationDestroy().destroy(req.body.preparation_id);
+	await new PreparationPlanDestroy().destroy_preparation_id(req.body.preparation_id);
 
 	return ApiRes(res, {
 		status: 204
@@ -160,6 +162,75 @@ export const add_plan = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const plan_update = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			plan_id: req.body.plan_id,
+			week_number: req.body.week_number,
+			field: req.body.field,
+			basic_concept: req.body.basic_concept,
+			number_of_class: req.body.number_of_class,
+			preparation_id: req.body.preparation_id,
+			subject: req.body.subject,
+			season: req.body.season,
+			notes: req.body.notes
+		},
+		{
+			plan_id: ['required', 'string'],
+			week_number: ['numeric'],
+			field: ['string'],
+			basic_concept: ['string'],
+			number_of_class: ['numeric'],
+			preparation_id: ['string'],
+			subject: ['string'],
+			season: ['string'],
+			notes: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new PreparationPlanBuilder()
+		.setId(req.body.plan_id)
+		.setWeekNumber(req.body.week_number)
+		.setField(req.body.field)
+		.setBasicConcept(req.body.basic_concept)
+		.setNumberOfClass(req.body.number_of_class)
+		.setPreparationId(req.body.preparation_id)
+		.setSeason(req.body.season)
+		.setSubject(req.body.subject)
+		.setNotes(req.body.notes)
+		.update();
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const destroy_plan = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			plan_id: req.body.plan_id
+		},
+		{
+			plan_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	// TODO : delete assoieted models
+	await new PreparationPlanDestroy().destroy(req.body.plan_id);
+
+	return ApiRes(res, {
+		status: 204
 	});
 };
 

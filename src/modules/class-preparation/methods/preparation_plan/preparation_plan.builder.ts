@@ -1,6 +1,8 @@
 import { PreparationPlanCreate } from './preparation_plan_create';
+import { PreparationPlanUpdate } from './preparation_plan_update';
 
 export class PreparationPlanBuilder {
+	private id?: string;
 	private week_number!: number;
 	private field!: string;
 	private basic_concept!: string;
@@ -9,6 +11,11 @@ export class PreparationPlanBuilder {
 	private season!: string;
 	private subject!: string;
 	private notes!: string;
+
+	public setId(id: string): this {
+		this.id = id;
+		return this;
+	}
 
 	public setNotes(notes: string): this {
 		this.notes = notes;
@@ -55,6 +62,10 @@ export class PreparationPlanBuilder {
 	}
 
 	// Getters for the fields (if needed)
+	public getId(): string | undefined {
+		return this.id;
+	}
+
 	public getWeekNumber(): number {
 		return this.week_number;
 	}
@@ -89,5 +100,8 @@ export class PreparationPlanBuilder {
 
 	public async build(): Promise<RestApi.ObjectResInterface> {
 		return await new PreparationPlanCreate().create(this);
+	}
+	public async update(): Promise<RestApi.ObjectResInterface> {
+		return await new PreparationPlanUpdate().update(this);
 	}
 }
