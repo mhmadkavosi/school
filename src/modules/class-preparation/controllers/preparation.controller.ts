@@ -6,6 +6,7 @@ import { ApiRes } from '../../../lib/http/api_response';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { PreparationPlanBuilder } from '../methods/preparation_plan/preparation_plan.builder';
 import { PreparationInfo } from '../methods/preparation/preparation_info';
+import { PreparationDestroy } from '../methods/preparation/preparation_delete';
 
 export const preparation_create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -47,6 +48,73 @@ export const preparation_create = async (req: Request, res: Response) => {
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 		data: result.data
+	});
+};
+
+export const preparation_update = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			preparation_year_start: req.body.preparation_year_start,
+			preparation_year_end: req.body.preparation_year_end,
+			subject: req.body.subject,
+			class_level_id: req.body.class_level_id,
+			grade: req.body.grade,
+			semester: req.body.semester,
+			part: req.body.part,
+			season: req.body.season,
+			id: req.body.id
+		},
+		{
+			id: ['required', 'string'],
+			preparation_year_start: ['string'],
+			preparation_year_end: ['string'],
+			subject: ['string'],
+			class_level_id: ['string'],
+			grade: ['string'],
+			semester: ['string'],
+			part: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new PreparationBuilder()
+		.setId(req.body.id)
+		.setClassLevelId(req.body.class_level_id)
+		.setGrade(req.body.grade)
+		.setPreparationYearStart(req.body.preparation_year_start)
+		.setPreparationYearEnd(req.body.preparation_year_end)
+		.setSubject(req.body.subject)
+		.setSemester(req.body.semester)
+		.setPart(req.body.part)
+		.update();
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const destroy_preparation = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			preparation_id: req.body.preparation_id
+		},
+		{
+			preparation_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	// TODO : delete assoieted models
+	await new PreparationDestroy().destroy(req.body.preparation_id);
+
+	return ApiRes(res, {
+		status: 204
 	});
 };
 

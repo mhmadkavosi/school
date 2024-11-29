@@ -1,6 +1,8 @@
 import { PreparationCreate } from './preparation_create';
+import { PreparationUpdate } from './preparation_update';
 
 export class PreparationBuilder {
+	private id?: string;
 	private preparation_year_start!: string;
 	private preparation_year_end!: string;
 	private subject!: string;
@@ -10,6 +12,10 @@ export class PreparationBuilder {
 	private part?: string;
 	private notes?: string;
 
+	public setId(id: string): this {
+		this.id = id;
+		return this;
+	}
 	// Set the preparation year start
 	public setPreparationYearStart(preparationYearStart: string): this {
 		this.preparation_year_start = preparationYearStart;
@@ -59,6 +65,10 @@ export class PreparationBuilder {
 	}
 
 	// Getters for the fields (if needed)
+	public getId(): string | undefined {
+		return this.id;
+	}
+
 	public getPreparationYearStart(): string {
 		return this.preparation_year_start;
 	}
@@ -93,5 +103,9 @@ export class PreparationBuilder {
 
 	public async build(): Promise<RestApi.ObjectResInterface> {
 		return await new PreparationCreate().create(this);
+	}
+
+	public async update(): Promise<RestApi.ObjectResInterface> {
+		return await new PreparationUpdate().update(this);
 	}
 }
