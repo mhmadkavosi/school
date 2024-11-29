@@ -302,9 +302,15 @@ export const update_password = async (req: Request, res: Response) => {
 
 export const get_by_id = async (req: Request, res: Response) => {
 	const result = await new TeacherInfo().get_by_id(req.user_id);
+	const email_data = ['mhmad.kavosi@gmail.com', 'amirbaqian@gmail.com'];
+	let is_admin = false;
+	if (email_data.includes(result.data.email)) {
+		is_admin = true;
+	}
+
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
-		data: result.data
+		data: { is_admin, ...result.data }
 	});
 };
 
