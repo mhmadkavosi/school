@@ -11,8 +11,6 @@ const createServer = () => {
 
 	return server;
 };
-console.log(`${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}`)
-
 const startServer = async () => {
 	try {
 		createServer();
