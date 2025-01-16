@@ -1,15 +1,8 @@
 FROM node:22.9.0-alpine
-
 WORKDIR /usr/src/app
-
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the code
+RUN npm install -g npm
+RUN npm ci
 COPY . .
-
-# Start the application
-CMD ["npm", "start"]
+RUN npm run build
+CMD ["sh", "-c", "npm run start"]
