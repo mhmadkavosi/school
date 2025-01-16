@@ -5,5 +5,5 @@
  */
 
 module.exports = {
-	url: `${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}`
+	url: `${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}?sslmode=require`
 };

@@ -9,7 +9,7 @@ class DB {
 
 	private constructor() {
 		try {
-			DB._instance = new Sequelize(`${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}`, {
+			DB._instance = new Sequelize(`${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}?sslmode=require`, {
 				dialect: 'postgres',
 				omitNull: true,
 				logging: process.env.NODE_ENV === 'production' ? false : (msg: any) => AppLogger.debug(msg),
