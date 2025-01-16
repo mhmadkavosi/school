@@ -12,10 +12,12 @@ class DB {
 			DB._instance = new Sequelize(`${process.env.POSTGRES_URL}/${process.env.POSTGRES_DB}`, {
 				dialect: 'postgres',
 				omitNull: true,
-				ssl : true,
 				logging: process.env.NODE_ENV === 'production' ? false : (msg: any) => AppLogger.debug(msg),
 				dialectOptions: {
-					keepAlive: true
+					keepAlive: true,
+					ssl: {
+						rejectUnauthorized: false,
+					},
 				},
 				define: {
 					underscored: true,
