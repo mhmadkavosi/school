@@ -15,8 +15,8 @@ export function RegisterMiddleware(app: Application) {
 
 	// Rate limit
 	const rateLimitMiddleware = rateLimit({
-		windowMs: 10 * 60 * 1000, // 5 minutes
-		max: 500,
+		windowMs: 5 * 60 * 1000, // 5 minutes
+		max: 200,
 		keyGenerator: (req: Request) => {
 			const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
 			return Array.isArray(ipAddress) ? ipAddress.join(',') : ipAddress;
