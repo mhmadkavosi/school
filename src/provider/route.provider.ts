@@ -22,6 +22,10 @@ import ExamRouter from '../modules/exam/routes/exam.routes';
 import ClassTimingRouter from '../modules/school_class/routes/class_timing.routes';
 import ClassPreparationRouter from '../modules/class-preparation/routes/class-preparation.routes';
 import PreparationRouter from '../modules/class-preparation/routes/preparation.routes';
+import AdminRouter from '../modules/admin/routes/admin.router';
+import AdminProfileRouter from '../modules/admin/routes/admin_profile.router';
+import AdminAuthRouter from '../modules/admin-auth/routes/admin.auth.router';
+import AdminTokenRouter from '../modules/admin-auth/routes/admin_token.router';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -70,4 +74,10 @@ export function RegisterRoutes(app: Application) {
 	// Preparation
 	app.use(routePrefix, ClassPreparationRouter);
 	app.use(routePrefix, PreparationRouter);
+
+	//admin
+	app.use(routePrefix, AdminRouter);
+	app.use(routePrefix, AdminProfileRouter);
+	app.use(routePrefix, AdminAuthRouter);
+	app.use(routePrefix, AdminTokenRouter);
 }

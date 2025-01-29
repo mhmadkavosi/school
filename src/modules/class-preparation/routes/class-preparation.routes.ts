@@ -6,6 +6,8 @@ const ClassPreparationRouter: Router = Router();
 
 const route_prefix = '/class-preparation';
 
+// TODO : add admin auth
+
 ClassPreparationRouter.get(`${route_prefix}`, TeacherAuthMiddleware, ClassPreparationController.get_all);
 ClassPreparationRouter.get(
 	`${route_prefix}/:class_preparation_id/info`,

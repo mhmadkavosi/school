@@ -5,6 +5,7 @@ const PreparationRouter: Router = Router();
 
 const route_prefix = '/preparation';
 
+// TODO : add admin auth
 PreparationRouter.get(`${route_prefix}`, PreparationController.get_all);
 PreparationRouter.post(`${route_prefix}`, PreparationController.preparation_create);
 PreparationRouter.post(`${route_prefix}/plan`, PreparationController.add_plan);

@@ -24,5 +24,11 @@ declare global {
 			data?: any;
 			msg?: string;
 		}
+
+		interface RestApiAdminTokenInterface {
+			user_id: string;
+			token_id: string;
+			expire_at: Date;
+		}
 	}
 }
