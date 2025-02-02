@@ -31,7 +31,7 @@ export const remove_user_token = async (req: Request, res: Response) => {
 };
 
 export const terminate_all_tokens = async (req: Request, res: Response) => {
-	const result = await new AdminTokenRemove().remove_all_tokens_by_user_id(req.user_id);
+	const result = await new AdminTokenRemove().remove_all_tokens_by_user_id(req.admin_id);
 
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
@@ -39,7 +39,7 @@ export const terminate_all_tokens = async (req: Request, res: Response) => {
 };
 
 export const get_all_admin_token = async (req: Request, res: Response) => {
-	const result = await new AdminTokenInfo().get_all_admin_token_by_user_id(req.user_id, req.token_id);
+	const result = await new AdminTokenInfo().get_all_admin_token_by_user_id(req.admin_id, req.token_id);
 
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

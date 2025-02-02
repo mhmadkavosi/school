@@ -9,11 +9,7 @@ module.exports = {
 				primaryKey: true,
 				defaultValue: Sequelize.UUIDV4
 			},
-			national_code: {
-				type: Sequelize.STRING(10),
-				allowNull: false,
-				unique: true
-			},
+
 			email: {
 				type: Sequelize.STRING(126),
 				allowNull: false,

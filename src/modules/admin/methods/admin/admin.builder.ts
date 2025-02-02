@@ -2,20 +2,10 @@ import { AdminCreate } from './admin_create';
 import { hash_password } from '../../../../utils/hashed_id_generetor.utility';
 
 export class AdminBuilder {
-	private national_code!: string;
 	private email!: string;
 	private name!: string;
 	private family!: string;
 	private password!: string;
-
-	public setNationalCode(national_code: string): this {
-		this.national_code = national_code;
-		return this;
-	}
-
-	public getNationalCode(): string {
-		return this.national_code;
-	}
 
 	public setEmail(email: string): this {
 		this.email = email;

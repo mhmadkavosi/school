@@ -26,8 +26,8 @@ declare global {
 		}
 
 		interface RestApiAdminTokenInterface {
-			user_id: string;
-			token_id: string;
+			admin_id: string;
+			admin_token_id: string;
 			expire_at: Date;
 		}
 	}

@@ -24,29 +24,29 @@ export const AdminAuthMiddleware = async (req: Request, res: Response, next: Nex
 
 		let admin_token_info: any | RestApi.ObjectResInterface = null;
 
-		admin_token_info = app_cache().get(jwt_data.token_id);
+		admin_token_info = app_cache().get(jwt_data.admin_token_id);
 
 		if (!admin_token_info) {
 			admin_token_info = await new AdminTokenInfo().get_admin_token_by_admin_id_and_token_id(
-				jwt_data.user_id,
-				jwt_data.token_id
+				jwt_data.admin_id,
+				jwt_data.admin_token_id
 			);
 
 			const differenceInMilliseconds: any = new Date(jwt_data.expire_at).getTime() - new Date().getTime();
 
-			app_cache().set(jwt_data.token_id, admin_token_info, differenceInMilliseconds);
+			app_cache().set(jwt_data.admin_token_id, admin_token_info, differenceInMilliseconds);
 		}
 
 		if (!admin_token_info.is_success || !admin_token_info.data) {
 			return new UnauthorizedError(res);
 		}
 
-		new AdminTokenUpdate().update_last_activity_by_token_id(jwt_data.token_id).catch((e: any) => {
+		new AdminTokenUpdate().update_last_activity_by_token_id(jwt_data.admin_token_id).catch((e: any) => {
 			AppLogger.error('error in AdminAuthMiddleware : AdminTokenUpdate', e);
 		});
 
-		req.user_id = jwt_data.user_id;
-		req.token_id = jwt_data.token_id;
+		req.admin_id = jwt_data.admin_id;
+		req.token_id = jwt_data.admin_token_id;
 		return next();
 	} catch (e: any) {
 		AppLogger.error('Error in AdminAuthMiddleware', e);

@@ -27,27 +27,6 @@ export class AdminInfo {
 
 	/**
 	 *
-	 * @param national_code
-	 */
-	async get_by_national_code(national_code: string): Promise<RestApi.ObjectResInterface> {
-		try {
-			const result = await AdminModel.findOne({ where: { national_code: national_code } });
-
-			return {
-				is_success: !!result,
-				data: result
-			};
-		} catch (error) {
-			AppLogger.error('Error in AdminInfo get_info_user_by_national_code', error);
-			return {
-				is_success: false,
-				msg: 'Internal Server Error'
-			};
-		}
-	}
-
-	/**
-	 *
 	 * @param id
 	 */
 	async get_password_by_id(id: string): Promise<RestApi.ObjectResInterface> {
@@ -94,7 +73,6 @@ export class AdminInfo {
 	 *
 	 * @param page
 	 * @param limit
-	 * @param national_code
 	 * @param name
 	 * @param family
 	 *
@@ -102,7 +80,6 @@ export class AdminInfo {
 	async get_all_admins(
 		page: number,
 		limit: number,
-		national_code: string,
 		name: string,
 		family: string,
 		email: string
@@ -111,13 +88,6 @@ export class AdminInfo {
 			const skip = (page - 1) * limit;
 			const match: any = [];
 
-			if (!!national_code) {
-				match.push({
-					national_code: {
-						[Op.like]: `%${national_code}%`
-					}
-				});
-			}
 			if (!!email) {
 				match.push({
 					email: {
@@ -147,7 +117,7 @@ export class AdminInfo {
 				distinct: true,
 				limit: limit,
 				offset: skip,
-				attributes: ['id', 'national_code', 'name', 'family', 'is_active', 'created_at', 'updated_at'],
+				attributes: ['id', 'name', 'family', 'is_active', 'created_at', 'updated_at'],
 				order: [['created_at', 'ASC']]
 			});
 

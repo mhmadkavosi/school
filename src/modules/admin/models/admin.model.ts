@@ -8,11 +8,7 @@ const AdminModel = DB.instance().define(
 			primaryKey: true,
 			defaultValue: DataTypes.UUIDV4
 		},
-		national_code: {
-			type: DataTypes.STRING(10),
-			allowNull: false,
-			unique: true
-		},
+
 		email: {
 			type: DataTypes.STRING(126),
 			allowNull: false,

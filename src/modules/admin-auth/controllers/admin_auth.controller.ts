@@ -92,7 +92,7 @@ export const login: any = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
 	const result = await new AdminTokenRemove().remove_admin_token_by_admin_id_and_token_id(
 		req.token_id,
-		req.user_id
+		req.admin_id
 	);
 
 	return ApiRes(res, <RestApi.ResInterface>{

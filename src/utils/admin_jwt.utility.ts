@@ -5,15 +5,15 @@ import { sign, verify } from 'jsonwebtoken';
 export class AdminJwtUtility {
 	/**
 	 *
-	 * @param user_id
+	 * @param admin_id
 	 * @param token_id
 	 */
-	static create(user_id: string, token_id: string): string | null {
+	static create(admin_id: string, token_id: string): string | null {
 		try {
 			return sign(
 				{
-					user_id: user_id,
-					token_id: token_id
+					admin_id: admin_id,
+					admin_token_id: token_id
 				},
 				process.env.SECRET_KEY,
 				{ algorithm: 'HS512', expiresIn: '1d' }

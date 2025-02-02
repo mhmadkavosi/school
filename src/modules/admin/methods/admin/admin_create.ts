@@ -11,7 +11,6 @@ export class AdminCreate {
 		try {
 			const result = await AdminModel.create(
 				{
-					national_code: builder.getNationalCode(),
 					name: builder.getName(),
 					family: builder.getFamily(),
 					password: builder.getPassword(),

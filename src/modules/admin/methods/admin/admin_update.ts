@@ -8,20 +8,12 @@ export class AdminUpdate {
 	 * @param name
 	 * @param family
 	 */
-	async update_user_info(
-		user_id: string,
-		name: string,
-		family: string,
-		national_code: string,
-		email: string,
-		super_admin: boolean
-	) {
+	async update_user_info(user_id: string, name: string, family: string, email: string, super_admin: boolean) {
 		try {
 			const [result] = await AdminModel.update(
 				{
 					name: name,
 					family: family,
-					national_code,
 					email,
 					super_admin
 				},
