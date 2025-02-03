@@ -3,6 +3,7 @@ import DB from '../../../config/sequelize.config';
 import { SexEnum } from './enums/sex.enum';
 import SectionModel from './section.model';
 import StateModel from './state.model';
+import ClassesModel from '../../school_class/models/classes.model';
 
 const SchoolModel = DB.instance().define(
 	'school',
@@ -45,6 +46,12 @@ SchoolModel.hasOne(SectionModel, {
 SchoolModel.hasOne(StateModel, {
 	sourceKey: 'state_id',
 	foreignKey: 'id'
+});
+
+SchoolModel.hasMany(ClassesModel, {
+	foreignKey: 'school_id',
+	sourceKey: 'id',
+	as: 'classes'
 });
 
 export default SchoolModel;

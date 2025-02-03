@@ -55,19 +55,9 @@ const ClassesModel = DB.instance().define(
 	}
 );
 
-ClassesModel.hasOne(SchoolModel, {
-	foreignKey: 'id',
-	sourceKey: 'school_id'
-});
-
 ClassesModel.hasOne(ClassLevelModel, {
 	foreignKey: 'id',
 	sourceKey: 'class_level_id'
-});
-
-ClassesModel.hasOne(TeacherModel, {
-	foreignKey: 'id',
-	sourceKey: 'teacher_id'
 });
 
 export default ClassesModel;

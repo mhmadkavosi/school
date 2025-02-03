@@ -26,12 +26,14 @@ import AdminRouter from '../modules/admin/routes/admin.router';
 import AdminProfileRouter from '../modules/admin/routes/admin_profile.router';
 import AdminAuthRouter from '../modules/admin-auth/routes/admin.auth.router';
 import AdminTokenRouter from '../modules/admin-auth/routes/admin_token.router';
+import AdminTeacherRouter from '../modules/teacher/routes/admin_teacher.routes';
+import AdminSchoolRouter from '../modules/school/routes/admin_school.routes';
+import AdminNewsRouter from '../modules/news/routes/admin_news.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
 	// auth
 	app.use(routePrefix, AuthRouter);
-	app.use(routePrefix, AdminTokenRouter);
 
 	// teacher
 	app.use(routePrefix, TeacherRouter);
@@ -81,4 +83,7 @@ export function RegisterRoutes(app: Application) {
 	app.use(routePrefix, AdminProfileRouter);
 	app.use(routePrefix, AdminAuthRouter);
 	app.use(routePrefix, AdminTokenRouter);
+	app.use(routePrefix, AdminTeacherRouter);
+	app.use(routePrefix, AdminSchoolRouter);
+	app.use(routePrefix, AdminNewsRouter);
 }

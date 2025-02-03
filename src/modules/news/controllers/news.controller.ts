@@ -253,3 +253,30 @@ export const get_count_of_news = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const total_news = async (req: Request, res: Response) => {
+	const result = await new NewsInfo().get_total_news();
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const total_news_category = async (req: Request, res: Response) => {
+	const result = await new NewsInfo().get_total_news_by_section();
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_all_news = async (req: Request, res: Response) => {
+	const result = await new NewsInfo().get_total_views_by_school();
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};

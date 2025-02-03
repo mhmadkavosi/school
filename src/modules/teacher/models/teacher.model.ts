@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
 import MajorModel from '../../school_class/models/major.model';
 import SchoolModel from '../../school/models/school.model';
+import ClassesModel from '../../school_class/models/classes.model';
 
 const TeacherModel = DB.instance().define(
 	'Teacher',
@@ -66,6 +67,18 @@ TeacherModel.hasOne(SchoolModel, {
 TeacherModel.hasOne(MajorModel, {
 	foreignKey: 'id',
 	sourceKey: 'major_id'
+});
+
+TeacherModel.hasMany(ClassesModel, {
+	foreignKey: 'teacher_id',
+	sourceKey: 'id',
+	as: 'classes'
+});
+
+ClassesModel.hasOne(TeacherModel, {
+	foreignKey: 'id',
+	sourceKey: 'teacher_id',
+	as: 'teacher'
 });
 
 export default TeacherModel;
