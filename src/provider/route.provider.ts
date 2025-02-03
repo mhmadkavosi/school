@@ -31,6 +31,7 @@ export function RegisterRoutes(app: Application) {
 
 	// auth
 	app.use(routePrefix, AuthRouter);
+	app.use(routePrefix, AdminTokenRouter);
 
 	// teacher
 	app.use(routePrefix, TeacherRouter);
