@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
 import ClassLevelModel from './class_level.model';
-import SchoolModel from '../../school/models/school.model';
-import TeacherModel from '../../teacher/models/teacher.model';
 
 const ClassesModel = DB.instance().define(
 	'class',

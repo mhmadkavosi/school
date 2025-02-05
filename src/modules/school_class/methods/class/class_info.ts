@@ -10,6 +10,7 @@ import { StudentHomeWorkStatusEnum } from '../../../home_work/models/enums/stude
 import StudentExamModel from '../../../exam/models/student_exam.model';
 import AttendanceModel from '../../../attendance/models/attendance.model';
 import { AttendanceTypeEnum } from '../../../attendance/models/enums/attendance_type.enum';
+import { paginate } from '../../../../utils/paginate.utility';
 
 export class ClassInfo {
 	async get_all_by_teacher_id(teacher_id: string): Promise<RestApi.ObjectResInterface> {
@@ -232,6 +233,53 @@ export class ClassInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentInfo get_student_for_exports', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_classes_by_teacher(
+		teacher_id: string,
+		limit: number,
+		page: number
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+
+			// Retrieve classes for the given teacher ID with a nested include of students.
+			const result = await ClassesModel.findAndCountAll({
+				where: { teacher_id },
+				distinct: true,
+				limit,
+				offset: skip,
+				attributes: ['id', 'name', 'link'], // Only need the class name from ClassesModel
+				include: [
+					{
+						model: StudentModel,
+						as: 'students', // Must match the alias defined in ClassesModel.hasMany(StudentModel, { as: 'students' })
+						attributes: ['id'] // Only need the id to count the number of students
+					}
+				]
+			});
+
+			// Map each class to an object with class name and total student count.
+			const classesList = result.rows.map((cls: any) => {
+				const class_name = cls.name;
+				const class_link = cls.link;
+				const class_id = cls.id;
+				// Total students is the length of the students array (or 0 if undefined)
+				const total_student = cls.students ? cls.students.length : 0;
+				return { class_link, class_id, class_name, total_student };
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, { count: result.count, rows: classesList })
+			};
+		} catch (error) {
+			AppLogger.error('Error in get_classes_by_teacher', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

@@ -7,6 +7,7 @@ import MajorModel from '../../school_class/models/major.model';
 import ClassesModel from '../../school_class/models/classes.model';
 import ClassLevelModel from '../../school_class/models/class_level.model';
 import StudentModel from '../../student/models/student.model';
+import { paginate } from '../../../utils/paginate.utility';
 
 export class TeacherInfo {
 	async get_by_email(email: string): Promise<RestApi.ObjectResInterface> {
@@ -204,10 +205,7 @@ export class TeacherInfo {
 			});
 			return {
 				is_success: true,
-				data: {
-					count: result.count,
-					rows: teacherList
-				}
+				data: paginate(page, limit, { count: result.count, rows: teacherList })
 			};
 		} catch (error) {
 			AppLogger.error('Error in get_teacher_list', error);

@@ -6,6 +6,7 @@ import SectionModel from '../models/section.model';
 import ClassesModel from '../../school_class/models/classes.model';
 import TeacherModel from '../../teacher/models/teacher.model';
 import StudentModel from '../../student/models/student.model';
+import { paginate } from '../../../utils/paginate.utility';
 
 export class SchoolInfo {
 	async get_all(): Promise<RestApi.ObjectResInterface> {
@@ -175,10 +176,7 @@ export class SchoolInfo {
 
 			return {
 				is_success: true,
-				data: {
-					count: result.count,
-					rows: schoolList
-				}
+				data: paginate(page, limit, { count: result.count, rows: schoolList })
 			};
 		} catch (error) {
 			AppLogger.error('Error in get_all_school_info', error);

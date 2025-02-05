@@ -104,6 +104,35 @@ export class StudentInfo {
 			};
 		}
 	}
+	async get_all_student_of_class_paginate(
+		page: number,
+		limit: number,
+		class_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+
+			const result = await StudentModel.findAndCountAll({
+				where: { class_id },
+				distinct: true,
+				limit: limit,
+				offset: skip,
+				attributes: ['id', 'profile_picture', 'phone', 'name', 'family', 'email', 'birth_date', 'class_id'],
+				order: [['created_at', 'DESC']]
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_all_student_of_class_paginate', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 
 	async get_all_student_by_school_id(
 		page: number,
