@@ -20,4 +20,10 @@ AdminTeacherRouter.get(
 	AdminTeacherController.get_total_teacher_section
 );
 
+AdminTeacherRouter.get(
+	`${route_prefix}/:teacher_id/info`,
+	AdminAuthMiddleware,
+	AdminTeacherController.get_by_id
+);
+
 export default AdminTeacherRouter;

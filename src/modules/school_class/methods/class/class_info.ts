@@ -96,17 +96,31 @@ export class ClassInfo {
 
 	async get_all_by_school_id(school_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findAll({
-				where: { school_id },
-				include: [{ model: ClassLevelModel }, { model: SchoolModel }]
+			const result = await SchoolModel.findAll({
+				where: { id: school_id },
+				include: [
+					{
+						model: ClassesModel,
+						as: 'classes',
+						include: [
+							{
+								model: ClassLevelModel
+							}
+						]
+					}
+				]
 			});
+			// const result = await ClassesModel.findAll({
+			// 	where: { school_id },
+			// 	include: [{ model: ClassLevelModel }, { model: SchoolModel }]
+			// });
 
 			return {
 				is_success: true,
 				data: result
 			};
 		} catch (error) {
-			AppLogger.error('Error in ClassInfo get_by_id', error);
+			AppLogger.error('Error in ClassInfo get_all_by_school_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

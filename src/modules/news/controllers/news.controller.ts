@@ -254,6 +254,15 @@ export const get_count_of_news = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_count_of_news_by_shool_id = async (req: Request, res: Response) => {
+	const result = await new NewsInfo().get_counts(req.params.school_id);
+
+	return ApiRes(res, <RestApi.ResInterface>{
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const total_news = async (req: Request, res: Response) => {
 	const result = await new NewsInfo().get_total_news();
 

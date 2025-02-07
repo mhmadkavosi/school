@@ -15,4 +15,11 @@ AdminNewsRouter.get(
 
 AdminNewsRouter.get(`${route_prefix}/all`, AdminAuthMiddleware, NewsController.get_all_news);
 
+AdminNewsRouter.get(`${route_prefix}/category/info`, NewsController.get_all_news_by_category_id);
+AdminNewsRouter.get(`${route_prefix}/school/info`, NewsController.get_all_news_by_school_id);
+AdminNewsRouter.get(`${route_prefix}/:news_id/details`, NewsController.get_info);
+AdminNewsRouter.get(`${route_prefix}/school/:school/count`, NewsController.get_count_of_news_by_shool_id);
+
+AdminNewsRouter.put(`${route_prefix}/file`, AdminAuthMiddleware, NewsController.update_file);
+AdminNewsRouter.delete(`${route_prefix}/file`, AdminAuthMiddleware, NewsController.delete_file);
 export default AdminNewsRouter;
