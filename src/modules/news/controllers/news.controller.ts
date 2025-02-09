@@ -282,7 +282,7 @@ export const total_news_category = async (req: Request, res: Response) => {
 };
 
 export const get_all_news = async (req: Request, res: Response) => {
-	const result = await new NewsInfo().get_total_views_by_school();
+	const result = await new NewsInfo().get_total_news_school();
 
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

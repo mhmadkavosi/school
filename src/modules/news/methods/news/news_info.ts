@@ -162,23 +162,23 @@ export class NewsInfo {
 		}
 	}
 
-	async get_total_views_by_school(): Promise<RestApi.ObjectResInterface> {
+	async get_total_news_school(): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await NewsModel.findAll({
 				attributes: [
-					// Retrieve the school's name from the associated model
+					// Retrieve the school's name from the associated SchoolModel (alias "school")
 					[Sequelize.col('school.name'), 'school_name'],
-					// Sum the views from the news items
-					[Sequelize.fn('SUM', Sequelize.col('views')), 'total_views']
+					// Count the number of news items for each school.
+					[Sequelize.fn('COUNT', Sequelize.col('news.id')), 'total_news']
 				],
 				include: [
 					{
 						model: SchoolModel,
-						as: 'school', // Must match the alias in NewsModel.belongsTo(SchoolModel, { as: 'school' })
-						attributes: [] // We don't need any additional school attributes here
+						as: 'school', // Must match the alias used in NewsModel.belongsTo(SchoolModel, { as: 'school' })
+						attributes: [] // No additional school attributes are needed for this query
 					}
 				],
-				// Group the results by the school's name
+				// Group by the school's name so that we get one row per school
 				group: ['school.name'],
 				raw: true
 			});
@@ -188,7 +188,7 @@ export class NewsInfo {
 				data: result
 			};
 		} catch (error) {
-			AppLogger.error('Error in get_total_views_by_school', error);
+			AppLogger.error('Error in get_total_news_by_school', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

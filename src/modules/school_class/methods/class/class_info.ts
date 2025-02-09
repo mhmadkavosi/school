@@ -268,12 +268,16 @@ export class ClassInfo {
 				distinct: true,
 				limit,
 				offset: skip,
-				attributes: ['id', 'name', 'link'], // Only need the class name from ClassesModel
+				attributes: ['id', 'name', 'link', 'count', 'color', 'major', 'major_type'], // Only need the class name from ClassesModel
 				include: [
 					{
 						model: StudentModel,
 						as: 'students', // Must match the alias defined in ClassesModel.hasMany(StudentModel, { as: 'students' })
 						attributes: ['id'] // Only need the id to count the number of students
+					},
+					{
+						model: ClassLevelModel,
+						attributes: ['name', 'level', 'id']
 					}
 				]
 			});
@@ -283,9 +287,24 @@ export class ClassInfo {
 				const class_name = cls.name;
 				const class_link = cls.link;
 				const class_id = cls.id;
+				const class_count = cls.count;
+				const class_color = cls.color;
+				const class_major = cls.major;
+				const class_major_type = cls.major_type;
+				const class_level = cls.class_level;
 				// Total students is the length of the students array (or 0 if undefined)
 				const total_student = cls.students ? cls.students.length : 0;
-				return { class_link, class_id, class_name, total_student };
+				return {
+					class_link,
+					class_id,
+					class_name,
+					total_student,
+					class_count,
+					class_color,
+					class_major,
+					class_major_type,
+					class_level
+				};
 			});
 
 			return {
