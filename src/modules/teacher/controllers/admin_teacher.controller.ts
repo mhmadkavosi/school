@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import Validator from 'validatorjs';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
-import { BadRequestError } from '../../../lib/http/error/bad_request.error';
-import { InternalServerError } from '../../../lib/http/error/internal_server.error';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { ApiRes } from '../../../lib/http/api_response';
 import { TeacherInfo } from '../methods/teacher_info';
@@ -47,7 +45,7 @@ export const get_all_teacher = async (req: Request, res: Response) => {
 };
 
 export const get_by_id = async (req: Request, res: Response) => {
-	const result = await new TeacherInfo().get_by_id(req.params.teacher_id);
+	const result = await new TeacherInfo().get_details(req.params.teacher_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
