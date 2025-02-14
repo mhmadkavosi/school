@@ -21,7 +21,7 @@ AdminSchoolRouter.post(route_prefix, AdminAuthMiddleware, SchoolController.creat
 AdminSchoolRouter.get(
 	`${route_prefix}/:school_id/info`,
 	AdminAuthMiddleware,
-	SchoolController.get_info_by_id
+	AdminSchoolController.get_info_by_id
 );
 
 export default AdminSchoolRouter;

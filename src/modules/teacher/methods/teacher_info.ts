@@ -69,7 +69,7 @@ export class TeacherInfo {
 				include: [
 					{
 						model: SchoolModel,
-						attributes: ['name']
+						attributes: ['id', 'name']
 					},
 					{
 						model: MajorModel,
@@ -110,7 +110,7 @@ export class TeacherInfo {
 				const teacher_id = teacher.id;
 				const teacher_name = `${teacher.name} ${teacher.family}`;
 				const school_name = teacher.school ? teacher.school.name : null;
-				console.log(teacher.major);
+				const school_id = teacher.school.id;
 				const major_name = teacher.major ? teacher.major.name : null;
 
 				// Calculate the class level and total student count.
@@ -130,7 +130,7 @@ export class TeacherInfo {
 					});
 				}
 
-				return { teacher_id, teacher_name, school_name, major_name, class_level, total_student };
+				return { teacher_id, teacher_name, school_name, major_name, class_level, total_student, school_id };
 			};
 			const data = teacherList(result);
 			return {

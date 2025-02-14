@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { AppLogger } from '../../../../lib/logger/Logger';
 import { make_random_string } from '../../../../utils/random_generator.utility';
 import SchoolModel from '../../../school/models/school.model';
@@ -110,10 +110,52 @@ export class ClassInfo {
 					}
 				]
 			});
-			// const result = await ClassesModel.findAll({
-			// 	where: { school_id },
-			// 	include: [{ model: ClassLevelModel }, { model: SchoolModel }]
-			// });
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in ClassInfo get_all_by_school_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_by_school_id_admin(school_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await SchoolModel.findAll({
+				where: { id: school_id },
+				include: [
+					{
+						model: ClassesModel,
+						as: 'classes',
+						attributes: [
+							'id',
+							'name', // Assuming 'name' is the class name field,
+							[
+								Sequelize.literal(
+									`COALESCE((SELECT COUNT(*) FROM students WHERE students.class_id = classes.id), 0)`
+								),
+								'total_students'
+							]
+						],
+						include: [
+							{
+								model: ClassLevelModel
+							},
+							{
+								model: StudentModel,
+								as: 'students', // Make sure the alias matches your associations
+								attributes: ['id']
+							}
+						]
+					}
+				],
+				group: ['school.id', 'classes.id', 'classes->class_level.id', 'classes->students.id']
+			});
 
 			return {
 				is_success: true,

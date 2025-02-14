@@ -44,3 +44,11 @@ export const get_all_school = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const get_info_by_id = async (req: Request, res: Response) => {
+	const result = await new SchoolInfo().get_info_by_id_admin(req.params.school_id);
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND,
+		data: result.data
+	});
+};

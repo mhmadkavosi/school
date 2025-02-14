@@ -41,7 +41,7 @@ export const get_by_id = async (req: Request, res: Response) => {
 };
 
 export const get_all_by_school_id = async (req: Request, res: Response) => {
-	const result = await new ClassInfo().get_all_by_school_id(req.params.school_id);
+	const result = await new ClassInfo().get_all_by_school_id_admin(req.params.school_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

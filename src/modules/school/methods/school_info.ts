@@ -43,6 +43,81 @@ export class SchoolInfo {
 		}
 	}
 
+	async get_info_by_id_admin(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			// Retrieve schools along with their associated section and classes.
+			// For each class, load its teacher and its students.
+			const result = await SchoolModel.findOne({
+				where: { id },
+				order: [['created_at', 'DESC']], // Adjust if your timestamp field is named differently.
+				include: [
+					{
+						model: SectionModel,
+						as: 'section',
+						attributes: ['name']
+					},
+					{
+						model: ClassesModel,
+						as: 'classes',
+						attributes: ['id'], // Only need the id for counting classes.
+						include: [
+							{
+								model: TeacherModel,
+								as: 'teacher',
+								attributes: ['id'] // We need the teacher id to count unique teachers.
+							},
+							{
+								model: StudentModel,
+								as: 'students',
+								attributes: ['id'] // Only need the id for counting students.
+							}
+						]
+					}
+				]
+			});
+
+			// Post-process the result to build the output fields.
+			const schoolList = (school: any) => {
+				const school_id = school.id;
+				const school_name = school.name;
+				const level = school.section ? school.section.name : null;
+				const total_class = school.classes ? school.classes.length : 0;
+
+				// Sum up students across all classes.
+				let total_students = 0;
+				// Use a Set to collect unique teacher ids.
+				const teacherSet = new Set<string>();
+
+				if (school.classes && school.classes.length > 0) {
+					school.classes.forEach((cls: any) => {
+						if (cls.students) {
+							total_students += cls.students.length;
+						}
+						if (cls.teacher && cls.teacher.id) {
+							teacherSet.add(cls.teacher.id);
+						}
+					});
+				}
+
+				const total_teachers = teacherSet.size;
+				return { school_id, school_name, level, total_class, total_students, total_teachers };
+			};
+
+			const data = schoolList(result);
+
+			return {
+				is_success: true,
+				data
+			};
+		} catch (error) {
+			AppLogger.error('Error in SchoolInfo get_info_by_id_admin', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
 	async get_info_by_sex(sex: SexEnum): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await SchoolModel.findAll({ where: { sex, is_active: true } });

@@ -168,6 +168,7 @@ export class NewsInfo {
 				attributes: [
 					// Retrieve the school's name from the associated SchoolModel (alias "school")
 					[Sequelize.col('school.name'), 'school_name'],
+					[Sequelize.col('school.id'), 'school_id'],
 					// Count the number of news items for each school.
 					[Sequelize.fn('COUNT', Sequelize.col('news.id')), 'total_news']
 				],
@@ -179,7 +180,7 @@ export class NewsInfo {
 					}
 				],
 				// Group by the school's name so that we get one row per school
-				group: ['school.name'],
+				group: ['school.id'],
 				raw: true
 			});
 
