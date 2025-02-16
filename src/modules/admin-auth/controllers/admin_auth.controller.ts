@@ -14,6 +14,9 @@ import { InternalServerError } from '../../../lib/http/error/internal_server.err
 import { HttpStatus } from '../../../lib/http/http_status';
 import { AdminTokenRemove } from '../methods/user_token/admin_token_remove';
 import { AdminJwtUtility } from '../../../utils/admin_jwt.utility';
+import { LogCreate } from '../../log/methods/logs_create';
+import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
+import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
 
 export const login: any = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -70,6 +73,15 @@ export const login: any = async (req: Request, res: Response) => {
 
 	const token = AdminJwtUtility.create(admin_info.data.id, token_id);
 
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.login,
+		LogTypeEnum.LOGIN,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
+
 	if (admin_info.data.super_admin) {
 		return ApiRes(res, {
 			status: token ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
@@ -93,6 +105,17 @@ export const logout = async (req: Request, res: Response) => {
 	const result = await new AdminTokenRemove().remove_admin_token_by_admin_id_and_token_id(
 		req.token_id,
 		req.admin_id
+	);
+
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.login,
+		LogTypeEnum.LOGIN,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
 	);
 
 	return ApiRes(res, <RestApi.ResInterface>{

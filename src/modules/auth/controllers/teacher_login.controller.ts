@@ -20,6 +20,9 @@ import { BaseConfig } from '../../../config/base.config';
 import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { TeacherInfo } from '../../teacher/methods/teacher_info';
 import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
+import { LogCreate } from '../../log/methods/logs_create';
+import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
+import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
 
 export const login_request = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -140,6 +143,14 @@ export const login_confirm = async (req: Request, res: Response) => {
 
 	const token = TeacherJwtUtility.create(teacher_info.data.id, token_id);
 	await new AuthRequestManager().remove_request(RequestType.login, req.body.access_address);
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.login,
+		LogTypeEnum.LOGIN,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		teacher_info.data.id
+	);
 
 	return ApiRes(res, {
 		status: token ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

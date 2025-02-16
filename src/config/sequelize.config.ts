@@ -16,8 +16,8 @@ class DB {
 				dialectOptions: {
 					keepAlive: true,
 					ssl: {
-						rejectUnauthorized: false,
-					},
+						rejectUnauthorized: false
+					}
 				},
 				define: {
 					underscored: true,

@@ -2,6 +2,7 @@ import { createLogger, format, transports } from 'winston';
 // import DailyRotateFile from "winston-daily-rotate-file";
 import { config } from 'dotenv';
 import { LogTypeEnum } from './models/enums/log_type_enum';
+import { LogReportModel } from './models/log_report.model';
 // import { LogReportModel } from './models/log_report.model';
 
 config();
@@ -51,7 +52,7 @@ class AppLoggerSingleton {
 
 	public error(errorMessage: any, errorObject: any = null, dbLog = false): void {
 		const error = new Error(`${errorMessage} : ${errorObject}`);
-		// dbLog && this.saveLog(LogTypeEnum.error, errorMessage, error.stack ?? '');
+		dbLog && this.saveLog(LogTypeEnum.error, errorMessage, error.stack ?? '');
 		LoggerFile.error(error);
 	}
 
@@ -61,18 +62,18 @@ class AppLoggerSingleton {
 	}
 
 	public warning(errorMessage: any, dbLog = false): void {
-		// dbLog && this.saveLog(LogTypeEnum.warning, errorMessage);
+		dbLog && this.saveLog(LogTypeEnum.warning, errorMessage);
 		LoggerFile.warn(`${errorMessage}`);
 	}
 
 	public debug(errorMessage: any, dbLog = false): void {
-		// dbLog && this.saveLog(LogTypeEnum.debug, errorMessage);
+		dbLog && this.saveLog(LogTypeEnum.debug, errorMessage);
 		LoggerFile.debug(`${errorMessage}`);
 	}
 
 	private saveLog(log_type: LogTypeEnum, message: any, stack?: string) {
 		try {
-			// LogReportModel.create({ log_type: log_type, log_message: message, log_location: stack });
+			LogReportModel.create({ log_type: log_type, log_message: message, log_location: stack });
 		} catch (e) {
 			AppLogger.error('error in save error to db', e, false);
 		}

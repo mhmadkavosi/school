@@ -19,6 +19,10 @@ import { EmailProvider } from '../../../utils/mail.service';
 import { remove_file } from '../../../lib/file_upload/aws/remove';
 import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 import { ZohoProvider } from '../../../services/mail_provider/liara_provider';
+import { LogCreate } from '../../log/methods/logs_create';
+import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
+import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
+import { get_user_agent } from '../../../utils/user_agent.utility';
 
 export const request_update_phone_number = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -295,6 +299,16 @@ export const update_password = async (req: Request, res: Response) => {
 
 	await new ZohoProvider().send_email(info.data.email, 'Change Password', 'teacher_change_password');
 
+	const user_agent = get_user_agent(req);
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.change_password,
+		LogTypeEnum.PASSWORD_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
+
 	return ApiRes(res, {
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
@@ -450,6 +464,16 @@ export const forgot_password_set_password = async (req: Request, res: Response) 
 	await new AuthRequestManager().remove_request(RequestType.forgot_password, req.body.access_address);
 
 	await new ZohoProvider().send_email(teacher_info.data.email, 'Change Password', 'teacher_change_password');
+
+	const user_agent = get_user_agent(req);
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.change_password,
+		LogTypeEnum.PASSWORD_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
 
 	return ApiRes(res, {
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
