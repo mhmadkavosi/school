@@ -34,6 +34,7 @@ import AdminNotificationRouter from '../modules/notification/routes/admin_notifi
 import NotificationRouter from '../modules/notification/routes/notification.routes';
 import AdminLogsRouter from '../modules/log/routes/admin_logs.routes';
 import TeacherLogsRouter from '../modules/log/routes/teacher_logs.routes';
+import AdminClassTimingRouter from '../modules/school_class/routes/admin_class_timing.routes';
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -100,4 +101,5 @@ export function RegisterRoutes(app: Application) {
 	app.use(routePrefix, AdminClassRouter);
 	app.use(routePrefix, AdminNotificationRouter);
 	app.use(routePrefix, AdminLogsRouter);
+	app.use(routePrefix, AdminClassTimingRouter);
 }
