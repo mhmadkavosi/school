@@ -94,25 +94,47 @@ export class ClassInfo {
 			};
 		}
 	}
-	async get_teacher_by_class_id(id: string): Promise<RestApi.ObjectResInterface> {
+
+	async get_teacher_by_class_id(class_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await TeacherModel.findOne({
-				attributes: ['id', 'name', 'family', 'email', 'school_id', 'profile_picture'],
+				attributes: [
+					'id',
+					'name',
+					'family',
+					'email',
+					'profile_picture',
+					'major_id',
+					'profile_picture',
+					'school_id'
+				],
 				include: [
 					{
 						model: ClassesModel,
-						where: { id },
-						as: 'classes'
+						where: { id: class_id },
+						attributes: ['id', 'name', 'link', 'count', 'color', 'major', 'major_type'], // Only need the class name from ClassesModel
+						as: 'classes',
+						include: [
+							{
+								model: StudentModel,
+								as: 'students', // Must match the alias defined in ClassesModel.hasMany(StudentModel, { as: 'students' })
+								attributes: ['id'] // Only need the id to count the number of students
+							},
+							{
+								model: ClassLevelModel,
+								attributes: ['name', 'level', 'id']
+							}
+						]
 					}
 				]
 			});
 
 			return {
-				is_success: !!result,
+				is_success: true,
 				data: result
 			};
 		} catch (error) {
-			AppLogger.error('Error in ClassInfo get_teacher_by_class_id', error);
+			AppLogger.error('Error in get_classes_by_teacher', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
