@@ -11,6 +11,7 @@ import StudentExamModel from '../../../exam/models/student_exam.model';
 import AttendanceModel from '../../../attendance/models/attendance.model';
 import { AttendanceTypeEnum } from '../../../attendance/models/enums/attendance_type.enum';
 import { paginate } from '../../../../utils/paginate.utility';
+import TeacherModel from '../../../teacher/models/teacher.model';
 
 export class ClassInfo {
 	async get_all_by_teacher_id(teacher_id: string): Promise<RestApi.ObjectResInterface> {
@@ -87,6 +88,31 @@ export class ClassInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in ClassInfo get_by_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+	async get_teacher_by_class_id(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await TeacherModel.findOne({
+				attributes: ['id', 'name', 'family', 'email', 'school_id', 'profile_picture'],
+				include: [
+					{
+						model: ClassesModel,
+						where: { id },
+						as: 'classes'
+					}
+				]
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in ClassInfo get_teacher_by_class_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

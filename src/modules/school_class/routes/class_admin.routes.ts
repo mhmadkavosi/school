@@ -17,6 +17,12 @@ AdminClassRouter.get(
 );
 
 AdminClassRouter.get(
+	`${route_prefix}/info/teacher`,
+	AdminAuthMiddleware,
+	ClassAdminController.get_teacher_by_class_id
+);
+
+AdminClassRouter.get(
 	`${route_prefix}/student`,
 	AdminAuthMiddleware,
 	ClassAdminController.get_all_student_by_class_id

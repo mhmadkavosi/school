@@ -198,3 +198,24 @@ export const get_all_student_by_class_id = async (req: Request, res: Response) =
 		data: result.data
 	});
 };
+
+export const get_teacher_by_class_id = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			class_id: req.query.class_id
+		},
+		{
+			class_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	const result = await new ClassInfo().get_teacher_by_class_id(<string>req.query.class_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
