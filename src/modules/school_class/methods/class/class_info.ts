@@ -48,9 +48,19 @@ export class ClassInfo {
 
 	async get_by_link(link: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findOne({
-				where: { link },
-				include: [{ model: ClassLevelModel }, { model: SchoolModel }]
+			const result = await SchoolModel.findOne({
+				include: [
+					{
+						model: ClassesModel,
+						as: 'classes',
+						where: { link },
+						include: [
+							{
+								model: ClassLevelModel
+							}
+						]
+					}
+				]
 			});
 
 			return {
@@ -82,11 +92,22 @@ export class ClassInfo {
 
 	async get_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findOne({
-				where: { id },
-				include: [{ model: ClassLevelModel }, { model: SchoolModel }]
+			const result = await SchoolModel.findOne({
+				include: [
+					{
+						model: ClassesModel,
+						as: 'classes',
+						where: {
+							id
+						},
+						include: [
+							{
+								model: ClassLevelModel
+							}
+						]
+					}
+				]
 			});
-
 			return {
 				is_success: !!result,
 				data: result

@@ -142,7 +142,8 @@ export class StudentInfo {
 		try {
 			const skip = (page - 1) * limit;
 
-			const result = await StudentModel.findAndCountAll({
+			const result = await SchoolModel.findAndCountAll({
+				where: { id: school_id },
 				distinct: true,
 				limit: limit,
 				offset: skip,
@@ -150,12 +151,10 @@ export class StudentInfo {
 				include: [
 					{
 						model: ClassesModel,
+						as: 'classes',
 						include: [
 							{
-								model: SchoolModel,
-								where: {
-									id: school_id
-								}
+								model: StudentModel
 							}
 						]
 					}
