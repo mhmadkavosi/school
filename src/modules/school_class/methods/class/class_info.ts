@@ -16,14 +16,19 @@ import TeacherModel from '../../../teacher/models/teacher.model';
 export class ClassInfo {
 	async get_all_by_teacher_id(teacher_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await ClassesModel.findAll({
-				where: { teacher_id },
+			const result = await SchoolModel.findAll({
 				include: [
-					{ model: ClassLevelModel },
-					{ model: SchoolModel },
 					{
-						model: StudentModel,
-						attributes: ['id']
+						model: ClassesModel,
+						as: 'classes',
+						where: { teacher_id },
+						include: [
+							{ model: ClassLevelModel },
+							{
+								model: StudentModel,
+								attributes: ['id']
+							}
+						]
 					}
 				]
 			});

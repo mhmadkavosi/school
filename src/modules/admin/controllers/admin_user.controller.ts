@@ -12,6 +12,10 @@ import { hash_password, validate_password } from '../../../utils/hashed_id_gener
 
 import { app_cache } from '../../../config/cache.config';
 import { BadRequestError } from '../../../lib/http/error/bad_request.error';
+import { LogCreate } from '../../log/methods/logs_create';
+import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
+import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
+import { get_user_agent } from '../../../utils/user_agent.utility';
 
 export const get_admin_info = async (req: Request, res: Response) => {
 	const admin_info = await new AdminInfo().get_by_id(req.admin_id);
@@ -206,9 +210,16 @@ export const update_password = async (req: Request, res: Response) => {
 		return new BadRequestError(res, 'password is wrong');
 	}
 
-	const update = await new AdminUpdate().update_password(
-		req.body.admin_id,
-		hash_password(req.body.new_password)
+	const update = await new AdminUpdate().update_password(req.admin_id, hash_password(req.body.new_password));
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.change_password,
+		LogTypeEnum.PASSWORD_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.admin_id
 	);
 
 	return ApiRes(res, <RestApi.ResInterface>{

@@ -79,7 +79,7 @@ export const login: any = async (req: Request, res: Response) => {
 		LogTypeEnum.LOGIN,
 		<string>user_agent.ip,
 		user_agent.browser ?? 'NA',
-		req.user_id
+		admin_info.data.id
 	);
 
 	if (admin_info.data.super_admin) {
@@ -115,7 +115,7 @@ export const logout = async (req: Request, res: Response) => {
 		LogTypeEnum.LOGIN,
 		<string>user_agent.ip,
 		user_agent.browser ?? 'NA',
-		req.user_id
+		req.admin_id
 	);
 
 	return ApiRes(res, <RestApi.ResInterface>{
