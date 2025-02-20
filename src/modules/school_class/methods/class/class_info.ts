@@ -188,6 +188,14 @@ export class ClassInfo {
 						attributes: [
 							'id',
 							'name', // Assuming 'name' is the class name field,
+							'school_id',
+							'class_level_id',
+							'count',
+							'link',
+							'major',
+							'major_type',
+							'color',
+							'teacher_id',
 							[
 								Sequelize.literal(
 									`COALESCE((SELECT COUNT(*) FROM students WHERE students.class_id = classes.id), 0)`
