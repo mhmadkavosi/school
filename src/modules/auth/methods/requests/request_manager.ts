@@ -23,7 +23,7 @@ export class AuthRequestManager {
 	 */
 	public async add_request(type: RequestType, access_address: string, value: IRequest): Promise<string> {
 		try {
-			await Redis.instance().setex(`${type}_${access_address}`, 250, JSON.stringify(value));
+			await Redis.instance.setex(`${type}_${access_address}`, 250, JSON.stringify(value));
 			return 'OK';
 		} catch (e) {
 			console.error('error in RequestManager add_register_request', e);
@@ -38,7 +38,7 @@ export class AuthRequestManager {
 	 */
 	public async remove_request(type: string, access_address: string): Promise<number> {
 		try {
-			return await Redis.instance().del(`${type}_${access_address}`);
+			return await Redis.instance.del(`${type}_${access_address}`);
 		} catch (e) {
 			console.error('error in RequestManager remove_request', e);
 			return 0;
@@ -52,7 +52,7 @@ export class AuthRequestManager {
 	 */
 	public async get_request(type: string, access_address: string): Promise<IRequest | null> {
 		try {
-			const data = await Redis.instance().get(`${type}_${access_address}`);
+			const data = await Redis.instance.get(`${type}_${access_address}`);
 			if (data) {
 				return JSON.parse(data);
 			} else {

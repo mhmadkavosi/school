@@ -5,36 +5,35 @@ import { AppLogger } from '../lib/logger/Logger';
 config();
 
 class Redis {
-	private static _instance: RedisClient;
-	private static connected: boolean = false;
+	private static _instance: RedisClient | null = null;
+	private static _connected: boolean = false;
 
-	private constructor() {
-		try {
-			Redis._instance = new RedisClient(process.env.REDIS_URL);
-			Redis._instance.on('connect', () => {
-				Redis.connected = true;
-				AppLogger.info('Redis connected');
-			});
-			Redis._instance.on('error', (error: Error) => {
-				Redis.connected = false;
-				AppLogger.error('Redis connection error', error);
-			});
-		} catch (e) {
-			Redis.connected = false;
-			AppLogger.error('Error in Redis constructor', e);
+	private constructor() {}
+
+	public static get instance(): RedisClient {
+		if (!this._instance) {
+			try {
+				this._instance = new RedisClient(process.env.REDIS_URL, {});
+
+				this._instance.on('connect', () => {
+					this._connected = true;
+					AppLogger.info('Redis connected');
+				});
+
+				this._instance.on('error', (error: Error) => {
+					this._connected = false;
+					AppLogger.error('Redis connection error', error);
+				});
+			} catch (error) {
+				this._connected = false;
+				AppLogger.error('Error in Redis constructor', error);
+			}
 		}
+		return this._instance!;
 	}
 
-	public static instance(): RedisClient {
-		if (!Redis._instance) {
-			new Redis();
-		}
-
-		return Redis._instance;
-	}
-
-	public static isConnected(): boolean {
-		return Redis.connected;
+	public static get isConnected(): boolean {
+		return this._connected;
 	}
 }
 
