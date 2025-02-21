@@ -13,6 +13,9 @@ import { TeacherJwtUtility } from '../../../utils/teacher_jwt.utility';
 import { HttpStatus } from '../../../lib/http/http_status';
 import { PreconditionFailedError } from '../../../lib/http/error/precondition_failed.error';
 import { TeacherCreate } from '../../teacher/methods/teacher_create';
+import { LogCreate } from '../../log/methods/logs_create';
+import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
+import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
 
 export const google_auth = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -74,6 +77,15 @@ export const google_auth = async (req: Request, res: Response) => {
 
 		const token = TeacherJwtUtility.create(teacher_info.data.id, token_id);
 
+		await new LogCreate().createLog(
+			'teacher',
+			LogTitleEnum.login,
+			LogTypeEnum.LOGIN,
+			<string>user_agent.ip,
+			user_agent.browser ?? 'NA',
+			teacher_info.data.id
+		);
+
 		return ApiRes(res, {
 			status: token ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
 			data: {
@@ -110,6 +122,15 @@ export const google_auth = async (req: Request, res: Response) => {
 		}
 
 		const token = TeacherJwtUtility.create(teacher_info.data.id, token_id);
+
+		await new LogCreate().createLog(
+			'teacher',
+			LogTitleEnum.login,
+			LogTypeEnum.LOGIN,
+			<string>user_agent.ip,
+			user_agent.browser ?? 'NA',
+			teacher_info.data.id
+		);
 
 		return ApiRes(res, {
 			status: token ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
