@@ -112,6 +112,11 @@ export class TeacherInfo {
 				const school_name = teacher.school ? teacher.school.name : null;
 				const school_id = teacher.school.id;
 				const major_name = teacher.major ? teacher.major.name : null;
+				const teacher_family = teacher.family;
+				const teacher_email = teacher.email;
+				const teacher_phone_number = teacher.phone_number;
+				const teacher_about = teacher.about;
+				const profile_picture = teacher.profile_picture;
 
 				// Calculate the class level and total student count.
 				// We assume that if a teacher has multiple classes, they share the same level.
@@ -130,7 +135,20 @@ export class TeacherInfo {
 					});
 				}
 
-				return { teacher_id, teacher_name, school_name, major_name, class_level, total_student, school_id };
+				return {
+					teacher_id,
+					teacher_name,
+					school_name,
+					major_name,
+					class_level,
+					total_student,
+					school_id,
+					teacher_family,
+					teacher_email,
+					teacher_phone_number,
+					teacher_about,
+					profile_picture
+				};
 			};
 			const data = teacherList(result);
 			return {
