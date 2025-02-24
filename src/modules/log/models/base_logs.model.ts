@@ -23,6 +23,10 @@ export const BaseLogSchema = new Schema(
 		device: {
 			type: String,
 			required: true
+		},
+		admin_id: {
+			type: String,
+			default: null
 		}
 	},
 	{ timestamps: { createdAt: 'created_at', updatedAt: false } }

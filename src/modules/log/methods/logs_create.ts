@@ -24,7 +24,8 @@ export class LogCreate {
 		type: LogTypeEnum,
 		ip: string,
 		device: string,
-		user_id: string
+		user_id: string,
+		admin_id?: string | null
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const LogModel = this.getModelForUserType(userType);
@@ -34,7 +35,8 @@ export class LogCreate {
 				type,
 				ip,
 				device,
-				user_id
+				user_id,
+				admin_id
 			});
 
 			return {
