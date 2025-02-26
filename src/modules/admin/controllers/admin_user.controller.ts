@@ -16,6 +16,8 @@ import { LogCreate } from '../../log/methods/logs_create';
 import { LogTitleEnum } from '../../log/models/enums/log_title.enum';
 import { LogTypeEnum } from '../../log/models/enums/log_type.eum';
 import { get_user_agent } from '../../../utils/user_agent.utility';
+import { remove_file } from '../../../lib/file_upload/aws/remove';
+import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
 
 export const get_admin_info = async (req: Request, res: Response) => {
 	const admin_info = await new AdminInfo().get_by_id(req.admin_id);
@@ -78,13 +80,15 @@ export const create_admin = async (req: Request, res: Response) => {
 			name: req.body.name,
 			family: req.body.family,
 			password: req.body.password,
-			email: req.body.email
+			email: req.body.email,
+			about_me: req.body.about_me
 		},
 		{
 			name: ['string', 'required'],
 			family: ['string', 'required'],
 			password: ['string', 'required', 'min:8'],
-			email: ['required', 'string', 'email']
+			email: ['required', 'string', 'email'],
+			about_me: ['string']
 		}
 	);
 
@@ -105,6 +109,7 @@ export const create_admin = async (req: Request, res: Response) => {
 		.setName(req.body.name)
 		.setPassword(req.body.password)
 		.setEmail(req.body.email)
+		.setAboutMe(req.body.about_me)
 		.build();
 
 	if (create.is_success && create.data) {
@@ -152,14 +157,16 @@ export const update_info = async (req: Request, res: Response) => {
 			name: req.body.name,
 			family: req.body.family,
 			email: req.body.email,
-			super_admin: req.body.super_admin
+			super_admin: req.body.super_admin,
+			about_me: req.body.about_me
 		},
 		{
 			admin_id: ['string', 'required'],
 			name: ['string'],
 			family: ['string'],
 			email: ['string'],
-			super_admin: ['boolean']
+			super_admin: ['boolean'],
+			about_me: ['string']
 		}
 	);
 
@@ -172,11 +179,45 @@ export const update_info = async (req: Request, res: Response) => {
 		req.body.name,
 		req.body.family,
 		req.body.email,
-		req.body.super_admin
+		req.body.super_admin,
+		req.body.about_me
 	);
 
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+	});
+};
+
+export const update_profile_picture = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			profile_picture: req.body.profile_picture
+		},
+		{
+			profile_picture: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new AdminUpdate().update_profile_picture(req.admin_id, req.body.profile_picture);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+	});
+};
+
+export const delete_profile_picture = async (req: Request, res: Response) => {
+	const admin_info = await new AdminInfo().get_by_id(req.admin_id);
+
+	remove_file(admin_info.data.profile_picture);
+	await new FileDestroy().destroy_for_admin(admin_info.data.profile_picture);
+	const result = await new AdminUpdate().delete_profile_picture(req.admin_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
 	});
 };
 

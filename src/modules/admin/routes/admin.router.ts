@@ -16,4 +16,15 @@ AdminRouter.put(`${route_prefix}/is-active`, AdminAuthMiddleware, AdminControlle
 
 AdminRouter.put(`${route_prefix}`, AdminAuthMiddleware, AdminController.update_info);
 
+AdminRouter.put(
+	`${route_prefix}/profile-picture`,
+	AdminAuthMiddleware,
+	AdminController.update_profile_picture
+);
+AdminRouter.delete(
+	`${route_prefix}/profile-picture`,
+	AdminAuthMiddleware,
+	AdminController.delete_profile_picture
+);
+
 export default AdminRouter;

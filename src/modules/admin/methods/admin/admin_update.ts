@@ -8,14 +8,22 @@ export class AdminUpdate {
 	 * @param name
 	 * @param family
 	 */
-	async update_user_info(user_id: string, name: string, family: string, email: string, super_admin: boolean) {
+	async update_user_info(
+		user_id: string,
+		name: string,
+		family: string,
+		email: string,
+		super_admin: boolean,
+		about_me: string
+	) {
 		try {
 			const [result] = await AdminModel.update(
 				{
 					name: name,
 					family: family,
 					email,
-					super_admin
+					super_admin,
+					about_me
 				},
 				{ where: { id: user_id } }
 			);
@@ -70,6 +78,38 @@ export class AdminUpdate {
 			};
 		} catch (error) {
 			AppLogger.error('Error in AdminUpdate update_password', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async update_profile_picture(id: string, profile_picture: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await AdminModel.update({ profile_picture }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in AdminUpdate update_profile_picture', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async delete_profile_picture(id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await AdminModel.update({ profile_picture: null }, { where: { id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in AdminUpdate delete_profile_picture', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

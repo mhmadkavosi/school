@@ -31,7 +31,14 @@ const AdminModel = DB.instance().define(
 			allowNull: true,
 			defaultValue: false
 		},
-
+		about_me: {
+			type: DataTypes.STRING(256),
+			allowNull: true
+		},
+		profile_picture: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
 		is_active: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: true

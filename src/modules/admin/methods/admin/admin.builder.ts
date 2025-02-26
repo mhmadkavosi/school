@@ -6,6 +6,7 @@ export class AdminBuilder {
 	private name!: string;
 	private family!: string;
 	private password!: string;
+	private about_me!: string;
 
 	public setEmail(email: string): this {
 		this.email = email;
@@ -14,6 +15,15 @@ export class AdminBuilder {
 
 	public getEmail(): string {
 		return this.email;
+	}
+
+	public setAboutMe(about_me: string): this {
+		this.about_me = about_me;
+		return this;
+	}
+
+	public getAboutMe(): string {
+		return this.about_me;
 	}
 
 	public setName(name: string): this {

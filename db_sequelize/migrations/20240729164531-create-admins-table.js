@@ -32,6 +32,14 @@ module.exports = {
 				allowNull: true,
 				defaultValue: false
 			},
+			about_me: {
+				type: Sequelize.STRING(256),
+				allowNull: true
+			},
+			profile_picture: {
+				type: Sequelize.STRING,
+				allowNull: true
+			},
 			is_active: {
 				type: Sequelize.BOOLEAN,
 				defaultValue: true

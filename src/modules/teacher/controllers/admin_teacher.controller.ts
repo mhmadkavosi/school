@@ -69,7 +69,7 @@ export const update_password = async (req: Request, res: Response) => {
 			new_password: req.body.new_password
 		},
 		{
-			teacher_id: ['required', 'teacher_id'],
+			teacher_id: ['required', 'string'],
 			new_password: [
 				'required',
 				'string',
@@ -122,7 +122,7 @@ export const update_details = async (req: Request, res: Response) => {
 			about: ['string'],
 			major_id: ['string'],
 			school_id: ['string'],
-			teacher_id: ['required', 'teacher_id']
+			teacher_id: ['required', 'string']
 		}
 	);
 

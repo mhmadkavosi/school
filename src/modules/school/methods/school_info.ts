@@ -185,15 +185,21 @@ export class SchoolInfo {
 		}
 	}
 
-	async get_all_school_info(page: number, limit: number): Promise<RestApi.ObjectResInterface> {
+	async get_all_school_info(page: number, limit: number, sex: string): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
+			const match: any = [{}];
+
+			if (sex) {
+				match.push({ sex: sex });
+			}
 
 			// Retrieve schools along with their associated section and classes.
 			// For each class, load its teacher and its students.
 			const result = await SchoolModel.findAndCountAll({
 				distinct: true,
 				limit,
+				where: match,
 				offset: skip,
 				order: [['created_at', 'DESC']], // Adjust if your timestamp field is named differently.
 				include: [
