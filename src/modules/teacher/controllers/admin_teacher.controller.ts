@@ -173,9 +173,9 @@ export const update_profile_picture = async (req: Request, res: Response) => {
 export const delete_profile_picture = async (req: Request, res: Response) => {
 	const teacher = await new TeacherInfo().get_by_id(req.body.teacher_id);
 
+	const result = await new TeacherUpdate().delete_profile_picture(req.body.teacher_id);
 	remove_file(teacher.data.profile_picture);
 	await new FileDestroy().destroy_for_admin(teacher.data.profile_picture);
-	const result = await new TeacherUpdate().delete_profile_picture(req.body.teacher_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND

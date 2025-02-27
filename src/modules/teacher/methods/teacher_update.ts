@@ -68,7 +68,7 @@ export class TeacherUpdate {
 
 	async delete_profile_picture(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await TeacherModel.update({ profile_picture: null }, { where: { id } });
+			const result = await TeacherModel.update({ profile_picture: '' }, { where: { id } });
 
 			return {
 				is_success: result[0] > 0
