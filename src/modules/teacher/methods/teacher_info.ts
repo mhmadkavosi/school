@@ -109,6 +109,7 @@ export class TeacherInfo {
 			const teacherList = (teacher: any) => {
 				const teacher_id = teacher.id;
 				const teacher_name = `${teacher.name} ${teacher.family}`;
+				const teacher_only_name = `${teacher.name}`;
 				const school_name = teacher.school ? teacher.school.name : null;
 				const school_id = teacher.school.id;
 				const major_name = teacher.major ? teacher.major.name : null;
@@ -138,6 +139,7 @@ export class TeacherInfo {
 				return {
 					teacher_id,
 					teacher_name,
+					teacher_only_name,
 					school_name,
 					major_name,
 					class_level,
