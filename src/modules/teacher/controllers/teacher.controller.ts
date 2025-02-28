@@ -99,7 +99,16 @@ export const phone_number_confirm = async (req: Request, res: Response) => {
 	await new AuthRequestManager().remove_request(RequestType.change_phone_number, req.body.access_address);
 
 	const result = await new TeacherUpdate().update_phone_number(req.user_id, request_info.value);
+	const user_agent = get_user_agent(req);
 
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
@@ -190,7 +199,16 @@ export const email_confirm = async (req: Request, res: Response) => {
 	await new AuthRequestManager().remove_request(RequestType.change_email, req.body.access_address);
 
 	const result = await new TeacherUpdate().update_email(req.user_id, request_info.value);
+	const user_agent = get_user_agent(req);
 
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
@@ -211,7 +229,16 @@ export const update_profile_picture = async (req: Request, res: Response) => {
 	}
 
 	const result = await new TeacherUpdate().update_profile_picture(req.user_id, req.body.profile_picture);
+	const user_agent = get_user_agent(req);
 
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
 	});
@@ -223,7 +250,16 @@ export const delete_profile_picture = async (req: Request, res: Response) => {
 	remove_file(teacher.data.profile_picture);
 	await new FileDestroy().destroy_for_admin(teacher.data.profile_picture);
 	const result = await new TeacherUpdate().delete_profile_picture(req.user_id);
+	const user_agent = get_user_agent(req);
 
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
+	);
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
 	});
@@ -258,6 +294,16 @@ export const update_details = async (req: Request, res: Response) => {
 		req.body.major_id,
 		req.body.about,
 		req.body.school_id
+	);
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'teacher',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.user_id
 	);
 
 	return ApiRes(res, {

@@ -183,6 +183,17 @@ export const update_info = async (req: Request, res: Response) => {
 		req.body.about_me
 	);
 
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.body.admin_id
+	);
+
 	return ApiRes(res, <RestApi.ResInterface>{
 		status: update.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
@@ -204,6 +215,17 @@ export const update_profile_picture = async (req: Request, res: Response) => {
 
 	const result = await new AdminUpdate().update_profile_picture(req.admin_id, req.body.profile_picture);
 
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.body.admin_id
+	);
+
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
 	});
@@ -215,6 +237,16 @@ export const delete_profile_picture = async (req: Request, res: Response) => {
 	remove_file(admin_info.data.profile_picture);
 	await new FileDestroy().destroy_for_admin(admin_info.data.profile_picture);
 	const result = await new AdminUpdate().delete_profile_picture(req.admin_id);
+	const user_agent = get_user_agent(req);
+
+	await new LogCreate().createLog(
+		'admin',
+		LogTitleEnum.profile_change,
+		LogTypeEnum.PROFILE_CHANGE,
+		<string>user_agent.ip,
+		user_agent.browser ?? 'NA',
+		req.body.admin_id
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.NOT_FOUND
