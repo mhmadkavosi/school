@@ -103,7 +103,7 @@ export class AdminUpdate {
 
 	async delete_profile_picture(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await AdminModel.update({ profile_picture: null }, { where: { id } });
+			const result = await AdminModel.update({ profile_picture: "" }, { where: { id } });
 
 			return {
 				is_success: result[0] > 0
