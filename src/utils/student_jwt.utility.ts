@@ -13,7 +13,7 @@ export class StudentJwtUtility {
 			return sign(
 				{
 					student_id: student_id,
-					admin_token_id: token_id
+					student_token_id: token_id
 				},
 				process.env.SECRET_KEY,
 				{ algorithm: 'HS512', expiresIn: '1d' }
@@ -28,11 +28,11 @@ export class StudentJwtUtility {
 	 *
 	 * @param req
 	 */
-	static verify(req: Request): RestApi.RestApiAdminTokenInterface | null {
+	static verify(req: Request): RestApi.RestApiStudentTokenInterface | null {
 		try {
 			const token = req.headers?.authorization?.replace('Bearer ', '');
 			if (token) {
-				return verify(token, process.env.SECRET_KEY) as unknown as RestApi.RestApiAdminTokenInterface;
+				return verify(token, process.env.SECRET_KEY) as unknown as RestApi.RestApiStudentTokenInterface;
 			}
 			return null;
 		} catch (e: any) {

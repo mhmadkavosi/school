@@ -30,7 +30,7 @@ declare global {
 			admin_token_id: string;
 			expire_at: Date;
 		}
-		interface RestApiAdminTokenInterface {
+		interface RestApiStudentTokenInterface {
 			student_id: string;
 			student_token_id: string;
 			expire_at: Date;

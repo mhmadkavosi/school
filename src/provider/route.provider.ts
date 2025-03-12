@@ -6,6 +6,7 @@ import ClassRouter from '../modules/school_class/routes/class.routes';
 import MajorRouter from '../modules/school_class/routes/major.routes';
 import SchoolRouter from '../modules/school/routes/school.routes';
 import TeacherRouter from '../modules/teacher/routes/teacher.routes';
+import StudentTeacherRouter from '../modules/student/routes/student_teacher.routes';
 import StudentRouter from '../modules/student/routes/student.routes';
 import HomeWorkRouter from '../modules/home_work/routes/home_work.routes';
 import StudentHomeWorkRouter from '../modules/home_work/routes/student_home_work.routes';
@@ -37,6 +38,7 @@ import TeacherLogsRouter from '../modules/log/routes/teacher_logs.routes';
 import AdminClassTimingRouter from '../modules/school_class/routes/admin_class_timing.routes';
 import StudentAuthRouter from '../modules/student-auth/routes/student.auth.routes';
 import StudentTokenRouter from '../modules/student-auth/routes/student_token.routes';
+import StudentLogsRouter from '../modules/log/routes/student_logs.routes';
 
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
@@ -60,6 +62,7 @@ export function RegisterRoutes(app: Application) {
 
 	// student
 	app.use(routePrefix, StudentRouter);
+	app.use(routePrefix, StudentTeacherRouter);
 	app.use(routePrefix, StudentTokenRouter);
 	app.use(routePrefix, StudentAuthRouter);
 
@@ -94,6 +97,8 @@ export function RegisterRoutes(app: Application) {
 
 	// Logs
 	app.use(routePrefix, TeacherLogsRouter);
+	app.use(routePrefix, StudentLogsRouter);
+	app.use(routePrefix, AdminLogsRouter);
 
 	//admin
 	app.use(routePrefix, AdminRouter);
@@ -105,6 +110,5 @@ export function RegisterRoutes(app: Application) {
 	app.use(routePrefix, AdminNewsRouter);
 	app.use(routePrefix, AdminClassRouter);
 	app.use(routePrefix, AdminNotificationRouter);
-	app.use(routePrefix, AdminLogsRouter);
 	app.use(routePrefix, AdminClassTimingRouter);
 }

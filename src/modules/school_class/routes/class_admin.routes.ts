@@ -1,5 +1,5 @@
 import { AdminAuthMiddleware } from '../../../middlewares/admin_auth.middleware';
-import * as StudentController from '../../student/controllers/student.controller';
+import * as StudentController from '../../student/controllers/student_teacehr.controller';
 import * as SchoolController from '../../school/controllers/school.controller';
 import * as ClassController from '../controllers/class.controller';
 import * as ClassAdminController from '../controllers/class_admin.controller';
@@ -31,7 +31,7 @@ AdminClassRouter.put(`${route_prefix}`, AdminAuthMiddleware, ClassAdminControlle
 
 AdminClassRouter.post(`${route_prefix}/student`, AdminAuthMiddleware, StudentController.create);
 AdminClassRouter.delete(`${route_prefix}/student`, AdminAuthMiddleware, StudentController.delete_student);
-AdminClassRouter.put(`${route_prefix}/student`, AdminAuthMiddleware, StudentController.update);
+AdminClassRouter.put(`${route_prefix}/student`, AdminAuthMiddleware, StudentController.update_teacher);
 
 AdminClassRouter.delete(`${route_prefix}`, AdminAuthMiddleware, ClassAdminController.destroy_class);
 AdminClassRouter.post(`${route_prefix}`, AdminAuthMiddleware, ClassAdminController.create_class);

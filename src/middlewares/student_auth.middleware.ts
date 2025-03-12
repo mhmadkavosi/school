@@ -19,26 +19,27 @@ export const StudentAuthMiddleware = async (req: Request, res: Response, next: N
 		}
 
 		const jwt_data = StudentJwtUtility.verify(req);
+		console.log(jwt_data);
 		if (!jwt_data) {
 			return new UnauthorizedError(res);
 		}
 
-		let admin_token_info: any | RestApi.ObjectResInterface = null;
+		let student_token_info: any | RestApi.ObjectResInterface = null;
 
-		admin_token_info = app_cache().get(jwt_data.student_token_id);
+		student_token_info = app_cache().get(jwt_data.student_token_id);
 
-		if (!admin_token_info) {
-			admin_token_info = await new StudentTokenInfo().get_student_token_by_student_and_token_id(
+		if (!student_token_info) {
+			student_token_info = await new StudentTokenInfo().get_student_token_by_student_and_token_id(
 				jwt_data.student_id,
 				jwt_data.student_token_id
 			);
 
 			const differenceInMilliseconds: any = new Date(jwt_data.expire_at).getTime() - new Date().getTime();
 
-			app_cache().set(jwt_data.student_token_id, admin_token_info, differenceInMilliseconds);
+			app_cache().set(jwt_data.student_token_id, student_token_info, differenceInMilliseconds);
 		}
 
-		if (!admin_token_info.is_success || !admin_token_info.data) {
+		if (!student_token_info.is_success || !student_token_info.data) {
 			return new UnauthorizedError(res);
 		}
 
