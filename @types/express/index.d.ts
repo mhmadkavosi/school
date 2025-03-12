@@ -15,6 +15,7 @@ declare global {
 			user_id: string;
 			token_id: string;
 			admin_id: string;
+			student_id: string;
 		}
 	}
 }

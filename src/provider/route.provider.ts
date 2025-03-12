@@ -35,6 +35,9 @@ import NotificationRouter from '../modules/notification/routes/notification.rout
 import AdminLogsRouter from '../modules/log/routes/admin_logs.routes';
 import TeacherLogsRouter from '../modules/log/routes/teacher_logs.routes';
 import AdminClassTimingRouter from '../modules/school_class/routes/admin_class_timing.routes';
+import StudentAuthRouter from '../modules/student-auth/routes/student.auth.routes';
+import StudentTokenRouter from '../modules/student-auth/routes/student_token.routes';
+
 export function RegisterRoutes(app: Application) {
 	const routePrefix = `/api/v${BaseConfig.VERSION}`;
 
@@ -57,6 +60,8 @@ export function RegisterRoutes(app: Application) {
 
 	// student
 	app.use(routePrefix, StudentRouter);
+	app.use(routePrefix, StudentTokenRouter);
+	app.use(routePrefix, StudentAuthRouter);
 
 	// Home Work
 	app.use(routePrefix, HomeWorkRouter);
