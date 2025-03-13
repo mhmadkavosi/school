@@ -57,4 +57,24 @@ export class StudentHomeWorkUpdate {
 			};
 		}
 	}
+
+	async update_status_student(
+		student_id: string,
+		status: StudentHomeWorkStatusEnum,
+		home_work_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentHomeWorkModel.update({ status }, { where: { student_id, home_work_id } });
+
+			return {
+				is_success: result[0] > 0
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWorkUpdate update_status', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

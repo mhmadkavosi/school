@@ -5,6 +5,8 @@ import StudentModel from '../../../student/models/student.model';
 import { paginate } from '../../../../utils/paginate.utility';
 import HomeWorkModel from '../../models/home_work.model';
 import HomeWorkFilesModel from '../../models/home_work_files.model';
+import ClassHomeWorkModel from '../../models/class_home_work.model';
+import ClassesModel from '../../../school_class/models/classes.model';
 
 export class StudentHomeWrkInfo {
 	async get_info_by_student_id_home_work_id(
@@ -140,6 +142,112 @@ export class StudentHomeWrkInfo {
 			return {
 				is_success: !!result,
 				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_count_of_status_home_works', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_student_home_work(student_id: string, status: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const match: any = [{ student_id: student_id }];
+
+			if (status) {
+				match.push({
+					status: status
+				});
+			}
+
+			const result = await StudentHomeWorkModel.findAll({
+				where: { [Op.and]: match },
+				include: [
+					{
+						model: HomeWorkModel,
+						include: [
+							{
+								model: ClassHomeWorkModel,
+								include: [
+									{
+										model: ClassesModel
+									}
+								]
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_student_home_work', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_student_home_work_details(
+		student_id: string,
+		home_work_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const match: any = [{ student_id: student_id }];
+
+			const result = await StudentHomeWorkModel.findAll({
+				where: { [Op.and]: match },
+				include: [
+					{
+						model: HomeWorkModel,
+						where: { id: home_work_id },
+						include: [
+							{
+								model: HomeWorkFilesModel
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_student_home_work', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_count_of_status_student(student_id: string, status: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const match: any = [{ student_id: student_id }];
+
+			if (status) {
+				match.push({
+					status
+				});
+			}
+
+			const result = await StudentHomeWorkModel.findAll({
+				where: { [Op.and]: match },
+				attributes: ['status', [Sequelize.fn('COUNT', 'id'), 'count']],
+				group: ['status']
+			});
+
+			return {
+				is_success: !!result,
+				data: result
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentHomeWrkInfo get_count_of_status_home_works', error);

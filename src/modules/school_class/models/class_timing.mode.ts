@@ -41,9 +41,9 @@ const ClassTimingModel = DB.instance().define(
 	}
 );
 
-ClassTimingModel.hasOne(ClassesModel, {
-	sourceKey: 'class_id',
-	foreignKey: 'id'
+ClassesModel.hasMany(ClassTimingModel, {
+	sourceKey: 'id',
+	foreignKey: 'class_id'
 });
 
 export default ClassTimingModel;

@@ -21,4 +21,6 @@ StudentRouter.delete(
 
 StudentRouter.get(`${route_prefix}/me`, StudentAuthMiddleware, StudentController.get_info);
 
+StudentRouter.get(`${route_prefix}/class`, StudentAuthMiddleware, StudentController.get_class_of_student);
+
 export default StudentRouter;

@@ -44,7 +44,7 @@ module.exports = {
 				unique: true
 			},
 			major: {
-				type: Sequelize.STRING,
+				type: Sequelize.UUID,
 				unique: true
 			},
 			major_type: {

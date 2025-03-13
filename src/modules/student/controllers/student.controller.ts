@@ -73,6 +73,15 @@ export const get_info = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_class_of_student = async (req: Request, res: Response) => {
+	const result = await new StudentInfo().get_class_of_student(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const update_profile_picture = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{

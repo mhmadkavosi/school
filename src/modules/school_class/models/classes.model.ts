@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
 import ClassLevelModel from './class_level.model';
+import MajorModel from './major.model';
 
 const ClassesModel = DB.instance().define(
 	'class',
@@ -32,7 +33,7 @@ const ClassesModel = DB.instance().define(
 			unique: true
 		},
 		major: {
-			type: DataTypes.STRING,
+			type: DataTypes.UUID,
 			allowNull: true
 		},
 		major_type: {
@@ -56,6 +57,12 @@ const ClassesModel = DB.instance().define(
 ClassesModel.hasOne(ClassLevelModel, {
 	foreignKey: 'id',
 	sourceKey: 'class_level_id'
+});
+
+ClassesModel.hasOne(MajorModel, {
+	sourceKey: 'major',
+	foreignKey: 'id',
+	as: 'majors'
 });
 
 export default ClassesModel;

@@ -4,6 +4,10 @@ import { paginate } from '../../../utils/paginate.utility';
 import SchoolModel from '../../school/models/school.model';
 import ClassesModel from '../../school_class/models/classes.model';
 import StudentModel from '../models/student.model';
+import ClassLevelModel from '../../school_class/models/class_level.model';
+import ClassTimingModel from '../../school_class/models/class_timing.mode';
+import MajorModel from '../../school_class/models/major.model';
+import SectionModel from '../../school/models/section.model';
 
 export class StudentInfo {
 	async get_all_student_of_class_with_pagination(
@@ -235,6 +239,47 @@ export class StudentInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentInfo get_by_national_code', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_class_of_student(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentModel.findAll({
+				where: { id: student_id },
+				include: [
+					{
+						model: ClassesModel,
+						include: [
+							{
+								model: ClassLevelModel,
+								include: [
+									{
+										model: SectionModel
+									}
+								]
+							},
+							{
+								model: ClassTimingModel
+							},
+							{
+								model: MajorModel,
+								as: 'majors'
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_class_of_student', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
