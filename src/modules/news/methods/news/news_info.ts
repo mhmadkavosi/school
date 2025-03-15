@@ -5,6 +5,8 @@ import SchoolModel from '../../../school/models/school.model';
 import SectionModel from '../../../school/models/section.model';
 import NewsModel from '../../models/news.model';
 import NewsCategoryModel from '../../models/news_category.model';
+import ClassesModel from '../../../school_class/models/classes.model';
+import StudentModel from '../../../student/models/student.model';
 
 export class NewsInfo {
 	async get_all_news_by_school_id(
@@ -30,6 +32,58 @@ export class NewsInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in NewsInfo get_all_news_by_school_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_news_by_student_id(
+		student_id: string,
+		page: number,
+		limit: number
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+
+			const result = await NewsModel.findAndCountAll({
+				distinct: true,
+				limit: limit,
+				offset: skip,
+				order: [['created_at', 'DESC']],
+				include: [
+					{ model: NewsCategoryModel },
+					{
+						model: SchoolModel,
+						as: 'school',
+						required: true,
+						include: [
+							{
+								model: ClassesModel,
+								as: 'classes',
+								required: true,
+								attributes: ['id', 'name'],
+								include: [
+									{
+										model: StudentModel,
+										where: { id: student_id },
+										required: true,
+										attributes: ['id']
+									}
+								]
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in NewsInfo get_all_news_by_student_id', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
