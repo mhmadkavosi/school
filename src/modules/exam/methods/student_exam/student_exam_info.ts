@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import StudentExamModel from '../../models/student_exam.model';
 import { AppLogger } from '../../../../lib/logger/Logger';
 import ExamModel from '../../models/exam.model';
@@ -90,6 +90,50 @@ export class StudentExamInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentExamInfo get_avg_all', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_exam_check_counts(exam_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			// Build the where clause based on provided filters
+			const whereClause: any = {};
+
+			if (exam_id) {
+				whereClause.exam_id = exam_id;
+			}
+
+			// Get total count
+			const totalCount = await StudentExamModel.count({
+				where: whereClause
+			});
+
+			// Get checked count (points > 0)
+			const checkedCount = await StudentExamModel.count({
+				where: {
+					...whereClause,
+					points: {
+						[Op.gt]: 0
+					}
+				}
+			});
+
+			// Calculate unchecked count
+			const uncheckedCount = totalCount - checkedCount;
+
+			return {
+				is_success: true,
+				data: {
+					total: totalCount,
+					checked: checkedCount,
+					unchecked: uncheckedCount
+				}
+			};
+		} catch (error) {
+			AppLogger.error('Error in getExamCheckCounts', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

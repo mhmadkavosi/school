@@ -17,6 +17,7 @@ import { ExamClassInfo } from '../methods/exam_class/exam_class_info';
 import { StudentExamInfo } from '../methods/student_exam/student_exam_info';
 import { StudentExamUpdate } from '../methods/student_exam/student_exam_update';
 import { ExamInfo } from '../methods/exam/exam_info';
+import { ClassInfo } from '../../school_class/methods/class/class_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -309,6 +310,119 @@ export const add_points = async (req: Request, res: Response) => {
 		req.body.student_id,
 		req.body.points
 	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_all_student_exam = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit,
+			start_date: req.query.start_date,
+			end_date: req.query.end_date,
+			sort: req.query.sort
+		},
+		{
+			page: ['required', 'numeric'],
+			limit: ['required', 'numeric'],
+			start_date: ['string'],
+			end_date: ['string'],
+			sort: [{ in: ['last_exam', 'first_exam'] }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+
+	const result = await new ExamClassInfo().get_all(
+		Number(req.query.page),
+		Number(req.query.limit),
+		class_info.data.classes[0].id,
+		class_info.data.classes[0].teacher_id,
+		<string>req.query.start_date,
+		<string>req.query.end_date,
+		req.student_id,
+		<string>req.query.sort
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_info_student = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			exam_id: req.query.exam_id
+		},
+		{
+			exam_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+	const result = await new ExamClassInfo().get_info_by_id(
+		<string>req.query.exam_id,
+		class_info.data.classes[0].id
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_list_of_students = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			exam_id: req.query.exam_id
+		},
+		{
+			exam_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new ExamClassInfo().get_list_of_students(<string>req.query.exam_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_total_check = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			exam_id: req.query.exam_id
+		},
+		{
+			exam_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentExamInfo().get_exam_check_counts(<string>req.query.exam_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

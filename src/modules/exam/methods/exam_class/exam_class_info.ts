@@ -140,4 +140,39 @@ export class ExamClassInfo {
 			};
 		}
 	}
+
+	async get_list_of_students(exam_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await ExamClassModel.findAll({
+				where: { exam_id },
+				include: [
+					{
+						model: ExamModel,
+						include: [
+							{
+								model: StudentExamModel,
+								include: [
+									{
+										model: StudentModel,
+										attributes: ['name', 'family', 'middle_name', 'profile_picture', 'id']
+									}
+								]
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: !!result,
+				data: result[0]
+			};
+		} catch (error) {
+			AppLogger.error('Error in ExamClassInfo get_all', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

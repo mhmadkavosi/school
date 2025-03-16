@@ -333,10 +333,6 @@ export const create_student = async (req: Request, res: Response) => {
 	const student_info = await new StudentInfo().get_by_id(req.student_id);
 	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
 
-	console.log(class_info.data.classes[0].teacher_id);
-
-	console.log(class_info.data.classes[0].school_id);
-
 	const result = await new ScheduleBuilder()
 		.setTitle(req.body.title)
 		.setEventDate(req.body.event_date)
