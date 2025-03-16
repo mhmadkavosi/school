@@ -1,3 +1,4 @@
+import { StudentAuthMiddleware } from '../../../middlewares/student_auth.middleware';
 import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as ScheduleController from '../controllers/schedule.controller';
 import { Router } from 'express';
@@ -17,6 +18,8 @@ ScheduleRouter.delete(
 );
 
 ScheduleRouter.get(route_prefix, TeacherAuthMiddleware, ScheduleController.get_all);
-ScheduleRouter.get(`${route_prefix}/:schedule_id/info`, TeacherAuthMiddleware, ScheduleController.get_by_id);
+ScheduleRouter.get(`${route_prefix}/:schedule_id/info`, ScheduleController.get_by_id);
+ScheduleRouter.get(`${route_prefix}/student`, StudentAuthMiddleware, ScheduleController.get_student_schedule);
+ScheduleRouter.post(`${route_prefix}/student`, StudentAuthMiddleware, ScheduleController.create_student);
 
 export default ScheduleRouter;

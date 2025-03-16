@@ -12,6 +12,8 @@ import { InternalServerError } from '../../../lib/http/error/internal_server.err
 import { ScheduleAssignDestroy } from '../methods/schedule_assign/schedule_assign_delete';
 import { ScheduleDestroy } from '../methods/schedule/schedule_destroy';
 import { ScheduleInfo } from '../methods/schedule/schedule_info';
+import { StudentInfo } from '../../student/methods/student_info';
+import { ClassInfo } from '../../school_class/methods/class/class_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -281,6 +283,89 @@ export const get_all = async (req: Request, res: Response) => {
 
 export const get_by_id = async (req: Request, res: Response) => {
 	const result = await new ScheduleInfo().get_by_id(req.params.schedule_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_student_schedule = async (req: Request, res: Response) => {
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const result = await new ScheduleInfo().get_schedules_for_student(
+		req.student_id,
+		student_info.data.class_id
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const create_student = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			title: req.body.title,
+			event_date: req.body.event_date,
+			event_start_hour: req.body.event_start_hour,
+			event_end_hour: req.body.event_end_hour,
+			event_description: req.body.event_description,
+
+			event_category_id: req.body.event_category_id,
+			event_type: req.body.event_type
+		},
+		{
+			title: ['required', 'string'],
+			event_date: ['required', 'date'],
+			event_start_hour: ['string'],
+			event_end_hour: ['string'],
+			event_description: ['string'],
+			event_category_id: ['required', 'string'],
+			event_type: ['required', { in: Object.keys(EventTypes) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+
+	console.log(class_info.data.classes[0].teacher_id);
+
+	console.log(class_info.data.classes[0].school_id);
+
+	const result = await new ScheduleBuilder()
+		.setTitle(req.body.title)
+		.setEventDate(req.body.event_date)
+		.setEventStartHour(req.body.event_start_hour)
+		.setEventEndHour(req.body.event_end_hour)
+		.setEventDescription(req.body.event_description)
+		.setEventCategoryId(req.body.event_category_id)
+		.setEventType(req.body.event_type)
+		.setTeacherId(class_info.data.classes[0].teacher_id)
+		.setSchoolId(class_info.data.classes[0].school_id)
+		.build();
+
+	if (!result.is_success) {
+		return new InternalServerError(res);
+	}
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const schedule_assign = await new ScheduleAssignCreate().create(
+		req.student_id,
+		AssignToTargetEnum.student,
+		result.data.id
+	);
+
+	if (!schedule_assign.is_success) {
+		return new InternalServerError(res);
+	}
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
