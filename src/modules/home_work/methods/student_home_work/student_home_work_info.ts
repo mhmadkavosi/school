@@ -7,6 +7,7 @@ import HomeWorkModel from '../../models/home_work.model';
 import HomeWorkFilesModel from '../../models/home_work_files.model';
 import ClassHomeWorkModel from '../../models/class_home_work.model';
 import ClassesModel from '../../../school_class/models/classes.model';
+import { StudentHomeWorkStatusEnum } from '../../models/enums/student_home_work.enum';
 
 export class StudentHomeWrkInfo {
 	async get_info_by_student_id_home_work_id(
@@ -251,6 +252,67 @@ export class StudentHomeWrkInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentHomeWrkInfo get_count_of_status_home_works', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_home_work_activity_student(
+		page: number,
+		limit: number,
+		student_id: string,
+		start_date: string,
+		end_date: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+			const match: any = [
+				{
+					student_id: student_id,
+					status: {
+						[Op.ne]: StudentHomeWorkStatusEnum.pending
+					}
+				}
+			];
+
+			if (start_date && end_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			} else if (start_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			} else if (end_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			}
+
+			const result = await StudentHomeWorkModel.findAndCountAll({
+				where: match,
+				distinct: true,
+				limit: limit,
+				offset: skip
+			});
+
+			return {
+				is_success: !!result,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_home_work_activity_student', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'

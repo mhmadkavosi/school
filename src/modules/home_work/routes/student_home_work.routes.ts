@@ -57,4 +57,10 @@ StudentHomeWorkRouter.delete(
 	HomeWorkFileController.delete_file
 );
 
+StudentHomeWorkRouter.get(
+	`${route_prefix}/activity`,
+	StudentAuthMiddleware,
+	StudentHomeWorkController.get_all_student_of_home_work
+);
+
 export default StudentHomeWorkRouter;

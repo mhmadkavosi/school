@@ -169,3 +169,38 @@ export const status_done_student = async (req: Request, res: Response) => {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
 	});
 };
+
+export const get_all_student_of_home_work = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit,
+			start_date: req.query.start_date,
+			end_date: req.query.end_date
+		},
+		{
+			page: ['required', 'numeric'],
+			limit: ['required', 'numeric'],
+			home_work_id: ['string'],
+			status: [{ in: Object.keys(StudentHomeWorkStatusEnum) }],
+			class_id: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentHomeWrkInfo().get_home_work_activity_student(
+		Number(req.query.page),
+		Number(req.query.limit),
+		req.student_id,
+		<string>req.query.start_date,
+		<string>req.query.end_date
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};

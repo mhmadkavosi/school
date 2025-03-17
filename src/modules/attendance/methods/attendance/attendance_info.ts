@@ -153,4 +153,75 @@ export class AttendanceInfo {
 			};
 		}
 	}
+
+	async get_student_attendance(
+		page: number,
+		limit: number,
+		student_id: string,
+		start_date: string,
+		end_date: string,
+		attendance_type: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const match: any = [];
+			const skip = (page - 1) * limit;
+
+			if (!!student_id) {
+				match.push({
+					student_id
+				});
+			}
+
+			if (start_date && end_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			} else if (start_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			} else if (end_date) {
+				match.push({
+					date: {
+						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),
+						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
+					}
+				});
+			}
+
+			if (!!attendance_type) {
+				match.push({
+					attendance_type
+				});
+			}
+
+			const result = await AttendanceModel.findAndCountAll({
+				where: { [Op.and]: match },
+				distinct: true,
+				include: [
+					{ model: AttendanceReasonModel },
+					{ model: ClassesModel, attributes: ['name', 'id', 'teacher_id'] }
+				],
+				limit: limit,
+				offset: skip
+			});
+
+			return {
+				is_success: !!result,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in AttendanceInfo get_student_attendance', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

@@ -1,3 +1,4 @@
+import { StudentAuthMiddleware } from '../../../middlewares/student_auth.middleware';
 import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as AttendanceController from '../controllers/attendance.controller';
 import { Router } from 'express';
@@ -33,6 +34,12 @@ AttendanceRouter.get(
 	`${route_prefix}/:attendance_id/info`,
 	TeacherAuthMiddleware,
 	AttendanceController.get_info
+);
+
+AttendanceRouter.get(
+	`${route_prefix}/student/all`,
+	StudentAuthMiddleware,
+	AttendanceController.get_all_for_student
 );
 
 export default AttendanceRouter;

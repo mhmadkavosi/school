@@ -210,3 +210,39 @@ export const get_by_attendance_type = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const get_all_for_student = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit,
+			start_date: req.query.start_date,
+			end_date: req.query.end_date,
+			attendance_type: req.query.attendance_type
+		},
+		{
+			page: ['required', 'numeric'],
+			limit: ['required', 'numeric'],
+			start_date: ['string'],
+			end_date: ['string'],
+			attendance_type: ['string', { in: Object.keys(AttendanceTypeEnum) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	const result = await new AttendanceInfo().get_student_attendance(
+		Number(req.query.page),
+		Number(req.query.limit),
+		req.student_id,
+		<string>req.query.start_date,
+		<string>req.query.end_date,
+		<string>req.query.attendance_type
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};
