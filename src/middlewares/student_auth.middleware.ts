@@ -19,7 +19,6 @@ export const StudentAuthMiddleware = async (req: Request, res: Response, next: N
 		}
 
 		const jwt_data = StudentJwtUtility.verify(req);
-		console.log(jwt_data);
 		if (!jwt_data) {
 			return new UnauthorizedError(res);
 		}
