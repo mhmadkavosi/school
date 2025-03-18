@@ -319,4 +319,52 @@ export class StudentHomeWrkInfo {
 			};
 		}
 	}
+
+	async get_assignment_count(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentHomeWorkModel.count({
+				where: {
+					student_id,
+					status: {
+						[Op.notIn]: [StudentHomeWorkStatusEnum.done, StudentHomeWorkStatusEnum.not_send]
+					}
+				}
+			});
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_assignment_count', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_new_assignment_count(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentHomeWorkModel.count({
+				where: {
+					student_id,
+					status: {
+						[Op.eq]: StudentHomeWorkStatusEnum.pending
+					}
+				}
+			});
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentHomeWrkInfo get_assignment_count', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

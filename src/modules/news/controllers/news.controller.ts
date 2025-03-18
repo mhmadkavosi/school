@@ -151,6 +151,15 @@ export const get_all_news_by_student_id = async (req: Request, res: Response) =>
 	});
 };
 
+export const get_count_news_by_student_id = async (req: Request, res: Response) => {
+	const result = await new NewsInfo().get_count_news_by_student_id(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const get_all_news_by_category_id = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{

@@ -246,3 +246,12 @@ export const get_all_for_student = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const get_counts_student = async (req: Request, res: Response) => {
+	const result = await new AttendanceInfo().get_counts_by_class_id(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};

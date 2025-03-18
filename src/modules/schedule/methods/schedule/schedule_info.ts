@@ -162,4 +162,44 @@ export class ScheduleInfo {
 			};
 		}
 	}
+
+	async get_count_schedules_for_student(
+		student_id: string,
+		student_class_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await ScheduleModel.count({
+				include: [
+					{
+						model: ScheduleAssignModel,
+						where: {
+							[Op.or]: [
+								// Schedules assigned directly to this student
+								{
+									assign_to: student_id,
+									assign_to_target: AssignToTargetEnum.student
+								},
+								// Schedules assigned to any class this student belongs to
+								{
+									assign_to: student_class_id,
+									assign_to_target: AssignToTargetEnum.class
+								}
+							]
+						}
+					}
+				]
+			});
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in ScheduleInfo get_count_schedules_for_student', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

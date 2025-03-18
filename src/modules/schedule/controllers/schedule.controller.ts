@@ -303,6 +303,19 @@ export const get_student_schedule = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_count_student_schedule = async (req: Request, res: Response) => {
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const result = await new ScheduleInfo().get_count_schedules_for_student(
+		req.student_id,
+		student_info.data.class_id
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
 export const create_student = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{

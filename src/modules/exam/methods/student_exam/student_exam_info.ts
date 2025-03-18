@@ -140,4 +140,112 @@ export class StudentExamInfo {
 			};
 		}
 	}
+
+	async calculate_student_exam_progress(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			// Get all exams for this student, ordered by date
+			const studentExams = await StudentExamModel.findAll({
+				where: {
+					student_id,
+					points: {
+						[Op.gt]: 0 // Only include checked exams (with points)
+					}
+				},
+				include: [
+					{
+						model: ExamModel, // Assuming you have an ExamModel related to StudentExamModel
+						attributes: ['date'],
+
+						order: [
+							['date', 'ASC'] // Order by exam date ascending
+						]
+					}
+				]
+			});
+
+			// If there are less than 2 exams, we can't calculate progress
+			if (studentExams.length < 2) {
+				return {
+					is_success: true,
+					data: {
+						progress: 0,
+						message: 'Not enough exams to calculate progress'
+					}
+				};
+			}
+
+			// Extract points from all exams
+			const examPoints = studentExams.map((exam: any) => exam.points);
+
+			// Calculate average of all exams except the last one (X)
+			const allExamsExceptLast = examPoints.slice(0, -1);
+			const sumExceptLast = allExamsExceptLast.reduce((sum, points) => sum + points, 0);
+			const X = sumExceptLast / allExamsExceptLast.length;
+
+			// Calculate average of all exams including the last one (Y)
+			const sumAll = examPoints.reduce((sum, points) => sum + points, 0);
+			const Y = sumAll / examPoints.length;
+
+			// Calculate difference and progress
+			const difference = X - Y;
+
+			// Avoid division by zero
+			if (X === 0) {
+				return {
+					is_success: true,
+					data: {
+						progress: 0,
+						message: 'Cannot calculate progress (division by zero)'
+					}
+				};
+			}
+
+			const ratio = difference / X;
+			const progress = ratio * 100;
+
+			// averageExceptLast: X,
+			//averageAll: Y,
+			//difference: difference,
+			//ratio: ratio,
+			//examCount: examPoints.length,
+			//lastExamPoints: examPoints[examPoints.length - 1]
+			// Return the calculated progress
+			return {
+				is_success: true,
+				data: {
+					progress: progress
+				}
+			};
+		} catch (error) {
+			AppLogger.error('Error in calculateStudentExamProgress', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_count_active_exam(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await StudentExamModel.count({
+				where: {
+					student_id,
+					points: {
+						[Op.gt]: 0 // Only include checked exams (with points)
+					}
+				}
+			});
+
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in get_count_active_exam', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }

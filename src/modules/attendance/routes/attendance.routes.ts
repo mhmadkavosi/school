@@ -42,4 +42,9 @@ AttendanceRouter.get(
 	AttendanceController.get_all_for_student
 );
 
+AttendanceRouter.get(
+	`${route_prefix}/student/counts`,
+	StudentAuthMiddleware,
+	AttendanceController.get_counts_student
+);
 export default AttendanceRouter;

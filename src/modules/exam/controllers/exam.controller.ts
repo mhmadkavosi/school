@@ -429,3 +429,33 @@ export const get_total_check = async (req: Request, res: Response) => {
 		data: result.data
 	});
 };
+
+export const get_student_progress = async (req: Request, res: Response) => {
+	const result = await new StudentExamInfo().calculate_student_exam_progress(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_student_progress_teacher = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			student_id: req.query.student_id
+		},
+		{
+			student_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	const result = await new StudentExamInfo().calculate_student_exam_progress(<string>req.query.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};

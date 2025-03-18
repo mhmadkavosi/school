@@ -17,6 +17,7 @@ ExamRouter.get(
 	TeacherAuthMiddleware,
 	ExamController.get_avg_student
 );
+ExamRouter.get(`${route_prefix}/growth`, TeacherAuthMiddleware, ExamController.get_student_progress_teacher);
 
 ExamRouter.get(`${route_prefix}/avg/all`, TeacherAuthMiddleware, ExamController.get_avg_all_class);
 
@@ -31,5 +32,6 @@ ExamRouter.get(`${route_prefix}/student/all`, StudentAuthMiddleware, ExamControl
 ExamRouter.get(`${route_prefix}/student/info`, StudentAuthMiddleware, ExamController.get_info_student);
 ExamRouter.get(`${route_prefix}/student/list`, StudentAuthMiddleware, ExamController.get_list_of_students);
 ExamRouter.get(`${route_prefix}/student/list/check`, StudentAuthMiddleware, ExamController.get_total_check);
+ExamRouter.get(`${route_prefix}/student/growth`, StudentAuthMiddleware, ExamController.get_student_progress);
 
 export default ExamRouter;

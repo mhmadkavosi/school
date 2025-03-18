@@ -63,4 +63,16 @@ StudentHomeWorkRouter.get(
 	StudentHomeWorkController.get_all_student_of_home_work
 );
 
+StudentHomeWorkRouter.get(
+	`${route_prefix}/active/count`,
+	StudentAuthMiddleware,
+	StudentHomeWorkController.get_assignment_count
+);
+
+StudentHomeWorkRouter.get(
+	`${route_prefix}/active/count/new`,
+	StudentAuthMiddleware,
+	StudentHomeWorkController.get_new_assignment_count
+);
+
 export default StudentHomeWorkRouter;

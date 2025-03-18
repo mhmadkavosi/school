@@ -21,4 +21,10 @@ ClassTimingRouter.get(
 ClassTimingRouter.put(`${route_prefix}`, TeacherAuthMiddleware, ClassTimingController.update);
 ClassTimingRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, ClassTimingController.destroy);
 
+ClassTimingRouter.get(
+	`${route_prefix}/student/time`,
+	TeacherAuthMiddleware,
+	ClassTimingController.get_student_class_timing
+);
+
 export default ClassTimingRouter;

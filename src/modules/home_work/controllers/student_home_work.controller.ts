@@ -204,3 +204,21 @@ export const get_all_student_of_home_work = async (req: Request, res: Response) 
 		data: result.data
 	});
 };
+
+export const get_assignment_count = async (req: Request, res: Response) => {
+	const result = await new StudentHomeWrkInfo().get_assignment_count(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
+
+export const get_new_assignment_count = async (req: Request, res: Response) => {
+	const result = await new StudentHomeWrkInfo().get_new_assignment_count(req.student_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};

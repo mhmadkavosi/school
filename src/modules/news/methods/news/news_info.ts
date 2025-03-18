@@ -91,6 +91,47 @@ export class NewsInfo {
 		}
 	}
 
+	async get_count_news_by_student_id(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await NewsModel.count({
+				include: [
+					{
+						model: SchoolModel,
+						as: 'school',
+						required: true,
+						include: [
+							{
+								model: ClassesModel,
+								as: 'classes',
+								required: true,
+								attributes: ['id', 'name'],
+								include: [
+									{
+										model: StudentModel,
+										where: { id: student_id },
+										required: true,
+										attributes: ['id']
+									}
+								]
+							}
+						]
+					}
+				]
+			});
+
+			return {
+				is_success: true,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in NewsInfo get_count_news_by_student_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
 	async get_all_news_by_category_id(
 		news_category_id: string,
 		page: number,

@@ -7,6 +7,8 @@ import { ClassTimingCreate } from '../methods/class_timing/class_timing_create';
 import { ClassTimingInfo } from '../methods/class_timing/class_timing_info';
 import { ClassTimingUpdate } from '../methods/class_timing/class_timing_update';
 import { ClassTimingDestroy } from '../methods/class_timing/class_timing_destroy';
+import { StudentInfo } from '../../student/methods/student_info';
+
 export const create = async (req: Request, res: Response) => {
 	const data = req.body.class_timings;
 
@@ -95,6 +97,36 @@ export const create = async (req: Request, res: Response) => {
 
 export const get_all = async (req: Request, res: Response) => {
 	const result = await new ClassTimingInfo().get_all_by_class_id(req.params.class_id);
+
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};
+
+export const get_student_class_timing = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			day: req.query.day
+		},
+		{
+			day: ['required', 'string', { in: Object.values(WeekDays) }]
+		}
+	);
+
+	if (validate.fails()) {
+		return ApiRes(res, {
+			status: 412,
+			msg: 'validation error',
+			data: validate.errors.all()
+		});
+	}
+
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const result = await new ClassTimingInfo().get_timing_by_class_id(
+		student_info.data.class_id,
+		<string>req.query.day
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? 200 : 500,

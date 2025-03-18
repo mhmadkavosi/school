@@ -19,6 +19,11 @@ NewsRouter.get(
 	StudentAuthMiddleware,
 	NewsController.get_all_news_by_student_id
 );
+NewsRouter.get(
+	`${route_prefix}/student/count`,
+	StudentAuthMiddleware,
+	NewsController.get_count_news_by_student_id
+);
 
 NewsRouter.put(`${route_prefix}/file`, TeacherAuthMiddleware, NewsController.update_file);
 NewsRouter.delete(`${route_prefix}/file`, TeacherAuthMiddleware, NewsController.delete_file);

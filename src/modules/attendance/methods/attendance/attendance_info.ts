@@ -224,4 +224,24 @@ export class AttendanceInfo {
 			};
 		}
 	}
+
+	async get_counts_by_student_id(student_id: string): Promise<RestApi.ObjectResInterface> {
+		try {
+			const result = await AttendanceModel.findAll({
+				where: { student_id },
+				attributes: ['attendance_type', [Sequelize.fn('COUNT', 'id'), 'count']],
+				group: ['attendance_type']
+			});
+			return {
+				is_success: !!result,
+				data: result
+			};
+		} catch (error) {
+			AppLogger.error('Error in AttendanceInfo get_counts_by_student_id', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
 }
