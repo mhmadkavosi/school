@@ -6,6 +6,7 @@ import { AttendanceBuilder } from '../methods/attendance/attendance.builder';
 import { ApiRes } from '../../../lib/http/api_response';
 import { AttendanceUpdate } from '../methods/attendance/attendance_update';
 import { AttendanceInfo } from '../methods/attendance/attendance_info';
+
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
@@ -248,7 +249,7 @@ export const get_all_for_student = async (req: Request, res: Response) => {
 };
 
 export const get_counts_student = async (req: Request, res: Response) => {
-	const result = await new AttendanceInfo().get_counts_by_class_id(req.student_id);
+	const result = await new AttendanceInfo().get_counts_by_student_id(req.student_id);
 
 	return ApiRes(res, {
 		status: result.is_success ? 200 : 500,
