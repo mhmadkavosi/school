@@ -1,3 +1,4 @@
+import { StudentAuthMiddleware } from '../../../middlewares/student_auth.middleware';
 import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as ClassPreparationController from '../controllers/class-preparation.controller';
 import { Router } from 'express';
@@ -36,6 +37,17 @@ ClassPreparationRouter.put(
 	`${route_prefix}/update/is-confirm`,
 	TeacherAuthMiddleware,
 	ClassPreparationController.update_is_confirm
+);
+
+ClassPreparationRouter.get(
+	`${route_prefix}/student`,
+	StudentAuthMiddleware,
+	ClassPreparationController.get_all
+);
+ClassPreparationRouter.get(
+	`${route_prefix}/student/:class_preparation_id/info`,
+	StudentAuthMiddleware,
+	ClassPreparationController.get_info
 );
 
 export default ClassPreparationRouter;

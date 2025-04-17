@@ -9,6 +9,8 @@ import { ClassPreparationAssignDestroy } from '../methods/class-preparation-assi
 import { ClassPreparationDestroy } from '../methods/class-preparation/class-preparation_destroy';
 import { ClassPreparationAssignInfo } from '../methods/class-preparation-assign/class_preparation_assign_info';
 import { ClassPreparationUpdate } from '../methods/class-preparation/class-preparation_update';
+import { StudentInfo } from '../../student/methods/student_info';
+import { ClassInfo } from '../../school_class/methods/class/class_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
@@ -203,6 +205,60 @@ export const get_info = async (req: Request, res: Response) => {
 	const result = await new ClassPreparationAssignInfo().get_info(
 		req.params.class_preparation_id,
 		req.user_id
+	);
+	return ApiRes(res, {
+		status: result.is_success ? 200 : 500,
+		data: result.data
+	});
+};
+
+export const get_all_student = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			limit: req.query.limit,
+			page: req.query.page,
+			start_date: req.query.start_date,
+			end_date: req.query.end_date,
+			class_id: req.query.class_id
+		},
+		{
+			limit: ['numeric', 'required'],
+			page: ['numeric', 'required'],
+			start_date: ['string'],
+			end_date: ['string'],
+			class_id: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+
+	const result = await new ClassPreparationAssignInfo().get_all(
+		Number(req.query.page),
+		Number(req.query.limit),
+		class_info.data.classes[0].teacher_id,
+		<string>req.query.start_date,
+		<string>req.query.end_date,
+		class_info.data.classes[0].id
+	);
+
+	return ApiRes(res, {
+		status: 200,
+		data: result.data
+	});
+};
+
+export const get_info_student = async (req: Request, res: Response) => {
+	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+
+	const result = await new ClassPreparationAssignInfo().get_info(
+		req.params.class_preparation_id,
+		class_info.data.classes[0].teacher_id
 	);
 	return ApiRes(res, {
 		status: result.is_success ? 200 : 500,

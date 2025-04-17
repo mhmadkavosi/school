@@ -3,10 +3,10 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
-	  "engines": {
-    "node": "20.11.0",
-    "npm": "10.2.4"
-  },
+	"engines": {
+		"node": "20.11.0",
+		"npm": "10.2.4"
+	},
 	"scripts": {
 		"build": "tsc",
 		"start": "cross-env NODE_ENV=production node dist/index.js",
@@ -55,9 +55,9 @@
 		"winston": "^3.13.1"
 	},
 	"devDependencies": {
-		"@types/cookie-parser": "^1.4.7",
 		"@types/bcryptjs": "^2.4.6",
 		"@types/compression": "^1.7.5",
+		"@types/cookie-parser": "^1.4.7",
 		"@types/cors": "^2.8.17",
 		"@types/hpp": "^0.2.6",
 		"@types/i18n": "^0.13.12",
