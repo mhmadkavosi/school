@@ -255,8 +255,8 @@ export const get_counts_student = async (req: Request, res: Response) => {
 			end_date: req.query.end_date
 		},
 		{
-			start_date: ['string'],
-			end_date: ['string']
+			start_date: ['string', 'required'],
+			end_date: ['string', 'required']
 		}
 	);
 
