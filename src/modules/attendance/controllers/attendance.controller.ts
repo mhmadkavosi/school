@@ -22,7 +22,7 @@ export const create = async (req: Request, res: Response) => {
 			student_id: ['required', 'string'],
 			class_id: ['required', 'string'],
 			attendance_reason_id: ['string'],
-			attendance_type: ['required', 'string', { in: Object.keys(AttendanceTypeEnum) }],
+			attendance_type: ['string', { in: Object.keys(AttendanceTypeEnum) }],
 			time_of_delayed: ['numeric']
 		}
 	);
@@ -249,7 +249,25 @@ export const get_all_for_student = async (req: Request, res: Response) => {
 };
 
 export const get_counts_student = async (req: Request, res: Response) => {
-	const result = await new AttendanceInfo().get_counts_by_student_id(req.student_id);
+	const validate = new Validator(
+		{
+			start_date: req.query.start_date,
+			end_date: req.query.end_date
+		},
+		{
+			start_date: ['string'],
+			end_date: ['string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+	const result = await new AttendanceInfo().get_counts_by_student_id(
+		req.student_id,
+		<string>req.query.start_date,
+		<string>req.query.end_date
+	);
 
 	return ApiRes(res, {
 		status: result.is_success ? 200 : 500,
