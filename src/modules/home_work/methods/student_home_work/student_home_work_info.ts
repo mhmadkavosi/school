@@ -8,6 +8,7 @@ import HomeWorkFilesModel from '../../models/home_work_files.model';
 import ClassHomeWorkModel from '../../models/class_home_work.model';
 import ClassesModel from '../../../school_class/models/classes.model';
 import { StudentHomeWorkStatusEnum } from '../../models/enums/student_home_work.enum';
+import StudentClassesModel from '../../../student/models/student_class.model';
 
 export class StudentHomeWrkInfo {
 	async get_info_by_student_id_home_work_id(
@@ -134,8 +135,13 @@ export class StudentHomeWrkInfo {
 				include: [
 					{
 						model: StudentModel,
-						attributes: ['name', 'family', 'id', 'class_id'],
-						where: { [Op.and]: class_id_match }
+						attributes: ['name', 'family', 'id'],
+						include: [
+							{
+								model: StudentClassesModel,
+								where: { [Op.and]: class_id_match }
+							}
+						]
 					}
 				]
 			});

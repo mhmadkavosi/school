@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import DB from '../../../config/sequelize.config';
-import ClassesModel from '../../school_class/models/classes.model';
+import SchoolModel from '../../school/models/school.model';
 
 const StudentModel = DB.instance().define(
 	'student',
@@ -10,7 +10,7 @@ const StudentModel = DB.instance().define(
 			primaryKey: true,
 			defaultValue: DataTypes.UUIDV4
 		},
-		class_id: {
+		school_id: {
 			type: DataTypes.UUID,
 			allowNull: false
 		},
@@ -66,13 +66,13 @@ const StudentModel = DB.instance().define(
 		tableName: 'students'
 	}
 );
-StudentModel.hasOne(ClassesModel, {
+StudentModel.hasOne(SchoolModel, {
 	foreignKey: 'id',
-	sourceKey: 'class_id'
+	sourceKey: 'school_id'
 });
 
-ClassesModel.hasMany(StudentModel, {
-	foreignKey: 'class_id',
+SchoolModel.hasMany(StudentModel, {
+	foreignKey: 'school_id',
 	sourceKey: 'id'
 });
 

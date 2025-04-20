@@ -8,6 +8,7 @@ import ClassesModel from '../../school_class/models/classes.model';
 import ClassLevelModel from '../../school_class/models/class_level.model';
 import StudentModel from '../../student/models/student.model';
 import { paginate } from '../../../utils/paginate.utility';
+import StudentClassesModel from '../../student/models/student_class.model';
 
 export class TeacherInfo {
 	async get_by_email(email: string): Promise<RestApi.ObjectResInterface> {
@@ -85,8 +86,13 @@ export class TeacherInfo {
 								attributes: ['name']
 							},
 							{
-								model: StudentModel,
-								attributes: ['id']
+								model: StudentClassesModel,
+								include: [
+									{
+										model: StudentModel,
+										attributes: ['id']
+									}
+								]
 							}
 						]
 					}

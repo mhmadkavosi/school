@@ -7,7 +7,6 @@ export class StudentCreate {
 		try {
 			const result = await StudentModel.create(
 				{
-					class_id: builder.getClassId(),
 					name: builder.getName(),
 					family: builder.getFamily(),
 					email: builder.getEmail(),
@@ -17,7 +16,8 @@ export class StudentCreate {
 					birth_date: builder.getBirthDate(),
 					password: builder.getPassword(),
 					profile_picture: builder.getProfilePicture(),
-					middle_name: builder.getMiddleName()
+					middle_name: builder.getMiddleName(),
+					school_id: builder.getSchoolId()
 				},
 				{ isNewRecord: true }
 			);

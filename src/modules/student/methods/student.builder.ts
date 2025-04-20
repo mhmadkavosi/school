@@ -1,7 +1,7 @@
 import { StudentCreate } from './student_create';
 
 export class StudentBuilder {
-	public class_id!: string;
+	public school_id!: string;
 	public name!: string;
 	public family!: string;
 	public middle_name!: string;
@@ -13,8 +13,8 @@ export class StudentBuilder {
 	public password!: string;
 	public profile_picture?: string;
 
-	public setClassId(class_id: string): this {
-		this.class_id = class_id;
+	public setSchoolId(school_id: string): this {
+		this.school_id = school_id;
 		return this;
 	}
 
@@ -68,8 +68,8 @@ export class StudentBuilder {
 		return this;
 	}
 
-	public getClassId(): string {
-		return this.class_id;
+	public getSchoolId(): string {
+		return this.school_id;
 	}
 
 	public getName(): string {

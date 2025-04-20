@@ -4,7 +4,6 @@ import StudentModel from '../models/student.model';
 export class StudentUpdate {
 	async update_teacher(
 		id: string,
-		class_id: string,
 		name: string,
 		family: string,
 		email: string,
@@ -17,7 +16,6 @@ export class StudentUpdate {
 		try {
 			const result = await StudentModel.update(
 				{
-					class_id,
 					name,
 					family,
 					email,

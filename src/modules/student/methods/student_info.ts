@@ -8,6 +8,7 @@ import ClassLevelModel from '../../school_class/models/class_level.model';
 import ClassTimingModel from '../../school_class/models/class_timing.mode';
 import MajorModel from '../../school_class/models/major.model';
 import SectionModel from '../../school/models/section.model';
+import StudentClassesModel from '../models/student_class.model';
 
 export class StudentInfo {
 	async get_all_student_of_class_with_pagination(
@@ -18,24 +19,22 @@ export class StudentInfo {
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
-			const match: any = [];
-
-			if (!!class_id) {
-				match.push({
-					class_id
-				});
-			}
 
 			const result = await StudentModel.findAndCountAll({
-				where: { [Op.and]: match },
 				distinct: true,
 				limit: limit,
 				offset: skip,
 				include: [
 					{
-						model: ClassesModel,
-						attributes: ['name', 'id', 'teacher_id'],
-						where: { teacher_id }
+						model: StudentClassesModel,
+						where: { class_id },
+						include: [
+							{
+								model: ClassesModel,
+								attributes: ['name', 'id', 'teacher_id'],
+								where: { teacher_id }
+							}
+						]
 					}
 				],
 				order: [['created_at', 'DESC']]
@@ -63,14 +62,24 @@ export class StudentInfo {
 		try {
 			const skip = (page - 1) * limit;
 			const attributes = ['middle_name', 'name', 'family', 'email', 'phone', 'national_code'];
-			let conditions: any = [];
+			let whereClause: any = {};
 
-			conditions = attributes.map((attribute) => ({
-				[attribute]: { [Op.like]: `%${search}%` }
-			}));
+			if (!!search) {
+				whereClause = {
+					[Op.or]: attributes.map((attribute) => ({
+						[attribute]: { [Op.like]: `%${search}%` }
+					}))
+				};
+			}
 
 			const result = await StudentModel.findAndCountAll({
-				where: { class_id, [Op.or]: conditions },
+				where: whereClause,
+				include: [
+					{
+						model: StudentClassesModel,
+						where: { class_id }
+					}
+				],
 				distinct: true,
 				limit: limit,
 				offset: skip,
@@ -82,7 +91,7 @@ export class StudentInfo {
 				data: paginate(page, limit, result)
 			};
 		} catch (error) {
-			AppLogger.error('Error in StudentInfo get_all_student_of_class_with_pagination', error);
+			AppLogger.error('Error in StudentInfo get_all_student_of_class_with_search', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
@@ -93,7 +102,12 @@ export class StudentInfo {
 	async get_all_student_of_class(class_id: string): Promise<RestApi.ObjectResInterface> {
 		try {
 			const result = await StudentModel.findAll({
-				where: { class_id }
+				include: [
+					{
+						model: StudentClassesModel,
+						where: { class_id }
+					}
+				]
 			});
 
 			return {
@@ -117,11 +131,16 @@ export class StudentInfo {
 			const skip = (page - 1) * limit;
 
 			const result = await StudentModel.findAndCountAll({
-				where: { class_id },
+				include: [
+					{
+						model: StudentClassesModel,
+						where: { class_id }
+					}
+				],
 				distinct: true,
 				limit: limit,
 				offset: skip,
-				attributes: ['id', 'profile_picture', 'phone', 'name', 'family', 'email', 'birth_date', 'class_id'],
+				attributes: ['id', 'profile_picture', 'phone', 'name', 'family', 'email', 'birth_date'],
 				order: [['created_at', 'DESC']]
 			});
 
@@ -158,7 +177,12 @@ export class StudentInfo {
 						as: 'classes',
 						include: [
 							{
-								model: StudentModel
+								model: StudentClassesModel,
+								include: [
+									{
+										model: StudentModel
+									}
+								]
 							}
 						]
 					}
@@ -212,9 +236,9 @@ export class StudentInfo {
 		}
 	}
 
-	async get_by_phone_number(phone_number: string): Promise<RestApi.ObjectResInterface> {
+	async get_by_phone_number(phone: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await StudentModel.findOne({ where: { phone_number } });
+			const result = await StudentModel.findOne({ where: { phone } });
 
 			return {
 				is_success: !!result,
@@ -252,22 +276,29 @@ export class StudentInfo {
 				where: { id: student_id },
 				include: [
 					{
-						model: ClassesModel,
+						model: StudentClassesModel,
 						include: [
 							{
-								model: ClassLevelModel,
+								model: ClassesModel,
 								include: [
 									{
-										model: SectionModel
+										model: ClassLevelModel,
+										include: [
+											{
+												model: SectionModel
+											}
+										]
+									},
+									{
+										model: ClassTimingModel,
+										required: false
+									},
+									{
+										model: MajorModel,
+										as: 'majors',
+										required: false
 									}
 								]
-							},
-							{
-								model: ClassTimingModel
-							},
-							{
-								model: MajorModel,
-								as: 'majors'
 							}
 						]
 					}

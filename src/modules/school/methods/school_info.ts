@@ -5,8 +5,8 @@ import SchoolModel from '../models/school.model';
 import SectionModel from '../models/section.model';
 import ClassesModel from '../../school_class/models/classes.model';
 import TeacherModel from '../../teacher/models/teacher.model';
-import StudentModel from '../../student/models/student.model';
 import { paginate } from '../../../utils/paginate.utility';
+import StudentClassesModel from '../../student/models/student_class.model';
 
 export class SchoolInfo {
 	async get_all(): Promise<RestApi.ObjectResInterface> {
@@ -67,9 +67,7 @@ export class SchoolInfo {
 								attributes: ['id'] // We need the teacher id to count unique teachers.
 							},
 							{
-								model: StudentModel,
-								as: 'students',
-								attributes: ['id'] // Only need the id for counting students.
+								model: StudentClassesModel
 							}
 						]
 					}
@@ -90,8 +88,8 @@ export class SchoolInfo {
 
 				if (school.classes && school.classes.length > 0) {
 					school.classes.forEach((cls: any) => {
-						if (cls.students) {
-							total_students += cls.students.length;
+						if (cls.student_classes.length) {
+							total_students += cls.student_classes.length;
 						}
 						if (cls.teacher && cls.teacher.id) {
 							teacherSet.add(cls.teacher.id);
@@ -219,9 +217,7 @@ export class SchoolInfo {
 								attributes: ['id'] // We need the teacher id to count unique teachers.
 							},
 							{
-								model: StudentModel,
-								as: 'students',
-								attributes: ['id'] // Only need the id for counting students.
+								model: StudentClassesModel
 							}
 						]
 					}
@@ -242,8 +238,8 @@ export class SchoolInfo {
 
 				if (school.classes && school.classes.length > 0) {
 					school.classes.forEach((cls: any) => {
-						if (cls.students) {
-							total_students += cls.students.length;
+						if (cls.student_classes) {
+							total_students += cls.student_classes.length;
 						}
 						if (cls.teacher && cls.teacher.id) {
 							teacherSet.add(cls.teacher.id);

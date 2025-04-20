@@ -12,6 +12,7 @@ import AttendanceModel from '../../../attendance/models/attendance.model';
 import { AttendanceTypeEnum } from '../../../attendance/models/enums/attendance_type.enum';
 import { paginate } from '../../../../utils/paginate.utility';
 import TeacherModel from '../../../teacher/models/teacher.model';
+import StudentClassesModel from '../../../student/models/student_class.model';
 
 export class ClassInfo {
 	async get_all_by_teacher_id(teacher_id: string): Promise<RestApi.ObjectResInterface> {
@@ -25,8 +26,13 @@ export class ClassInfo {
 						include: [
 							{ model: ClassLevelModel },
 							{
-								model: StudentModel,
-								attributes: ['id']
+								model: StudentClassesModel,
+								include: [
+									{
+										model: StudentModel,
+										attributes: ['id']
+									}
+								]
 							}
 						]
 					}
@@ -142,9 +148,13 @@ export class ClassInfo {
 						as: 'classes',
 						include: [
 							{
-								model: StudentModel,
-								as: 'students', // Must match the alias defined in ClassesModel.hasMany(StudentModel, { as: 'students' })
-								attributes: ['id'] // Only need the id to count the number of students
+								model: StudentClassesModel,
+								include: [
+									{
+										model: StudentModel,
+										attributes: ['id'] // Only need the id to count the number of students
+									}
+								]
 							},
 							{
 								model: ClassLevelModel,
@@ -208,7 +218,7 @@ export class ClassInfo {
 						as: 'classes',
 						attributes: [
 							'id',
-							'name', // Assuming 'name' is the class name field,
+							'name',
 							'school_id',
 							'class_level_id',
 							'count',
@@ -219,7 +229,9 @@ export class ClassInfo {
 							'teacher_id',
 							[
 								Sequelize.literal(
-									`COALESCE((SELECT COUNT(*) FROM students WHERE students.class_id = classes.id), 0)`
+									`(SELECT COUNT(DISTINCT sc.student_id) 
+						   FROM student_class sc 
+						   WHERE sc.class_id = classes.id)`
 								),
 								'total_students'
 							]
@@ -229,14 +241,14 @@ export class ClassInfo {
 								model: ClassLevelModel
 							},
 							{
-								model: StudentModel,
-								as: 'students', // Make sure the alias matches your associations
-								attributes: ['id']
+								model: StudentClassesModel,
+								attributes: [],
+								required: false
 							}
 						]
 					}
 				],
-				group: ['school.id', 'classes.id', 'classes->class_level.id', 'classes->students.id']
+				group: ['school.id', 'classes.id', 'classes->class_level.id']
 			});
 
 			return {
@@ -266,6 +278,12 @@ export class ClassInfo {
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const match: any = [];
+			const student_class_id: any = [];
+			if (class_id) {
+				student_class_id.push({
+					class_id
+				});
+			}
 			const attributes = ['name', 'family'];
 			let conditions: any = [];
 
@@ -273,12 +291,6 @@ export class ClassInfo {
 				conditions = attributes.map((attribute) => ({
 					[attribute]: { [Op.like]: `%${search}%` }
 				}));
-			}
-
-			if (!!class_id) {
-				match.push({
-					class_id
-				});
 			}
 
 			if (student_status) {
@@ -350,17 +362,25 @@ export class ClassInfo {
 				where: { teacher_id },
 				include: [
 					{
-						model: StudentModel,
-						attributes: ['id', 'name', 'family', 'student_status', 'class_id', 'created_at'],
+						model: StudentClassesModel,
 						where: {
-							[Op.and]: match,
-							...(conditions &&
-								conditions.length > 0 && {
-									[Op.or]: conditions
-								})
+							[Op.and]: student_class_id
 						},
-						include: include_options,
-						order: [['created_at', sort_value]]
+						include: [
+							{
+								model: StudentModel,
+								attributes: ['id', 'name', 'family', 'student_status', 'created_at'],
+								where: {
+									[Op.and]: match,
+									...(conditions &&
+										conditions.length > 0 && {
+											[Op.or]: conditions
+										})
+								},
+								include: include_options,
+								order: [['created_at', sort_value]]
+							}
+						]
 					}
 				]
 			});
@@ -395,9 +415,13 @@ export class ClassInfo {
 				attributes: ['id', 'name', 'link', 'count', 'color', 'major', 'major_type'], // Only need the class name from ClassesModel
 				include: [
 					{
-						model: StudentModel,
-						as: 'students', // Must match the alias defined in ClassesModel.hasMany(StudentModel, { as: 'students' })
-						attributes: ['id'] // Only need the id to count the number of students
+						model: StudentClassesModel,
+						include: [
+							{
+								model: StudentModel,
+								attributes: ['id'] // Only need the id to count the number of students
+							}
+						]
 					},
 					{
 						model: ClassLevelModel,
@@ -417,7 +441,7 @@ export class ClassInfo {
 				const class_major_type = cls.major_type;
 				const class_level = cls.class_level;
 				// Total students is the length of the students array (or 0 if undefined)
-				const total_student = cls.students ? cls.students.length : 0;
+				const total_student = cls.student_classes.length;
 				return {
 					class_link,
 					class_id,

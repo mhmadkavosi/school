@@ -11,25 +11,29 @@ import { StudentHomeWorDestroy } from '../../home_work/methods/student_home_work
 import { StudentUpdate } from '../methods/student_update';
 import { remove_file } from '../../../lib/file_upload/aws/remove';
 import { FileDestroy } from '../../file-upload/methods/file/file_destroy';
+import { StudentClassCreate } from '../methods/student_class/student_class_create';
+import { StudentClassInfo } from '../methods/student_class/student_class_info';
 
 export const create = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
 			name: req.body.name,
 			middle_name: req.body.middle_name,
-			class_id: req.body.class_id,
+			classes_id: req.body.classes_id,
 			family: req.body.family,
 			email: req.body.email,
 			phone: req.body.phone,
 			national_code: req.body.national_code,
 			student_status: req.body.student_status,
 			birth_date: req.body.birth_date,
-			profile_picture: req.body.profile_picture
+			profile_picture: req.body.profile_picture,
+			school_id: req.body.school_id
 		},
 		{
 			name: ['required', 'string'],
 			middle_name: ['string'],
-			class_id: ['required', 'string'],
+			classes_id: ['required', 'array'],
+			school_id: ['required', 'string'],
 			family: ['required', 'string'],
 			email: ['email'],
 			phone: ['string'],
@@ -73,9 +77,15 @@ export const create = async (req: Request, res: Response) => {
 		});
 	}
 
+	if (req.body.classes_id.length === 0) {
+		return ApiRes(res, {
+			status: HttpStatus.BAD_REQUEST,
+			msg: 'No class ids provided Error'
+		});
+	}
+
 	const result = await new StudentBuilder()
 		.setName(req.body.name)
-		.setClassId(req.body.class_id)
 		.setFamily(req.body.family)
 		.setMiddleName(req.body.middle_name)
 		.setEmail(req.body.email)
@@ -85,7 +95,18 @@ export const create = async (req: Request, res: Response) => {
 		.setBirthDate(req.body.birth_date)
 		.setPassword(hash_password(req.body.national_code))
 		.setProfilePicture(req.body.profile_picture)
+		.setSchoolId(req.body.school_id)
 		.build();
+
+	for (let i = 0; i < req.body.classes_id.length; i++) {
+		const check_user_class = await new StudentClassInfo().get_info_by_student_and_class_id(
+			result.data.id,
+			req.body.classes_id[i]
+		);
+		if (!check_user_class.is_success) {
+			await new StudentClassCreate().create(result.data.id, req.body.classes_id[i]);
+		}
+	}
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
@@ -98,7 +119,7 @@ export const update_teacher = async (req: Request, res: Response) => {
 		{
 			student_id: req.body.student_id,
 			name: req.body.name,
-			class_id: req.body.class_id,
+			classes_id: req.body.classes_id,
 			family: req.body.family,
 			email: req.body.email,
 			phone: req.body.phone,
@@ -127,7 +148,6 @@ export const update_teacher = async (req: Request, res: Response) => {
 
 	const result = await new StudentUpdate().update_teacher(
 		req.body.student_id,
-		req.body.class_id,
 		req.body.name,
 		req.body.family,
 		req.body.email,

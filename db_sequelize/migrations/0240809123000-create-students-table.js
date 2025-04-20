@@ -10,11 +10,11 @@ module.exports = {
 				defaultValue: Sequelize.UUIDV4,
 				allowNull: false
 			},
-			class_id: {
+			school_id: {
 				type: Sequelize.UUID,
 				allowNull: false,
 				references: {
-					model: 'classes', // This should match the table name of the classes model
+					model: 'schools', // This should match the table name of the schools model
 					key: 'id'
 				},
 				onUpdate: 'CASCADE',

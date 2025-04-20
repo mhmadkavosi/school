@@ -7,6 +7,7 @@ import NewsModel from '../../models/news.model';
 import NewsCategoryModel from '../../models/news_category.model';
 import ClassesModel from '../../../school_class/models/classes.model';
 import StudentModel from '../../../student/models/student.model';
+import StudentClassesModel from '../../../student/models/student_class.model';
 
 export class NewsInfo {
 	async get_all_news_by_school_id(
@@ -66,10 +67,15 @@ export class NewsInfo {
 								attributes: ['id', 'name'],
 								include: [
 									{
-										model: StudentModel,
-										where: { id: student_id },
-										required: true,
-										attributes: ['id']
+										model: StudentClassesModel,
+										include: [
+											{
+												model: StudentModel,
+												where: { id: student_id },
+												required: true,
+												attributes: ['id']
+											}
+										]
 									}
 								]
 							}
@@ -107,10 +113,15 @@ export class NewsInfo {
 								attributes: ['id', 'name'],
 								include: [
 									{
-										model: StudentModel,
-										where: { id: student_id },
-										required: true,
-										attributes: ['id']
+										model: StudentClassesModel,
+										include: [
+											{
+												model: StudentModel,
+												where: { id: student_id },
+												required: true,
+												attributes: ['id']
+											}
+										]
 									}
 								]
 							}
