@@ -12,7 +12,6 @@ import { InternalServerError } from '../../../lib/http/error/internal_server.err
 import { ScheduleAssignDestroy } from '../methods/schedule_assign/schedule_assign_delete';
 import { ScheduleDestroy } from '../methods/schedule/schedule_destroy';
 import { ScheduleInfo } from '../methods/schedule/schedule_info';
-import { StudentInfo } from '../../student/methods/student_info';
 import { ClassInfo } from '../../school_class/methods/class/class_info';
 
 export const create = async (req: Request, res: Response) => {
@@ -291,10 +290,22 @@ export const get_by_id = async (req: Request, res: Response) => {
 };
 
 export const get_student_schedule = async (req: Request, res: Response) => {
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const validate = new Validator(
+		{
+			class_id: req.query.class_id
+		},
+		{
+			class_id: ['string', 'required']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
 	const result = await new ScheduleInfo().get_schedules_for_student(
 		req.student_id,
-		student_info.data.class_id
+		<string>req.query.class_id
 	);
 
 	return ApiRes(res, {
@@ -304,10 +315,22 @@ export const get_student_schedule = async (req: Request, res: Response) => {
 };
 
 export const get_count_student_schedule = async (req: Request, res: Response) => {
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
+	const validate = new Validator(
+		{
+			class_id: req.query.class_id
+		},
+		{
+			class_id: ['string', 'required']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
 	const result = await new ScheduleInfo().get_count_schedules_for_student(
 		req.student_id,
-		student_info.data.class_id
+		<string>req.query.class_id
 	);
 
 	return ApiRes(res, {
@@ -324,12 +347,13 @@ export const create_student = async (req: Request, res: Response) => {
 			event_start_hour: req.body.event_start_hour,
 			event_end_hour: req.body.event_end_hour,
 			event_description: req.body.event_description,
-
+			class_id: req.body.class_id,
 			event_category_id: req.body.event_category_id,
 			event_type: req.body.event_type
 		},
 		{
 			title: ['required', 'string'],
+			class_id: ['required', 'string'],
 			event_date: ['required', 'date'],
 			event_start_hour: ['string'],
 			event_end_hour: ['string'],
@@ -343,9 +367,10 @@ export const create_student = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
-	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
-
+	const class_info = await new ClassInfo().get_by_id(req.body.class_id);
+	if (!class_info.is_success) {
+		return new InternalServerError(res);
+	}
 	const result = await new ScheduleBuilder()
 		.setTitle(req.body.title)
 		.setEventDate(req.body.event_date)
@@ -354,16 +379,12 @@ export const create_student = async (req: Request, res: Response) => {
 		.setEventDescription(req.body.event_description)
 		.setEventCategoryId(req.body.event_category_id)
 		.setEventType(req.body.event_type)
-		.setTeacherId(class_info.data.classes[0].teacher_id)
-		.setSchoolId(class_info.data.classes[0].school_id)
+		.setTeacherId(class_info.data.teacher_id)
+		.setSchoolId(class_info.data.school_id)
 		.build();
 
 	if (!result.is_success) {
 		return new InternalServerError(res);
-	}
-
-	if (validate.fails()) {
-		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
 	const schedule_assign = await new ScheduleAssignCreate().create(

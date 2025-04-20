@@ -324,14 +324,16 @@ export const get_all_student_exam = async (req: Request, res: Response) => {
 			limit: req.query.limit,
 			start_date: req.query.start_date,
 			end_date: req.query.end_date,
-			sort: req.query.sort
+			sort: req.query.sort,
+			class_id: req.query.class_id
 		},
 		{
 			page: ['required', 'numeric'],
 			limit: ['required', 'numeric'],
 			start_date: ['string'],
 			end_date: ['string'],
-			sort: [{ in: ['last_exam', 'first_exam'] }]
+			sort: [{ in: ['last_exam', 'first_exam'] }],
+			class_id: ['required', 'string']
 		}
 	);
 
@@ -339,14 +341,13 @@ export const get_all_student_exam = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
-	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
+	const class_info = await new ClassInfo().get_by_id(<string>req.query.class_id);
 
 	const result = await new ExamClassInfo().get_all(
 		Number(req.query.page),
 		Number(req.query.limit),
-		class_info.data.classes[0].id,
-		class_info.data.classes[0].teacher_id,
+		class_info.data.id,
+		class_info.data.teacher_id,
 		<string>req.query.start_date,
 		<string>req.query.end_date,
 		req.student_id,
@@ -362,10 +363,12 @@ export const get_all_student_exam = async (req: Request, res: Response) => {
 export const get_info_student = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
-			exam_id: req.query.exam_id
+			exam_id: req.query.exam_id,
+			class_id: req.query.class_id
 		},
 		{
-			exam_id: ['required', 'string']
+			exam_id: ['required', 'string'],
+			class_id: ['required', 'string']
 		}
 	);
 
@@ -373,12 +376,8 @@ export const get_info_student = async (req: Request, res: Response) => {
 		return new PreconditionFailedError(res, validate.errors.all());
 	}
 
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
-	const class_info = await new ClassInfo().get_by_id(student_info.data.class_id);
-	const result = await new ExamClassInfo().get_info_by_id(
-		<string>req.query.exam_id,
-		class_info.data.classes[0].id
-	);
+	const class_info = await new ClassInfo().get_by_id(<string>req.query.class_id);
+	const result = await new ExamClassInfo().get_info_by_id(<string>req.query.exam_id, class_info.data.id);
 
 	return ApiRes(res, {
 		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,

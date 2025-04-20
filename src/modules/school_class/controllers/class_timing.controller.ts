@@ -7,7 +7,6 @@ import { ClassTimingCreate } from '../methods/class_timing/class_timing_create';
 import { ClassTimingInfo } from '../methods/class_timing/class_timing_info';
 import { ClassTimingUpdate } from '../methods/class_timing/class_timing_update';
 import { ClassTimingDestroy } from '../methods/class_timing/class_timing_destroy';
-import { StudentInfo } from '../../student/methods/student_info';
 
 export const create = async (req: Request, res: Response) => {
 	const data = req.body.class_timings;
@@ -107,9 +106,11 @@ export const get_all = async (req: Request, res: Response) => {
 export const get_student_class_timing = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{
+			class_id: req.query.class_id,
 			day: req.query.day
 		},
 		{
+			class_id: ['required', 'string'],
 			day: ['required', 'string', { in: Object.values(WeekDays) }]
 		}
 	);
@@ -122,9 +123,8 @@ export const get_student_class_timing = async (req: Request, res: Response) => {
 		});
 	}
 
-	const student_info = await new StudentInfo().get_by_id(req.student_id);
 	const result = await new ClassTimingInfo().get_timing_by_class_id(
-		student_info.data.class_id,
+		<string>req.query.class_id,
 		<string>req.query.day
 	);
 

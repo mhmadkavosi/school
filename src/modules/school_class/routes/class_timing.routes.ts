@@ -1,3 +1,4 @@
+import { StudentAuthMiddleware } from '../../../middlewares/student_auth.middleware';
 import { TeacherAuthMiddleware } from '../../../middlewares/teacher_auth.middleware';
 import * as ClassTimingController from '../controllers/class_timing.controller';
 import { Router } from 'express';
@@ -23,7 +24,7 @@ ClassTimingRouter.delete(`${route_prefix}`, TeacherAuthMiddleware, ClassTimingCo
 
 ClassTimingRouter.get(
 	`${route_prefix}/student/time`,
-	TeacherAuthMiddleware,
+	StudentAuthMiddleware,
 	ClassTimingController.get_student_class_timing
 );
 

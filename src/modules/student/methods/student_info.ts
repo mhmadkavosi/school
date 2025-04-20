@@ -204,7 +204,7 @@ export class StudentInfo {
 
 	async get_by_id(id: string): Promise<RestApi.ObjectResInterface> {
 		try {
-			const result = await StudentModel.findOne({ where: { id } });
+			const result = await StudentModel.findOne({ where: { id }, include: [{ model: StudentClassesModel }] });
 
 			return {
 				is_success: !!result,
