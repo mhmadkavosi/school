@@ -23,7 +23,7 @@ export function RegisterMiddleware(app: Application) {
 		}
 	});
 
-	app.use(rateLimitMiddleware);
+	//app.use(rateLimitMiddleware);
 
 	app.use(compression());
 	app.use(cookieParser());
