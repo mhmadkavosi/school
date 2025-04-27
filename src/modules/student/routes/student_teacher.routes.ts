@@ -26,6 +26,13 @@ StudentTeacherRouter.get(
 	TeacherAuthMiddleware,
 	StudentController.get_all_student_of_class
 );
+
+StudentTeacherRouter.get(
+	`${route_prefix}/school/all`,
+	TeacherAuthMiddleware,
+	StudentController.get_all_student_of_school
+);
+
 StudentTeacherRouter.get(
 	`${route_prefix}/class/search`,
 	TeacherAuthMiddleware,

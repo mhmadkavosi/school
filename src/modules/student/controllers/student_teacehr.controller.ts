@@ -233,6 +233,39 @@ export const get_all_student_of_class = async (req: Request, res: Response) => {
 	});
 };
 
+export const get_all_student_of_school = async (req: Request, res: Response) => {
+	const validate = new Validator(
+		{
+			page: req.query.page,
+			limit: req.query.limit,
+			class_id: req.query.class_id,
+			school_id: req.query.school_id
+		},
+		{
+			page: ['numeric', 'required'],
+			limit: ['numeric', 'required'],
+			class_id: ['string'],
+			school_id: ['required', 'string']
+		}
+	);
+
+	if (validate.fails()) {
+		return new PreconditionFailedError(res, validate.errors.all());
+	}
+
+	const result = await new StudentInfo().get_all_student_of_school_with_pagination(
+		Number(req.query.page),
+		Number(req.query.limit),
+		<string>req.query.class_id,
+		req.user_id,
+		<string>req.query.school_id
+	);
+
+	return ApiRes(res, {
+		status: result.is_success ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR,
+		data: result.data
+	});
+};
 export const get_all_student_of_class_with_search = async (req: Request, res: Response) => {
 	const validate = new Validator(
 		{

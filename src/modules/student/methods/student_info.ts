@@ -19,7 +19,12 @@ export class StudentInfo {
 	): Promise<RestApi.ObjectResInterface> {
 		try {
 			const skip = (page - 1) * limit;
-
+			const match: any = [];
+			if (class_id) {
+				match.push({
+					class_id
+				});
+			}
 			const result = await StudentModel.findAndCountAll({
 				distinct: true,
 				limit: limit,
@@ -46,6 +51,56 @@ export class StudentInfo {
 			};
 		} catch (error) {
 			AppLogger.error('Error in StudentInfo get_all_student_of_class_with_pagination', error);
+			return {
+				is_success: false,
+				msg: 'Internal Server Error'
+			};
+		}
+	}
+
+	async get_all_student_of_school_with_pagination(
+		page: number,
+		limit: number,
+		class_id: string,
+		teacher_id: string,
+		school_id: string
+	): Promise<RestApi.ObjectResInterface> {
+		try {
+			const skip = (page - 1) * limit;
+
+			const match: any = [];
+			if (!!class_id) {
+				match.push({
+					class_id
+				});
+			}
+			const result = await StudentModel.findAndCountAll({
+				distinct: true,
+				limit: limit,
+				where: { school_id },
+				offset: skip,
+				include: [
+					{
+						model: StudentClassesModel,
+						where: match,
+						include: [
+							{
+								model: ClassesModel,
+								attributes: ['name', 'id', 'teacher_id'],
+								where: { teacher_id }
+							}
+						]
+					}
+				],
+				order: [['created_at', 'DESC']]
+			});
+
+			return {
+				is_success: true,
+				data: paginate(page, limit, result)
+			};
+		} catch (error) {
+			AppLogger.error('Error in StudentInfo get_all_student_of_school_with_pagination', error);
 			return {
 				is_success: false,
 				msg: 'Internal Server Error'
