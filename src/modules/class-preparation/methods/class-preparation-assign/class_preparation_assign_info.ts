@@ -21,27 +21,27 @@ export class ClassPreparationAssignInfo {
 			const match: any = [{ teacher_id }];
 			const class_match = [{}];
 
-			if (class_id) {
+			if (!!class_id) {
 				class_match.push({
 					class_id
 				});
 			}
 
-			if (start_date && end_date) {
+			if (!!start_date && !!end_date) {
 				match.push({
 					date: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(end_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
-			} else if (start_date) {
+			} else if (!!start_date) {
 				match.push({
 					date: {
 						[Op.gte]: new Date(start_date + 'T' + '00:00:00' + '.000Z'),
 						[Op.lte]: new Date(start_date + 'T' + '23:59:00' + '.000Z')
 					}
 				});
-			} else if (end_date) {
+			} else if (!!end_date) {
 				match.push({
 					date: {
 						[Op.gte]: new Date(end_date + 'T' + '00:00:00' + '.000Z'),

@@ -42,12 +42,12 @@ ClassPreparationRouter.put(
 ClassPreparationRouter.get(
 	`${route_prefix}/student`,
 	StudentAuthMiddleware,
-	ClassPreparationController.get_all
+	ClassPreparationController.get_all_student
 );
 ClassPreparationRouter.get(
 	`${route_prefix}/student/:class_preparation_id/info`,
 	StudentAuthMiddleware,
-	ClassPreparationController.get_info
+	ClassPreparationController.get_info_student
 );
 
 export default ClassPreparationRouter;
