@@ -8,7 +8,7 @@ export class ZohoProvider extends MailProviderAbstract {
 	constructor() {
 		super();
 		this.transporter = createTransport({
-			host: 'smtp.liara.ir',
+			host: 'smtp.c1.liara.email',
 			port: 587,
 			secure: false,
 			auth: {
