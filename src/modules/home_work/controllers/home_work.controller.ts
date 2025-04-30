@@ -130,7 +130,7 @@ export const create = async (req: Request, res: Response) => {
 		}
 	}
 
-	return ApiRes(res, { status: HttpStatus.OK });
+	return ApiRes(res, { status: HttpStatus.OK, data: home_work.data });
 };
 
 export const add_home_work_for_classes = async (req: Request, res: Response) => {
