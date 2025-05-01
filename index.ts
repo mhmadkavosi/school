@@ -13,7 +13,7 @@ const createServer = () => {
 };
 const startServer = async () => {
 	try {
-		createServer();
+		// createServer();
 	} catch (err: any) {
 		AppLogger.error(err.message, err);
 		throw err;
